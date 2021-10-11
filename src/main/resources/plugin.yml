@@ -1,0 +1,7 @@
+name: SurvivalSystem
+version: '${version}'
+main: xyz.n7mn.dev.survivalsystem.SurvivalSystem
+api-version: 1.17
+load: STARTUP
+authors: [ 7mi_chan ]
+description: SurvivalSystem
