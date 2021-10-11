@@ -5,3 +5,36 @@ api-version: 1.17
 load: STARTUP
 authors: [ 7mi_chan ]
 description: SurvivalSystem
+depend: [ ViaVersion , ProtocolLib ]
+commands:
+  tipsoff:
+    description: ''
+    usage: '/tipsoff'
+  tipson:
+    description: ''
+    usage: '/tipson'
+  spawn:
+    description: ''
+    usage: '/spawn'
+  sigen:
+    description: ''
+    usage: '/sigen'
+  main:
+    description: ''
+    usage: '/main'
+  discord:
+    description: ''
+    usage: '/discord'
+  rule:
+    description: ''
+    usage: '/rule'
+  gm:
+    description: ''
+    usage: '/gm'
+    permission: '7mi.sv.op.gm'
+    permission-message: ''
+  mc:
+    description: ''
+    usage: '/mc'
+    permission: '7mi.sv.op.mc'
+    permission-message: ''

@@ -15,13 +15,21 @@ repositories {
         name = 'sonatype'
         url = 'https://oss.sonatype.org/content/groups/public/'
     }
+
+    maven {
+        name = 'purpur'
+        url = 'https://repo.pl3x.net/'
+    }
+
+    maven { url "https://repo.dmulloy2.net/repository/public/" }
 }
 
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT'
+    compileOnly 'net.pl3x.purpur:purpur-api:1.17.1-R0.1-SNAPSHOT'
+    compileOnly 'com.comphenix.protocol:ProtocolLib:4.7.0'
 }
 
-def targetJavaVersion = 8
+def targetJavaVersion = 16
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion

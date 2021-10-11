@@ -1,0 +1,16 @@
+MySQLServer: ''
+MySQLPort: 3306
+MySQLDatabase: ''
+MySQLOption: '?allowPublicKeyRetrieval=true&useSSL=false'
+MySQLUsername: ''
+MySQLPassword: ''
+
+DiscordURL: 'https://discord.gg/MEYEPgN3T6'
+
+TipsList: [
+    "初期地点に戻るには「/spawn」を使用してください！\nUse \"/spawn\" to return to the initial respawn point!",
+    "荒らされている、チートを使ってる人がいるなど ルールに反している人がいたらこっそりと「/report」で教えて下さい。\nPlease use \"/report\" to tell us if someone violates the rules!",
+    "資源ワールドへは「/sigen」で行けます。(戻り方は「/main」、毎週土曜日18:00リセットです。)\nYou can go to the resource world with \"/sigen\". The way back is \"/main\", which resets every Saturday at 18:00(JST).",
+    "ここだけの話、このTipsを表示させなくする場合は「/tipsoff」だよ\nBetween you and me, if you don't want this tip to show up, it's \"/tipsoff\".",
+    "Discordは「/discord」、ルールは「/rule」です。\nDiscord is \"/discord\" and rules are \"/rule\"."
+]
