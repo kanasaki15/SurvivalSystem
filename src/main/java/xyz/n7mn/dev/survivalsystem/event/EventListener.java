@@ -1,7 +1,7 @@
 package xyz.n7mn.dev.survivalsystem.event;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
+import io.github.retrooper.packetevents.PacketEvents;
+import io.github.retrooper.packetevents.utils.player.ClientVersion;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -13,16 +13,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.*;
-import org.bukkit.event.server.TabCompleteEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
+import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
+import xyz.n7mn.dev.survivalsystem.util.MessageManager;
+import xyz.n7mn.dev.survivalsystem.util.MessageUtil;
+import xyz.n7mn.dev.survivalsystem.util.PlayerDataUtil;
 
 
 public class EventListener implements Listener {
 
-    private Plugin plugin = Bukkit.getPluginManager().getPlugin("SurvivalSystem");
-
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler
     public void AsyncChatEvent (AsyncChatEvent e){
         Component message = e.message();
 
@@ -30,7 +35,7 @@ public class EventListener implements Listener {
     }
 
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler
     public void PlayerCommandPreprocessEvent (PlayerCommandPreprocessEvent e){
 
         // op以外には見せたくないものとか
@@ -49,14 +54,16 @@ public class EventListener implements Listener {
             }
 
             if (e.getMessage().startsWith("/version") || e.getMessage().startsWith("/ver ") || e.getMessage().equals("/ver")){
+
+                Plugin plugin = SurvivalInstance.INSTANCE.getPlugin();
+
                 TextComponent text1 = Component.text("" +
-                        "ななみ生活鯖\n接続可能バージョン : 1.16.4 - " + plugin.getServer().getMinecraftVersion() + "\n" +
+                        "ななみ生活鯖\n接続可能バージョン : 1.16 - " + plugin.getServer().getMinecraftVersion() + "\n" +
                         "This server is running NanamiSurvivalServer\nConnectable Versions : 1.16.4 - " + plugin.getServer().getMinecraftVersion() + "\n\n" +
                         "不具合報告はDiscordの「#せいかつ鯖-不具合報告」へどうぞ。\n" +
                         "If you want to report a bug, please go to \"#せいかつ鯖-不具合報告\" on Discord.\n"
                 );
                 TextComponent text2 = Component.text(ChatColor.BLUE + "[Discord]").clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, plugin.getConfig().getString("DiscordURL")));
-
                 text1.append(text2);
 
                 e.getPlayer().sendMessage(text1);
@@ -65,31 +72,32 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void PlayerLoginEvent (PlayerLoginEvent e){
-        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-        int version = protocolManager.getProtocolVersion(e.getPlayer());
+    @EventHandler
+    public void PlayerLoginEvent (PlayerLoginEvent e) {
+        @NotNull ClientVersion version = PacketEvents.get().getPlayerUtils().getClientVersion(e.getPlayer());
 
-        if (version < 754){
-            e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Component.text("Outdated server! I'm still on 1.16.4-"+plugin.getServer().getMinecraftVersion()));
+        if (version.isOlderThan(ClientVersion.v_1_16)) {
+            e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Component.text(MessageUtil.replaceString("OUT-DATED-MESSAGE", "%version%|" + Bukkit.getVersion())));
+        } else {
+            PlayerDataUtil.putPlayerData(e.getPlayer());
+
+            MessageUtil.sendMessageBroadCast("JOIN-MESSAGE", "%player%|" + e.getPlayer().getName());
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void PlayerJoinEvent (PlayerJoinEvent e){
-        e.joinMessage(Component.text(""));
+    @EventHandler
+    public void PlayerQuitEvent(PlayerQuitEvent e) {
+        if (!PlayerDataUtil.removePlayerData(e.getPlayer()).getVanishManager().isVanished()) {
+            MessageUtil.sendMessageBroadCast("QUIT-MESSAGE", "%player%|" + e.getPlayer().getName());
+        }
+    }
 
-        for (Player player : plugin.getServer().getOnlinePlayers()){
+    @EventHandler
+    public void PlayerJoinEvent (PlayerJoinEvent e){
+        e.joinMessage(Component.empty());
+
+        for (Player player : Bukkit.getOnlinePlayers()){
             player.playSound(player.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
         }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void TabCompleteEvent (TabCompleteEvent e){
-        if (e.getSender() instanceof Player){
-            Player player = (Player) e.getSender();
-        }
-
-        System.out.println(e.getBuffer());
     }
 }

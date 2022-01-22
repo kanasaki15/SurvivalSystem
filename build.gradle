@@ -17,16 +17,24 @@ repositories {
     }
 
     maven {
-        name = 'purpur'
-        url = 'https://repo.pl3x.net/'
+        url 'https://jitpack.io'
     }
 
-    maven { url "https://repo.dmulloy2.net/repository/public/" }
+    maven {
+        name = 'purpur'
+        url = 'https://repo.purpurmc.org/snapshots'
+    }
 }
 
 dependencies {
-    compileOnly 'net.pl3x.purpur:purpur-api:1.17.1-R0.1-SNAPSHOT'
-    compileOnly 'com.comphenix.protocol:ProtocolLib:4.7.0'
+    compileOnly 'org.purpurmc.purpur:purpur-api:1.17.1-R0.1-SNAPSHOT'
+    implementation 'com.github.retrooper:packetevents:v1.8-pre-19'
+
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 }
 
 def targetJavaVersion = 16

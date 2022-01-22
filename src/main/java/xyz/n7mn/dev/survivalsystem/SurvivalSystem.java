@@ -1,11 +1,13 @@
 package xyz.n7mn.dev.survivalsystem;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 import xyz.n7mn.dev.survivalsystem.event.EventListener;
+import xyz.n7mn.dev.survivalsystem.util.MessageManager;
 
 import java.security.SecureRandom;
 import java.util.List;
@@ -16,6 +18,8 @@ public final class SurvivalSystem extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         saveDefaultConfig();
+
+        MessageManager.init();
 
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
