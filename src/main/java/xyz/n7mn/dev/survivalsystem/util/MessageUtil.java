@@ -31,7 +31,6 @@ public class MessageUtil {
     }
 
     public void sendMessageBroadCast(String messageID, String... replace) {
-
         String message = replaceString(messageID, replace);
 
         Bukkit.broadcast(Component.text(message));

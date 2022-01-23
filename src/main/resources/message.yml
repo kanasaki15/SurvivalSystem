@@ -3,4 +3,9 @@ PREFIX: '&e[ななみ生活鯖]'
 JOIN-MESSAGE: '&a[+] &e%player% が参加しました'
 QUIT-MESSAGE: '&c[-] &e%player% が抜けました'
 
-OUT-DATED-MESSAGE: "Outdated server! I'm still on 1.16-%version%"
+CANNOT-EXECUTE-FROM-CONSOLE: '%prefix% &cコンソールからこのコマンドは使えません'
+
+VANISH-ON: '%prefix% Vanish を&aON&eにしました'
+VANISH-OFF: '%prefix% Vanish を&cOFF&eにしました'
+
+VANISH-ACTIONBAR: '&a[!] あなたは現在Vanishしています /vanish で解除可能です'

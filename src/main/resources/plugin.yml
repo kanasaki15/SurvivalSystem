@@ -1,11 +1,11 @@
 name: SurvivalSystem
-version: '${version}'
+version: 1.0-pre
 main: xyz.n7mn.dev.survivalsystem.SurvivalSystem
 api-version: 1.17
 load: STARTUP
 authors: [ 7mi_chan ]
 description: SurvivalSystem
-depend: [ ViaVersion , ProtocolLib ]
+depend: [ ViaVersion ]
 commands:
   tipsoff:
     description: ''
@@ -38,3 +38,5 @@ commands:
     usage: '/mc'
     permission: '7mi.sv.op.mc'
     permission-message: ''
+  vanish:
+    permission: 'sv.vanish'

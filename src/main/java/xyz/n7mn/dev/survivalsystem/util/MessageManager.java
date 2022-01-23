@@ -29,7 +29,7 @@ public class MessageManager {
     public static void reload() {
         messageConfig = YamlConfiguration.loadConfiguration(new File(SurvivalInstance.INSTANCE.getPlugin().getDataFolder(), "message.yml"));
 
-        prefix = getString("prefix");
+        prefix = getString("PREFIX");
     }
 
     public static void init() {
