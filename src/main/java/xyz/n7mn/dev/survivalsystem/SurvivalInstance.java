@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import xyz.n7mn.dev.survivalsystem.sql.SQLConnection;
 import xyz.n7mn.dev.survivalsystem.timer.Timer;
 import xyz.n7mn.dev.survivalsystem.util.MessageManager;
 
@@ -20,7 +21,12 @@ public enum SurvivalInstance {
 
     private final Timer timer = new Timer();
 
+    private final SQLConnection connection = new SQLConnection();
+
     public void init() {
         timer.start();
+
+        connection.setUseSQL(plugin.getConfig().getBoolean("useSQL"));
+        connection.init();
     }
 }

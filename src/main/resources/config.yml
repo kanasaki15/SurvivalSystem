@@ -5,6 +5,10 @@ MySQLOption: '?allowPublicKeyRetrieval=true&useSSL=false'
 MySQLUsername: ''
 MySQLPassword: ''
 
+useSQL: true
+
+SQLiteLocation: 'server.data'
+
 DiscordURL: 'https://discord.gg/MEYEPgN3T6'
 
 TipsList: [
