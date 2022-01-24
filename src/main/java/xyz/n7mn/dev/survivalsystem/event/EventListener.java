@@ -5,17 +5,31 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
+import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
 import xyz.n7mn.dev.survivalsystem.playerdata.PlayerData;
+import xyz.n7mn.dev.survivalsystem.sql.table.GraveTable;
 import xyz.n7mn.dev.survivalsystem.util.MessageUtil;
 import xyz.n7mn.dev.survivalsystem.util.PlayerDataUtil;
 import xyz.n7mn.dev.survivalsystem.util.VanishManager;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 
 public class EventListener implements Listener {
@@ -89,5 +103,31 @@ public class EventListener implements Listener {
         }
 
         e.joinMessage(Component.empty());
+    }
+
+    @EventHandler
+    public void PlayerDeathEvent(PlayerDeathEvent e) {
+        GraveTable deathTable = SurvivalInstance.INSTANCE.getConnection().getDeathTable();
+
+        Player player = e.getPlayer();
+
+        ArmorStand armorStand = (ArmorStand) player.getWorld().spawnEntity(e.getPlayer().getLocation(), EntityType.ARMOR_STAND, CreatureSpawnEvent.SpawnReason.CUSTOM);
+        armorStand.setInvisible(true);
+        armorStand.setInvulnerable(true);
+        armorStand.setSmall(true);
+        armorStand.setAI(false);
+        armorStand.addDisabledSlots(EquipmentSlot.HEAD); //4096
+        armorStand.getEquipment().setHelmet(new ItemStack(Material.CHEST, 64));
+
+        GraveInventoryData data = new GraveInventoryData(Timestamp.valueOf(LocalDateTime.now()), player.getWorld().getName(), player.getName(), e.getPlayer().getUniqueId(), e.getEntity().getLocation(), e.getDrops(), armorStand.getUniqueId());
+        deathTable.put(data);
+
+        e.setShouldDropExperience(false);
+        e.getDrops().clear();
+    }
+
+    @EventHandler
+    public void onEntityInteractEvent(EntityInteractEvent e) {
+
     }
 }

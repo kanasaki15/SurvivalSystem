@@ -1,5 +1,7 @@
 PREFIX: '&e[ななみ生活鯖]'
 
+DISCORD-LINK: 'https://discord.gg/MEYEPgN3T6'
+
 JOIN-MESSAGE: '&a[+] &e%player% が参加しました'
 QUIT-MESSAGE: '&c[-] &e%player% が抜けました'
 

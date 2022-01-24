@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.plugin.Plugin;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
+import xyz.n7mn.dev.survivalsystem.sql.table.GraveTable;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,6 +17,7 @@ public class SQLConnection {
     long time;
 
     private Connection connection;
+    private GraveTable deathTable;
 
     public void init() {
         try {
@@ -27,6 +29,8 @@ public class SQLConnection {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+        deathTable = new GraveTable();
     }
 
     public Connection getConnection() {

@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class SQLFormat {
+public abstract class SQLFormat {
     public void createSQL(String tableName, String tableObject) {
         SQLConnection sqlConnection = SurvivalInstance.INSTANCE.getConnection();
 
@@ -14,7 +14,7 @@ public class SQLFormat {
 
         try {
             Statement statement = connection.createStatement();
-            statement.executeUpdate("create table if not exists" + tableName + tableObject);
+            statement.executeUpdate("create table if not exists " + tableName + " " + tableObject);
         } catch (SQLException e) {
             e.printStackTrace();
         }
