@@ -1,11 +1,10 @@
 package xyz.n7mn.dev.survivalsystem.timer;
 
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
+import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
 import xyz.n7mn.dev.survivalsystem.playerdata.PlayerData;
-import xyz.n7mn.dev.survivalsystem.util.MessageUtil;
 import xyz.n7mn.dev.survivalsystem.util.PlayerDataUtil;
 
 public class Timer {
@@ -36,6 +35,8 @@ public class Timer {
 
             data.getVanishData().handle();
         });
+
+        GraveCache.handle();
     }
 
     public void stop() {

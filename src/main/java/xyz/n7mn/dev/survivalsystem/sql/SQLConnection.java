@@ -17,7 +17,7 @@ public class SQLConnection {
     long time;
 
     private Connection connection;
-    private GraveTable deathTable;
+    private GraveTable graveTable;
 
     public void init() {
         try {
@@ -30,7 +30,7 @@ public class SQLConnection {
             e.printStackTrace();
         }
 
-        deathTable = new GraveTable();
+        graveTable = new GraveTable();
     }
 
     public Connection getConnection() {

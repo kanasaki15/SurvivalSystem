@@ -9,6 +9,8 @@ useSQL: true
 
 SQLiteLocation: 'server.data'
 
+GraveTime: 360
+
 DiscordURL: 'https://discord.gg/MEYEPgN3T6'
 
 TipsList: [

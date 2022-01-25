@@ -2,40 +2,68 @@ package xyz.n7mn.dev.survivalsystem.data;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
+import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
+import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
+import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackSerializable;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Getter
 public class GraveInventoryData {
-    private Timestamp timestamp;
+    private final Timestamp timestamp;
     private final World world;
     private final String playerName;
     private final UUID UUID;
-    private final Location location;
-    private final List<ItemStack> itemStackList;
+    private final ItemStackSerializable itemStack;
     private final UUID armorStandUUID;
 
-    public GraveInventoryData(String world, String playerName, UUID uuid, Location location, List<ItemStack> itemStackList, UUID armorStandUUID) {
-        this.world = Bukkit.getWorld(world);
-        this.playerName = playerName;
-        this.UUID = uuid;
-        this.location = location;
-        this.itemStackList = itemStackList;
-        this.armorStandUUID = armorStandUUID;
-    }
+    private final List<ItemStack> itemStackList = new ArrayList<>();
 
-    public GraveInventoryData(Timestamp timestamp, String world, String playerName, UUID uuid, Location location, List<ItemStack> itemStackList, UUID armorStandUUID) {
+    private final boolean active;
+
+    private int time = SurvivalInstance.INSTANCE.getPlugin().getConfig().getInt("GraveTime");
+
+    public GraveInventoryData(Timestamp timestamp, String world, String playerName, UUID uuid, ItemStackSerializable itemStackSerializable, UUID armorStandUUID) {
         this.timestamp = timestamp;
         this.world = Bukkit.getWorld(world);
         this.playerName = playerName;
         this.UUID = uuid;
-        this.location = location;
-        this.itemStackList = itemStackList;
+        this.itemStack = itemStackSerializable;
         this.armorStandUUID = armorStandUUID;
+        this.active = true;
+    }
+
+    public GraveInventoryData(Timestamp timestamp, String world, String playerName, UUID uuid, ItemStackSerializable itemStackSerializable, UUID armorStandUUID, boolean active) {
+        this.timestamp = timestamp;
+        this.world = Bukkit.getWorld(world);
+        this.playerName = playerName;
+        this.UUID = uuid;
+        this.itemStack = itemStackSerializable;
+        this.armorStandUUID = armorStandUUID;
+        this.active = active;
+    }
+
+
+    //SerializableをItemStackに変換する
+    public List<ItemStack> translateSerializable() {
+        if (itemStackList.isEmpty() && !itemStack.getSerializable().isEmpty()) {
+            itemStack.getSerializable().forEach(serializable -> itemStackList.add(ItemStack.deserialize(serializable)));
+        }
+        return itemStackList;
+    }
+
+    public void remove() {
+        SurvivalInstance.INSTANCE.getConnection().getGraveTable().updateActive(this, false);
+
+        GraveCache.graveCache.remove(armorStandUUID);
+    }
+
+    public void setTime(int time) {
+        this.time = time;
     }
 }

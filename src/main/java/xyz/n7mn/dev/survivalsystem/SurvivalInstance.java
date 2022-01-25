@@ -4,9 +4,9 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
 import xyz.n7mn.dev.survivalsystem.sql.SQLConnection;
 import xyz.n7mn.dev.survivalsystem.timer.Timer;
-import xyz.n7mn.dev.survivalsystem.util.MessageManager;
 
 import java.util.Objects;
 
@@ -28,5 +28,7 @@ public enum SurvivalInstance {
 
         connection.setUseSQL(plugin.getConfig().getBoolean("useSQL"));
         connection.init();
+
+        GraveCache.init();
     }
 }

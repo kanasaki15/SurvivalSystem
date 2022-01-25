@@ -12,24 +12,28 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityInteractEvent;
+import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
+import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
+import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackSerializable;
 import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
 import xyz.n7mn.dev.survivalsystem.playerdata.PlayerData;
 import xyz.n7mn.dev.survivalsystem.sql.table.GraveTable;
+import xyz.n7mn.dev.survivalsystem.util.MessageManager;
 import xyz.n7mn.dev.survivalsystem.util.MessageUtil;
 import xyz.n7mn.dev.survivalsystem.util.PlayerDataUtil;
 import xyz.n7mn.dev.survivalsystem.util.VanishManager;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 public class EventListener implements Listener {
@@ -107,7 +111,7 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void PlayerDeathEvent(PlayerDeathEvent e) {
-        GraveTable deathTable = SurvivalInstance.INSTANCE.getConnection().getDeathTable();
+        GraveTable deathTable = SurvivalInstance.INSTANCE.getConnection().getGraveTable();
 
         Player player = e.getPlayer();
 
@@ -116,18 +120,60 @@ public class EventListener implements Listener {
         armorStand.setInvulnerable(true);
         armorStand.setSmall(true);
         armorStand.setAI(false);
+        armorStand.setCustomNameVisible(true);
+        armorStand.setCustomName(MessageUtil.replaceString("GRAVE-NAME", "%name%|" + e.getPlayer().getName(), "%time%|" + SurvivalInstance.INSTANCE.getPlugin().getConfig().getInt("GraveTime")));
         armorStand.addDisabledSlots(EquipmentSlot.HEAD); //4096
+        armorStand.addEquipmentLock(EquipmentSlot.CHEST, ArmorStand.LockType.ADDING_OR_CHANGING);
+        armorStand.addEquipmentLock(EquipmentSlot.LEGS, ArmorStand.LockType.ADDING_OR_CHANGING);
+        armorStand.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.ADDING_OR_CHANGING);
+
         armorStand.getEquipment().setHelmet(new ItemStack(Material.CHEST, 64));
 
-        GraveInventoryData data = new GraveInventoryData(Timestamp.valueOf(LocalDateTime.now()), player.getWorld().getName(), player.getName(), e.getPlayer().getUniqueId(), e.getEntity().getLocation(), e.getDrops(), armorStand.getUniqueId());
+        List<Map<String, Object>> list = new ArrayList<>();
+        e.getDrops().forEach(i -> list.add(i.serialize()));
+
+        GraveInventoryData data = new GraveInventoryData(Timestamp.valueOf(LocalDateTime.now()), player.getWorld().getName(), player.getName(), e.getPlayer().getUniqueId(), new ItemStackSerializable(list), armorStand.getUniqueId());
         deathTable.put(data);
+        GraveCache.graveCache.put(armorStand.getUniqueId(), data);
+
+        e.getPlayer().sendMessage(String.valueOf(e.getDrops()));
 
         e.setShouldDropExperience(false);
         e.getDrops().clear();
     }
 
     @EventHandler
-    public void onEntityInteractEvent(EntityInteractEvent e) {
+    public void onEntityInteractEvent(PlayerInteractEntityEvent e) {
+        if (e.getRightClicked().getType() == EntityType.ARMOR_STAND) {
+            GraveInventoryData data = GraveCache.graveCache.get(e.getRightClicked().getUniqueId());
+            if (data != null) {
+                e.setCancelled(true);
 
+                e.getPlayer().sendMessage(MessageManager.getString("CANNOT-USE"));
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerInteractAtEntityEvent(PlayerInteractAtEntityEvent e) {
+        if (e.getRightClicked().getType() == EntityType.ARMOR_STAND) {
+            GraveInventoryData data = GraveCache.graveCache.get(e.getRightClicked().getUniqueId());
+
+            //equals使わないと動かない気がする
+            if (data != null && data.getUUID().equals(e.getPlayer().getUniqueId())) {
+                e.getRightClicked().remove();
+
+                GraveCache.refundItem(e.getPlayer(), data);
+
+                data.remove();
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityPortalEvent(EntityPortalEvent e) {
+        //通常テレポートさせてはいけません！
+        if (GraveCache.graveCache.get(e.getEntity().getUniqueId()) != null)
+            e.setCancelled(true);
     }
 }

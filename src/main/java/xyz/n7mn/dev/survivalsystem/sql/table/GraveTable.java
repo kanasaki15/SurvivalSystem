@@ -1,40 +1,50 @@
 package xyz.n7mn.dev.survivalsystem.sql.table;
 
+import com.google.gson.Gson;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.entity.Player;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
+import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackSerializable;
 import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
 import xyz.n7mn.dev.survivalsystem.sql.SQLFormat;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Consumer;
 
+/**
+ * これが動く仕組み
+ * - ItemStackをSerializableに変換します
+ * - GsonでJSONに変換します
+ * - GsonでSerializableに戻します
+ * - ItemStackに変換します
+ */
 public class GraveTable extends SQLFormat {
+
     public GraveTable() {
         create();
     }
 
     public void create() {
-        createSQL("grave", "(date datetime2, world string, name string, uuid string, location text, itemstack text, armorStand uuid)");
+        createSQL("grave", "(date datetime2, world string, name string, uuid string, itemstack text, armorStand uuid, active boolean)");
     }
 
-    public void put(String world, String playerName, UUID uuid, Location location, List<ItemStack> itemStackList, UUID armorStand) {
+    public void put(String world, String playerName, UUID uuid, String itemGson, UUID armorStand) {
         Bukkit.getScheduler().runTaskAsynchronously(SurvivalInstance.INSTANCE.getPlugin(), () -> {
             try {
-                PreparedStatement preparedStatement = SurvivalInstance.INSTANCE.getConnection().getConnection().prepareStatement("insert into death values(?,?,?,?,?,?,?)");
+                PreparedStatement preparedStatement = SurvivalInstance.INSTANCE.getConnection().getConnection().prepareStatement("insert into grave values(?,?,?,?,?,?,?)");
 
                 preparedStatement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
                 preparedStatement.setString(2, world);
                 preparedStatement.setString(3, playerName);
                 preparedStatement.setString(4, uuid.toString());
-                preparedStatement.setObject(5, location);
-                preparedStatement.setObject(6, itemStackList);
-                preparedStatement.setString(7, armorStand.toString());
+                preparedStatement.setString(5, itemGson);
+                preparedStatement.setString(6, armorStand.toString());
+                preparedStatement.setBoolean(7, true);
 
                 preparedStatement.execute();
                 preparedStatement.close();
@@ -47,15 +57,15 @@ public class GraveTable extends SQLFormat {
     public void put(GraveInventoryData data) {
         Bukkit.getScheduler().runTaskAsynchronously(SurvivalInstance.INSTANCE.getPlugin(), () -> {
             try {
-                PreparedStatement preparedStatement = SurvivalInstance.INSTANCE.getConnection().getConnection().prepareStatement("insert into death values(?,?,?,?,?,?,?)");
+                PreparedStatement preparedStatement = SurvivalInstance.INSTANCE.getConnection().getConnection().prepareStatement("insert into grave values(?,?,?,?,?,?,?)");
 
                 preparedStatement.setTimestamp(1, data.getTimestamp());
                 preparedStatement.setString(2, data.getWorld().getName());
                 preparedStatement.setString(3, data.getPlayerName());
                 preparedStatement.setString(4, data.getUUID().toString());
-                preparedStatement.setObject(5, data.getLocation());
-                preparedStatement.setObject(6, data.getItemStackList());
-                preparedStatement.setString(7, data.getArmorStandUUID().toString());
+                preparedStatement.setString(5, new Gson().toJson(data.getItemStack()));
+                preparedStatement.setString(6, data.getArmorStandUUID().toString());
+                preparedStatement.setBoolean(7, true);
 
                 preparedStatement.execute();
                 preparedStatement.close();
@@ -65,7 +75,85 @@ public class GraveTable extends SQLFormat {
         });
     }
 
-    public void put(Timestamp timestamp) {
+    public void updateActive(GraveInventoryData data, boolean active) {
+        Bukkit.getScheduler().runTaskAsynchronously(SurvivalInstance.INSTANCE.getPlugin(), () -> {
+            try {
+                PreparedStatement preparedStatement = SurvivalInstance.INSTANCE.getConnection().getConnection().prepareStatement("update grave set active = ? where armorStand = ?");
+                preparedStatement.setBoolean(1, active);
+                preparedStatement.setString(2, data.getArmorStandUUID().toString());
 
+                preparedStatement.execute();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void get(Consumer<Map<UUID, GraveInventoryData>> consumer) {
+        Bukkit.getScheduler().runTaskAsynchronously(SurvivalInstance.INSTANCE.getPlugin(), () -> {
+            try {
+                Map<UUID, GraveInventoryData> hashMap = new HashMap<>();
+
+                ResultSet resultSet = SurvivalInstance.INSTANCE.getConnection().getConnection().prepareStatement("select * from grave").executeQuery();
+
+                while (resultSet.next()) {
+                    if (resultSet.getBoolean(7)) {
+                        //アーマースタンドのUUID
+                        UUID armorStand = UUID.fromString(resultSet.getString(6));
+
+                        hashMap.put(armorStand, new GraveInventoryData(resultSet.getTimestamp(1), resultSet.getString(2), resultSet.getString(3), UUID.fromString(resultSet.getString(4)), new Gson().fromJson(resultSet.getString(5), ItemStackSerializable.class), armorStand));
+                    }
+                }
+
+                resultSet.close();
+                consumer.accept(hashMap);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void getAll(Consumer<Map<UUID, GraveInventoryData>> consumer) {
+        Bukkit.getScheduler().runTaskAsynchronously(SurvivalInstance.INSTANCE.getPlugin(), () -> {
+            try {
+                Map<UUID, GraveInventoryData> hashMap = new HashMap<>();
+
+                ResultSet resultSet = SurvivalInstance.INSTANCE.getConnection().getConnection().prepareStatement("select * from grave").executeQuery();
+
+                while (resultSet.next()) {
+                    //アーマースタンドのUUID
+                    UUID armorStand = UUID.fromString(resultSet.getString(6));
+
+                    hashMap.put(armorStand, new GraveInventoryData(resultSet.getTimestamp(1), resultSet.getString(2), resultSet.getString(3), UUID.fromString(resultSet.getString(4)), new Gson().fromJson(resultSet.getString(5), ItemStackSerializable.class), armorStand, resultSet.getBoolean(7)));
+                }
+
+                resultSet.close();
+                consumer.accept(hashMap);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void getAll(UUID uuid, Consumer<List<GraveInventoryData>> consumer) {
+        Bukkit.getScheduler().runTaskAsynchronously(SurvivalInstance.INSTANCE.getPlugin(), () -> {
+            try {
+                List<GraveInventoryData> list = new ArrayList<>();
+
+                PreparedStatement preparedStatement = SurvivalInstance.INSTANCE.getConnection().getConnection().prepareStatement("select * from grave where uuid = ?");
+                preparedStatement.setString(1, uuid.toString());
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                while (resultSet.next()) {
+                    list.add(new GraveInventoryData(resultSet.getTimestamp(1), resultSet.getString(2), resultSet.getString(3), UUID.fromString(resultSet.getString(4)), new Gson().fromJson(resultSet.getString(5), ItemStackSerializable.class), UUID.fromString(resultSet.getString(6)), resultSet.getBoolean(7)));
+                }
+
+                resultSet.close();
+                consumer.accept(list);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

@@ -11,3 +11,10 @@ VANISH-ON: '%prefix% Vanish を&aON&eにしました'
 VANISH-OFF: '%prefix% Vanish を&cOFF&eにしました'
 
 VANISH-ACTIONBAR: '&a[!] あなたは現在Vanishしています /vanish で解除可能です'
+
+RELOAD-COMMAND: 'メッセージファイル / コンフィグファイルを再読込しました'
+
+CANNOT-USE: '&c使用できません！'
+
+GRAVE-NAME: '&a%name%のお墓撤去まで・・・ %time%秒'
+GRAVE-DROP-ITEM: '&cアイテムが一杯なので%item%を地面に捨てました・・・！'

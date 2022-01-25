@@ -43,9 +43,10 @@ public class MessageUtil {
         if (replace == null) return message;
 
         for (String str : replace) {
-            String[] split = str.split("\\|");
+            String[] split = str.split("\\|", 2);
 
             message = message.replaceAll(split[0], split[1]);
+
         }
         return message;
     }
@@ -60,7 +61,7 @@ public class MessageUtil {
 
         for (String message : list) {
             for (String str : replace) {
-                String[] split = str.split("\\|");
+                String[] split = str.split("\\|", 2);
 
                 message = translateAlternateColorCodes(message.replaceAll(split[0], split[1]));
             }
@@ -81,7 +82,7 @@ public class MessageUtil {
 
         for (String message : list) {
             for (String str : replace) {
-                String[] split = str.split("\\|");
+                String[] split = str.split("\\|", 2);
 
                 message = MessageUtil.translateAlternateColorCodes(message.replaceAll(split[0], split[1]));
             }
