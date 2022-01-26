@@ -19,7 +19,7 @@ public class VanishData {
 
     public void handle() {
         if (data.getVanishData().isVanished()) {
-            data.getPlayer().sendActionBar(Component.text(MessageUtil.replaceString("VANISH-ACTIONBAR")));
+            data.getPlayer().sendActionBar(Component.text(MessageUtil.replaceFromConfig("VANISH-ACTIONBAR")));
         }
     }
 }

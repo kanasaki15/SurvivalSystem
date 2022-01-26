@@ -139,7 +139,7 @@ public class EventListener implements Listener {
 
             final int time = SurvivalInstance.INSTANCE.getPlugin().getConfig().getInt("GraveTime");
 
-            armorStand.setCustomName(MessageUtil.replaceString("GRAVE-NAME", "%name%|" + e.getPlayer().getName(), "%time%|" + time));
+            armorStand.setCustomName(MessageUtil.replaceFromConfig("GRAVE-NAME", "%name%|" + e.getPlayer().getName(), "%time%|" + time));
             armorStand.getPersistentDataContainer().set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(),"delete_time"), PersistentDataType.INTEGER, time);
 
             List<Map<String, Object>> list = new ArrayList<>();
@@ -207,7 +207,7 @@ public class EventListener implements Listener {
                     final int chance = MessageManager.getInt("HONEY-RARE-ITEM-CHANCE");
 
                     if (new SecureRandom().nextInt(100) < chance) {
-                        ItemStack itemStack = ItemStackUtil.createItem(Material.HONEY_BOTTLE, MessageUtil.replaceString("HONEY-ITEM-NAME"), MessageUtil.replaceList("HONEY-ITEM-LORE", "%grade%|" + "Ⅰ"));
+                        ItemStack itemStack = ItemStackUtil.createItem(Material.HONEY_BOTTLE, MessageUtil.replaceFromConfig("HONEY-ITEM-NAME"), MessageUtil.replaceList("HONEY-ITEM-LORE", "%grade%|" + "Ⅰ"));
 
                         itemStack.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                         itemStack.addEnchant(Enchantment.MENDING, 1, true);
@@ -221,28 +221,7 @@ public class EventListener implements Listener {
                         MessageUtil.sendChat(e.getPlayer(), "HONEY-RARE-ITEM", "%chance%|" + chance);
 
                         ItemStackUtil.addItem(e.getPlayer(), itemStack);
-                    }   else {
-                        ItemStack itemStack = new ItemStack(Material.HONEY_BOTTLE);
-
-                        ItemStackUtil.addItem(e.getPlayer(), itemStack);
                     }
-
-                    //強制的に中身を '0'にします
-                    e.getClickedBlock().setBlockData(Bukkit.createBlockData(Material.BEE_NEST, e.getClickedBlock().getBlockData().getAsString().replaceAll("minecraft:bee_nest", "").replaceAll("[0-9]", "0")));
-
-                    if (e.getHand() == EquipmentSlot.HAND) {
-                        ItemStack itemStack = e.getPlayer().getInventory().getItemInMainHand();
-
-                        itemStack.setAmount(itemStack.getAmount() - 1);
-
-                        e.getPlayer().getInventory().setItemInMainHand(itemStack);
-                    } else {
-                        ItemStack itemStack = e.getPlayer().getInventory().getItemInOffHand();
-
-                        itemStack.setAmount(itemStack.getAmount() - 1);
-                    }
-
-                    e.setCancelled(true);
                 }
             }
         }
@@ -273,6 +252,8 @@ public class EventListener implements Listener {
                         e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 60, 1));
                     }
                 }
+
+                e.getPlayer().getAdvancementProgress(Bukkit.getAdvancement(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "great_honey"))).awardCriteria("grant");
             }
         }
     }

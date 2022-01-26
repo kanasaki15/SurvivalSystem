@@ -32,7 +32,7 @@ public class GraveCache {
                     final int time = entity.getPersistentDataContainer().get(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "delete_time"), PersistentDataType.INTEGER) - 1;
 
                     if (time > 0) {
-                        entity.setCustomName(MessageUtil.replaceString("GRAVE-NAME", "%name%|" + data.getPlayerName(), "%time%|" + time));
+                        entity.setCustomName(MessageUtil.replaceFromConfig("GRAVE-NAME", "%name%|" + data.getPlayerName(), "%time%|" + time));
 
                         entity.getPersistentDataContainer().set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(),"delete_time"), PersistentDataType.INTEGER, time);
                     } else {

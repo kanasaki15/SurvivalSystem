@@ -3,7 +3,9 @@ package xyz.n7mn.dev.survivalsystem;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
+import xyz.n7mn.dev.survivalsystem.advancement.Advancement;
 import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
 import xyz.n7mn.dev.survivalsystem.sql.SQLConnection;
 import xyz.n7mn.dev.survivalsystem.timer.Timer;
@@ -23,6 +25,8 @@ public enum SurvivalInstance {
 
     private final SQLConnection connection = new SQLConnection();
 
+    private final Advancement advancement = new Advancement();
+
     public void init() {
         timer.start();
 
@@ -30,5 +34,7 @@ public enum SurvivalInstance {
         connection.init();
 
         GraveCache.init();
+
+        advancement.init();
     }
 }

@@ -1,6 +1,5 @@
 package xyz.n7mn.dev.survivalsystem;
 
-import io.github.retrooper.packetevents.PacketEvents;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,8 +23,8 @@ public final class SurvivalSystem extends JavaPlugin {
 
         MessageManager.init();
 
-        PacketEvents.create(this);
-        PacketEvents.get().load();
+        //PacketEvents.create(this);
+        //PacketEvents.get().load();
 
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
@@ -60,7 +59,7 @@ public final class SurvivalSystem extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        PacketEvents.get().terminate();
+        //PacketEvents.get().terminate();
         SurvivalInstance.INSTANCE.getTimer().stop();
     }
 }

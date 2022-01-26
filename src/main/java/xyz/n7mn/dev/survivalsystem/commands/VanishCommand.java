@@ -25,14 +25,14 @@ public class VanishCommand implements CommandExecutor {
             if (hasData) {
                 VanishManager.remove(player);
 
-                player.sendMessage(Component.text(MessageUtil.replaceString("VANISH-OFF")));
+                player.sendMessage(Component.text(MessageUtil.replaceFromConfig("VANISH-OFF")));
                 MessageUtil.sendMessageBroadCast("JOIN-MESSAGE", "%player%|" + player.getName());
 
                 VanishManager.showPlayer(player);
             } else {
                 VanishManager.add(player);
 
-                player.sendMessage(Component.text(MessageUtil.replaceString("VANISH-ON")));
+                player.sendMessage(Component.text(MessageUtil.replaceFromConfig("VANISH-ON")));
                 MessageUtil.sendMessageBroadCast("QUIT-MESSAGE", "%player%|" + player.getName());
 
                 VanishManager.handleHide(player);

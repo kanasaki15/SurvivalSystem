@@ -14,7 +14,7 @@ public class ReloadCommand implements CommandExecutor {
         MessageManager.reload();
         SurvivalInstance.INSTANCE.getPlugin().reloadConfig();
 
-        sender.sendMessage(MessageUtil.replaceString("RELOAD-COMMAND"));
+        sender.sendMessage(MessageUtil.replaceFromConfig("RELOAD-COMMAND"));
 
         return true;
     }

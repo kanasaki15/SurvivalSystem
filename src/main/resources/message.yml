@@ -22,13 +22,13 @@ GRAVE-DROP-ITEM: '&cアイテムが一杯なので%item%を地面に捨てまし
 ## 特別にCHANCEをここに置いてあります
 ## - %grade% 1まで 多分今後も1
 ## - %chance% 確率を表示
-HONEY-RARE-ITEM: '&6レア！ あなたは上質なはちみつを手に入れた！ (%chance%%)'
+HONEY-RARE-ITEM: '&6ラッキー！あなたは運良く上質なはちみつをついでに手に入れた！ (%chance%%)'
 HONEY-ITEM-NAME: '&e上質なはちみつ'
 HONEY-ITEM-LORE:
   - '&eとても上質なはちみつ'
   - '&e飲むとなにか効果が付くようだ'
   - ''
   - '&7上質なはちみつ %grade%'
-HONEY-RARE-ITEM-CHANCE: 25
+HONEY-RARE-ITEM-CHANCE: 15
 
 ADVANCEMENT:

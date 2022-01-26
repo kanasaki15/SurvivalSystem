@@ -16,7 +16,7 @@ public class MessageUtil {
     }
 
     public void sendChat(Player player, String messageID, String... replace) {
-        String message = replaceString(messageID, replace).replaceAll("%player%", player.getName());
+        String message = replaceFromConfig(messageID, replace).replaceAll("%player%", player.getName());
 
         player.sendMessage(message);
     }
@@ -24,22 +24,26 @@ public class MessageUtil {
     public void sendChat(String messageID, String... replace) {
         for (Player player : Bukkit.getOnlinePlayers()) {
 
-            String message = replaceString(messageID, replace).replaceAll("%player%", player.getName());
+            String message = replaceFromConfig(messageID, replace).replaceAll("%player%", player.getName());
 
             player.sendMessage(message);
         }
     }
 
     public void sendMessageBroadCast(String messageID, String... replace) {
-        String message = replaceString(messageID, replace);
+        String message = replaceFromConfig(messageID, replace);
 
         Bukkit.broadcast(Component.text(message));
     }
 
-    public String replaceString(String messageID, String... replace) {
+    public String replaceFromConfig(String messageID, String... replace) {
 
         String message = MessageManager.getString(messageID);
 
+        return replaceMessage(message, replace);
+    }
+
+    public String replaceMessage(String message, String... replace) {
         if (replace == null) return message;
 
         for (String str : replace) {
