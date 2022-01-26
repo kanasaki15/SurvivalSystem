@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.n7mn.dev.survivalsystem.commands.DebugCommand;
 import xyz.n7mn.dev.survivalsystem.commands.GraveCommand;
 import xyz.n7mn.dev.survivalsystem.commands.ReloadCommand;
 import xyz.n7mn.dev.survivalsystem.commands.VanishCommand;
@@ -58,6 +59,7 @@ public final class SurvivalSystem extends JavaPlugin {
         getCommand("vanish").setExecutor(new VanishCommand());
         getCommand("reloadConfig").setExecutor(new ReloadCommand());
         getCommand("grave").setExecutor(new GraveCommand());
+        getCommand("debug").setExecutor(new DebugCommand());
 
         SurvivalInstance.INSTANCE.init();
     }

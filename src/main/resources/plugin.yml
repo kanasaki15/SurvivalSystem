@@ -44,3 +44,5 @@ commands:
     permission: 'sv.reload'
   grave:
     permission: 'sv.grave'
+  debug:
+    permission: 'sv.debug'

@@ -6,6 +6,8 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import xyz.n7mn.dev.survivalsystem.advancement.Advancement;
 import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
+import xyz.n7mn.dev.survivalsystem.customcraft.CustomCraft;
+import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftData;
 import xyz.n7mn.dev.survivalsystem.sql.SQLConnection;
 import xyz.n7mn.dev.survivalsystem.timer.Timer;
 
@@ -26,6 +28,8 @@ public enum SurvivalInstance {
 
     private final Advancement advancement = new Advancement();
 
+    private final CustomCraft customCraft = new CustomCraft();
+
     public void init() {
         timer.start();
 
@@ -35,5 +39,7 @@ public enum SurvivalInstance {
         GraveCache.init();
 
         advancement.init();
+
+        customCraft.init();
     }
 }
