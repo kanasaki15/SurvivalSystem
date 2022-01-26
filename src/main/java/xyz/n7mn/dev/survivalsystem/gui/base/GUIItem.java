@@ -1,4 +1,4 @@
-package xyz.n7mn.dev.survivalsystem.util.gui.base;
+package xyz.n7mn.dev.survivalsystem.gui.base;
 
 import org.bukkit.entity.Player;
 

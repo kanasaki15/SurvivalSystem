@@ -1,4 +1,4 @@
-package xyz.n7mn.dev.survivalsystem.util.gui;
+package xyz.n7mn.dev.survivalsystem.gui;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -16,9 +16,9 @@ import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
 import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 import xyz.n7mn.dev.survivalsystem.util.MessageUtil;
-import xyz.n7mn.dev.survivalsystem.util.gui.base.GUIData;
-import xyz.n7mn.dev.survivalsystem.util.gui.base.GUIHolder;
-import xyz.n7mn.dev.survivalsystem.util.gui.base.GUIItem;
+import xyz.n7mn.dev.survivalsystem.gui.base.GUIData;
+import xyz.n7mn.dev.survivalsystem.gui.base.GUIHolder;
+import xyz.n7mn.dev.survivalsystem.gui.base.GUIItem;
 
 import java.util.Objects;
 
@@ -26,7 +26,7 @@ import java.util.Objects;
  * https://www.spigotmc.org/threads/custom-inventoryholders.253149/
  * https://www.spigotmc.org/threads/inventory-system-tutorial-gui.258035/
  */
-public class GraveGui implements Listener {
+public class GraveGUI implements Listener {
 
     public int MAX_ALLOWED = 45;
 
@@ -58,7 +58,7 @@ public class GraveGui implements Listener {
             holder.setData(guiHolder.getData());
             holder.setBasePlayer(player);
 
-            Inventory inventory = Bukkit.createInventory(holder, 54, Component.text(ChatColor.YELLOW + "お墓" + holder.getGPlayer().getName() + "の履歴"));
+            Inventory inventory = Bukkit.createInventory(holder, 54, Component.text(ChatColor.YELLOW + "お墓" + holder.getTargetPlayer().getName() + "の履歴"));
 
             generatePage(inventory, page);
 

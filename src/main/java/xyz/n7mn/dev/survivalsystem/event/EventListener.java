@@ -1,11 +1,16 @@
 package xyz.n7mn.dev.survivalsystem.event;
 
+import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.World;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -16,19 +21,22 @@ import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
 import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackSerializable;
 import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
 import xyz.n7mn.dev.survivalsystem.playerdata.PlayerData;
 import xyz.n7mn.dev.survivalsystem.sql.table.GraveTable;
-import xyz.n7mn.dev.survivalsystem.util.MessageManager;
-import xyz.n7mn.dev.survivalsystem.util.MessageUtil;
-import xyz.n7mn.dev.survivalsystem.util.PlayerDataUtil;
-import xyz.n7mn.dev.survivalsystem.util.VanishManager;
+import xyz.n7mn.dev.survivalsystem.util.*;
 
+import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -111,33 +119,40 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void PlayerDeathEvent(PlayerDeathEvent e) {
-        GraveTable deathTable = SurvivalInstance.INSTANCE.getConnection().getGraveTable();
-
         Player player = e.getPlayer();
+        if (player.getWorld().getEnvironment() != World.Environment.THE_END) {
 
-        ArmorStand armorStand = (ArmorStand) player.getWorld().spawnEntity(e.getPlayer().getLocation(), EntityType.ARMOR_STAND, CreatureSpawnEvent.SpawnReason.CUSTOM);
-        armorStand.setInvisible(true);
-        armorStand.setInvulnerable(true);
-        armorStand.setSmall(true);
-        armorStand.setAI(false);
-        armorStand.setCustomNameVisible(true);
-        armorStand.setCustomName(MessageUtil.replaceString("GRAVE-NAME", "%name%|" + e.getPlayer().getName(), "%time%|" + SurvivalInstance.INSTANCE.getPlugin().getConfig().getInt("GraveTime")));
-        armorStand.addDisabledSlots(EquipmentSlot.HEAD); //4096
-        armorStand.addEquipmentLock(EquipmentSlot.CHEST, ArmorStand.LockType.ADDING_OR_CHANGING);
-        armorStand.addEquipmentLock(EquipmentSlot.LEGS, ArmorStand.LockType.ADDING_OR_CHANGING);
-        armorStand.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.ADDING_OR_CHANGING);
+            GraveTable deathTable = SurvivalInstance.INSTANCE.getConnection().getGraveTable();
 
-        armorStand.getEquipment().setHelmet(new ItemStack(Material.CHEST, 64));
+            ArmorStand armorStand = (ArmorStand) player.getWorld().spawnEntity(e.getPlayer().getLocation(), EntityType.ARMOR_STAND, CreatureSpawnEvent.SpawnReason.CUSTOM);
+            armorStand.setInvisible(true);
+            armorStand.setInvulnerable(true);
+            armorStand.setSmall(true);
+            armorStand.setAI(false);
+            armorStand.setCustomNameVisible(true);
+            armorStand.addDisabledSlots(EquipmentSlot.HEAD); //4096
+            armorStand.addEquipmentLock(EquipmentSlot.CHEST, ArmorStand.LockType.ADDING_OR_CHANGING);
+            armorStand.addEquipmentLock(EquipmentSlot.LEGS, ArmorStand.LockType.ADDING_OR_CHANGING);
+            armorStand.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.ADDING_OR_CHANGING);
 
-        List<Map<String, Object>> list = new ArrayList<>();
-        e.getDrops().forEach(i -> list.add(i.serialize()));
+            armorStand.getEquipment().setHelmet(new ItemStack(Material.CHEST, 64));
 
-        GraveInventoryData data = new GraveInventoryData(Timestamp.valueOf(LocalDateTime.now()), player.getWorld().getName(), player.getName(), e.getPlayer().getUniqueId(), new ItemStackSerializable(list), armorStand.getUniqueId());
-        deathTable.put(data);
-        GraveCache.graveCache.put(armorStand.getUniqueId(), data);
+            final int time = SurvivalInstance.INSTANCE.getPlugin().getConfig().getInt("GraveTime");
 
-        e.getPlayer().sendMessage(String.valueOf(e.getDrops()));
+            armorStand.setCustomName(MessageUtil.replaceString("GRAVE-NAME", "%name%|" + e.getPlayer().getName(), "%time%|" + time));
+            armorStand.getPersistentDataContainer().set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(),"delete_time"), PersistentDataType.INTEGER, time);
 
+            List<Map<String, Object>> list = new ArrayList<>();
+            e.getDrops().forEach(i -> list.add(i.serialize()));
+
+            GraveInventoryData data = new GraveInventoryData(Timestamp.valueOf(LocalDateTime.now()), player.getWorld().getName(), player.getName(), e.getPlayer().getUniqueId(), new ItemStackSerializable(list), armorStand.getUniqueId());
+            deathTable.put(data);
+            GraveCache.graveCache.put(armorStand.getUniqueId(), data);
+        } else {
+            e.setKeepInventory(true);
+        }
+
+        e.setKeepLevel(true);
         e.setShouldDropExperience(false);
         e.getDrops().clear();
     }
@@ -171,9 +186,94 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
+    public void onEntityAddToWorldEvent(EntityAddToWorldEvent e) {
+        if (e.getEntity().getType() == EntityType.ARMOR_STAND) {
+            SurvivalInstance.INSTANCE.getConnection().getGraveTable().get(e.getEntity().getUniqueId(), data -> {
+                if (data != null && GraveCache.graveCache.get(data.getArmorStandUUID()) == null) {
+                    GraveCache.graveCache.put(data.getArmorStandUUID(), data);
+                }
+            });
+        }
+    }
+
+    @EventHandler
+    public void onPlayerInteractEvent(PlayerInteractEvent e) {
+        if (e.getClickedBlock() != null && e.getClickedBlock().getType() == Material.BEE_NEST) {
+            if ((e.getHand() == EquipmentSlot.HAND && e.getPlayer().getInventory().getItemInMainHand().getType() == Material.GLASS_BOTTLE) || (e.getHand() == EquipmentSlot.OFF_HAND && e.getPlayer().getInventory().getItemInOffHand().getType() == Material.GLASS_BOTTLE)) {
+
+                final int type = Integer.parseInt(e.getClickedBlock().getBlockData().getAsString().replaceAll("[^0-9]", ""));
+
+                if (type == 5) {
+                    final int chance = MessageManager.getInt("HONEY-RARE-ITEM-CHANCE");
+
+                    if (new SecureRandom().nextInt(100) < chance) {
+                        ItemStack itemStack = ItemStackUtil.createItem(Material.HONEY_BOTTLE, MessageUtil.replaceString("HONEY-ITEM-NAME"), MessageUtil.replaceList("HONEY-ITEM-LORE", "%grade%|" + "Ⅰ"));
+
+                        itemStack.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                        itemStack.addEnchant(Enchantment.MENDING, 1, true);
+
+                        ItemMeta itemMeta = itemStack.getItemMeta();
+
+                        itemMeta.getPersistentDataContainer().set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "gq_honey"), PersistentDataType.INTEGER, 1);
+
+                        itemStack.setItemMeta(itemMeta);
+
+                        MessageUtil.sendChat(e.getPlayer(), "HONEY-RARE-ITEM", "%chance%|" + chance);
+
+                        ItemStackUtil.addItem(e.getPlayer(), itemStack);
+                    }   else {
+                        ItemStack itemStack = new ItemStack(Material.HONEY_BOTTLE);
+
+                        ItemStackUtil.addItem(e.getPlayer(), itemStack);
+                    }
+
+                    //強制的に中身を '0'にします
+                    e.getClickedBlock().setBlockData(Bukkit.createBlockData(Material.BEE_NEST, e.getClickedBlock().getBlockData().getAsString().replaceAll("minecraft:bee_nest", "").replaceAll("[0-9]", "0")));
+
+                    if (e.getHand() == EquipmentSlot.HAND) {
+                        ItemStack itemStack = e.getPlayer().getInventory().getItemInMainHand();
+
+                        itemStack.setAmount(itemStack.getAmount() - 1);
+
+                        e.getPlayer().getInventory().setItemInMainHand(itemStack);
+                    } else {
+                        ItemStack itemStack = e.getPlayer().getInventory().getItemInOffHand();
+
+                        itemStack.setAmount(itemStack.getAmount() - 1);
+                    }
+
+                    e.setCancelled(true);
+                }
+            }
+        }
+    }
+
+    @EventHandler
     public void onEntityPortalEvent(EntityPortalEvent e) {
         //通常テレポートさせてはいけません！
         if (GraveCache.graveCache.get(e.getEntity().getUniqueId()) != null)
             e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onPlayerItemConsumeEvent(PlayerItemConsumeEvent e) {
+        if (e.getItem().getType() == Material.HONEY_BOTTLE) {
+
+            NamespacedKey namespacedKey = new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "gq_honey");
+
+            if (e.getItem().getPersistentDataContainer().has(namespacedKey)) {
+                switch (e.getItem().getPersistentDataContainer().get(namespacedKey, PersistentDataType.INTEGER)) {
+                    case 1: {
+                        e.getPlayer().setFoodLevel(e.getPlayer().getFoodLevel() + 3);
+
+                        e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 20 * 300, 1));
+                        e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 20 * 300, 1));
+                        e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 60, 1));
+                        e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 20 * 60, 1));
+                        e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 60, 1));
+                    }
+                }
+            }
+        }
     }
 }

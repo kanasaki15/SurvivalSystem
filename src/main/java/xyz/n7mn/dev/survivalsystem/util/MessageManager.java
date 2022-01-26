@@ -18,6 +18,10 @@ public class MessageManager {
         return messageConfig.getBoolean(key);
     }
 
+    public static int getInt(String key) {
+        return messageConfig.getInt(key);
+    }
+
     public static String getString(String key) {
         return MessageUtil.translateAlternateColorCodes(messageConfig.getString(key).replaceAll("%prefix%", prefix));
     }

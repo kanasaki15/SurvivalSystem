@@ -26,8 +26,6 @@ public class GraveInventoryData {
 
     private final boolean active;
 
-    private int time = SurvivalInstance.INSTANCE.getPlugin().getConfig().getInt("GraveTime");
-
     public GraveInventoryData(Timestamp timestamp, String world, String playerName, UUID uuid, ItemStackSerializable itemStackSerializable, UUID armorStandUUID) {
         this.timestamp = timestamp;
         this.world = Bukkit.getWorld(world);
@@ -57,13 +55,13 @@ public class GraveInventoryData {
         return itemStackList;
     }
 
-    public void remove() {
-        SurvivalInstance.INSTANCE.getConnection().getGraveTable().updateActive(this, false);
+    public void remove(final boolean active) {
+        SurvivalInstance.INSTANCE.getConnection().getGraveTable().updateActive(this, active);
 
-        GraveCache.graveCache.remove(armorStandUUID);
+        GraveCache.graveCache.keySet().removeIf(uuid -> uuid.equals(armorStandUUID));
     }
 
-    public void setTime(int time) {
-        this.time = time;
+    public void remove() {
+        remove(true);
     }
 }

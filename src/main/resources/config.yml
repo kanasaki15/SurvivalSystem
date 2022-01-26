@@ -10,6 +10,7 @@ useSQL: true
 SQLiteLocation: 'server.data'
 
 GraveTime: 360
+GraveCacheWarning: true
 
 DiscordURL: 'https://discord.gg/MEYEPgN3T6'
 

@@ -1,9 +1,7 @@
-package xyz.n7mn.dev.survivalsystem.util.gui.base;
+package xyz.n7mn.dev.survivalsystem.gui.base;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -43,7 +41,7 @@ public class GUIHolder implements InventoryHolder {
         hashMap.put(chestID, guiItem);
     }
 
-    public GUIData getGPlayer() {
+    public GUIData getTargetPlayer() {
         return guiData;
     }
 }

@@ -2,7 +2,6 @@ package xyz.n7mn.dev.survivalsystem.sql.table;
 
 import com.google.gson.Gson;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackSerializable;
 import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
@@ -30,7 +29,7 @@ public class GraveTable extends SQLFormat {
     }
 
     public void create() {
-        createSQL("grave", "(date datetime2, world string, name string, uuid string, itemstack text, armorStand uuid, active boolean)");
+        createSQL("grave", "(date datetime2, world string, name string, uuid string, itemstack text, armorStand string, active boolean)");
     }
 
     public void put(String world, String playerName, UUID uuid, String itemGson, UUID armorStand) {
@@ -86,6 +85,34 @@ public class GraveTable extends SQLFormat {
                 preparedStatement.close();
             } catch (SQLException e) {
                 e.printStackTrace();
+            }
+        });
+    }
+
+    public void get(UUID uuid, Consumer<GraveInventoryData> consumer) {
+        Bukkit.getScheduler().runTaskAsynchronously(SurvivalInstance.INSTANCE.getPlugin(), () -> {
+            PreparedStatement preparedStatement = null;
+            try {
+
+                preparedStatement = SurvivalInstance.INSTANCE.getConnection().getConnection().prepareStatement("select * from grave where armorStand = ?");
+                preparedStatement.setString(1, uuid.toString());
+
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+
+                if (resultSet.next() && resultSet.getBoolean(7)) {
+                    consumer.accept(new GraveInventoryData(resultSet.getTimestamp(1), resultSet.getString(2), resultSet.getString(3), UUID.fromString(resultSet.getString(4)), new Gson().fromJson(resultSet.getString(5), ItemStackSerializable.class), UUID.fromString(resultSet.getString(6))));
+                } else {
+                    consumer.accept(null);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (preparedStatement != null) preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

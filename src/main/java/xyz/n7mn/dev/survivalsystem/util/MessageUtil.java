@@ -86,7 +86,6 @@ public class MessageUtil {
 
                 message = MessageUtil.translateAlternateColorCodes(message.replaceAll(split[0], split[1]));
             }
-
             temp.add(message);
         }
 

@@ -8,7 +8,7 @@ import java.util.*;
 
 @UtilityClass
 public class PlayerDataUtil {
-    private Map<UUID, PlayerData> playerData = new HashMap<>();
+    private final Map<UUID, PlayerData> playerData = new HashMap<>();
 
     public PlayerData getPlayerData(Player player) {
         return playerData.get(player.getUniqueId());

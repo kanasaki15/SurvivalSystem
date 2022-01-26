@@ -3,10 +3,12 @@ package xyz.n7mn.dev.survivalsystem.cache;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.persistence.PersistentDataType;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
 import xyz.n7mn.dev.survivalsystem.util.MessageUtil;
@@ -20,25 +22,32 @@ public class GraveCache {
     public static Map<UUID, GraveInventoryData> graveCache = new HashMap<>();
 
     public void handle() {
-        Bukkit.getScheduler().runTask(SurvivalInstance.INSTANCE.getPlugin(), () -> {
-            for (GraveInventoryData data : graveCache.values()) {
-                Entity entity = data.getWorld().getEntity(data.getArmorStandUUID());
-                if (entity != null) {
-                    final int time = data.getTime();
+        for (GraveInventoryData data : graveCache.values()) {
+            Bukkit.getScheduler().runTask(SurvivalInstance.INSTANCE.getPlugin(), () -> {
 
-                    data.setTime(time - 1);
+                Entity entity = data.getWorld().getEntity(data.getArmorStandUUID());
+
+                if (entity != null) {
+
+                    final int time = entity.getPersistentDataContainer().get(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "delete_time"), PersistentDataType.INTEGER) - 1;
 
                     if (time > 0) {
                         entity.setCustomName(MessageUtil.replaceString("GRAVE-NAME", "%name%|" + data.getPlayerName(), "%time%|" + time));
+
+                        entity.getPersistentDataContainer().set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(),"delete_time"), PersistentDataType.INTEGER, time);
                     } else {
                         data.translateSerializable().forEach(itemStack -> ((Item) entity.getWorld().spawnEntity(entity.getLocation(), EntityType.DROPPED_ITEM)).setItemStack(itemStack));
-                        data.remove();
-
                         entity.remove();
+
+                        data.remove();
                     }
+                } else {
+                    data.remove(true);
+
+                    if (SurvivalInstance.INSTANCE.getPlugin().getConfig().getBoolean("GraveCacheWarning")) Bukkit.getLogger().warning("[お墓] キャッシュにいらないデータが入っていました");
                 }
-            }
-        });
+            });
+        }
     }
 
     public void refundItem(Player player, GraveInventoryData data) {
