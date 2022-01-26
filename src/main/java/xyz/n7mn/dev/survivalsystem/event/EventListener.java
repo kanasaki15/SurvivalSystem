@@ -198,7 +198,7 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent e) {
-        if (e.getClickedBlock() != null && e.getClickedBlock().getType() == Material.BEE_NEST) {
+        if (e.getClickedBlock() != null && (e.getClickedBlock().getType() == Material.BEE_NEST || e.getClickedBlock().getType() == Material.BEEHIVE)) {
             if ((e.getHand() == EquipmentSlot.HAND && e.getPlayer().getInventory().getItemInMainHand().getType() == Material.GLASS_BOTTLE) || (e.getHand() == EquipmentSlot.OFF_HAND && e.getPlayer().getInventory().getItemInOffHand().getType() == Material.GLASS_BOTTLE)) {
 
                 final int type = Integer.parseInt(e.getClickedBlock().getBlockData().getAsString().replaceAll("[^0-9]", ""));
@@ -256,5 +256,10 @@ public class EventListener implements Listener {
                 e.getPlayer().getAdvancementProgress(Bukkit.getAdvancement(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "great_honey"))).awardCriteria("grant");
             }
         }
+    }
+
+    @EventHandler
+    public void advancement(PlayerAdvancementDoneEvent e) {
+        SurvivalInstance.INSTANCE.getAdvancement().getRewardManager().execute(e.getPlayer(), e.getAdvancement().getKey().getKey());
     }
 }

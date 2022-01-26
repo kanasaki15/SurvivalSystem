@@ -6,9 +6,14 @@ import net.roxeez.advancement.Context;
 import net.roxeez.advancement.display.BackgroundType;
 import net.roxeez.advancement.trigger.TriggerType;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import xyz.n7mn.dev.survivalsystem.advancement.base.AdvancementReward;
+import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 
-public class EnterServerAdvancement implements AdvancementCreator {
+public class EnterServerAdvancement implements AdvancementCreator, AdvancementReward {
     public static final String ID = "enter_server";
 
     @Override
@@ -27,5 +32,16 @@ public class EnterServerAdvancement implements AdvancementCreator {
         });
 
         return advancement;
+    }
+
+
+    @Override
+    public void reward(Player player) {
+        ItemStack woodenAxe = new ItemStack(Material.WOODEN_AXE);
+        ItemStack woodenSword = new ItemStack(Material.WOODEN_SWORD);
+        ItemStack woodenShovel = new ItemStack(Material.WOODEN_SHOVEL);
+        ItemStack woodenPickaxe = new ItemStack(Material.WOODEN_PICKAXE);
+
+        ItemStackUtil.addItem(player, woodenSword, woodenPickaxe, woodenAxe, woodenShovel);
     }
 }

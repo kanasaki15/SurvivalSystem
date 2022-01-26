@@ -32,11 +32,13 @@ public class ItemStackUtil {
         return item;
     }
 
-    public void addItem(Player player, ItemStack itemStack) {
-        if (player.getInventory().firstEmpty() != -1) {
-            player.getInventory().addItem(itemStack);
-        } else {
-            ((Item) player.getWorld().spawnEntity(player.getLocation(), EntityType.DROPPED_ITEM)).setItemStack(itemStack);
+    public void addItem(Player player, ItemStack... itemStack) {
+        for (ItemStack item : itemStack) {
+            if (player.getInventory().firstEmpty() != -1) {
+                player.getInventory().addItem(item);
+            } else {
+                ((Item) player.getWorld().spawnEntity(player.getLocation(), EntityType.DROPPED_ITEM)).setItemStack(item);
+            }
         }
     }
 }
