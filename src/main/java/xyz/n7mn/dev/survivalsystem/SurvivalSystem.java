@@ -1,5 +1,6 @@
 package xyz.n7mn.dev.survivalsystem;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -9,7 +10,8 @@ import xyz.n7mn.dev.survivalsystem.commands.ReloadCommand;
 import xyz.n7mn.dev.survivalsystem.commands.VanishCommand;
 import xyz.n7mn.dev.survivalsystem.event.EventListener;
 import xyz.n7mn.dev.survivalsystem.util.MessageManager;
-import xyz.n7mn.dev.survivalsystem.gui.GraveGUI;
+import xyz.n7mn.dev.survivalsystem.gui.grave.GraveGUI;
+import xyz.n7mn.dev.survivalsystem.util.PlayerDataUtil;
 
 import java.security.SecureRandom;
 import java.util.List;
@@ -42,6 +44,10 @@ public final class SurvivalSystem extends JavaPlugin {
                 }
             }
         };
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            PlayerDataUtil.putPlayerData(player);
+        }
 
         long i = 20 * 60;
         runnable.runTaskTimerAsynchronously(this, 0L, i);

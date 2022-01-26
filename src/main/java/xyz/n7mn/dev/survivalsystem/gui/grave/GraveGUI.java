@@ -1,4 +1,4 @@
-package xyz.n7mn.dev.survivalsystem.gui;
+package xyz.n7mn.dev.survivalsystem.gui.grave;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -17,7 +17,6 @@ import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 import xyz.n7mn.dev.survivalsystem.util.MessageUtil;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIData;
-import xyz.n7mn.dev.survivalsystem.gui.base.GUIHolder;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIItem;
 
 import java.util.Objects;
@@ -31,7 +30,7 @@ public class GraveGUI implements Listener {
     public int MAX_ALLOWED = 45;
 
     public Inventory createPage(GUIData guiData, int page) {
-        GUIHolder guiHolder = new GUIHolder(1);
+        GraveHolder guiHolder = new GraveHolder(1);
 
         guiHolder.setGuiData(guiData);
 
@@ -48,11 +47,11 @@ public class GraveGUI implements Listener {
         return inventory;
     }
 
-    public void nextPage(Player player, GUIHolder guiHolder, int page) {
+    public void nextPage(Player player, GraveHolder guiHolder, int page) {
         if (1 > page) {
             MessageUtil.sendChat(player, "CANNOT-USE");
         } else {
-            GUIHolder holder = new GUIHolder(1);
+            GraveHolder holder = new GraveHolder(1);
 
             holder.setGuiData(guiHolder.getGuiData());
             holder.setData(guiHolder.getData());
@@ -69,7 +68,7 @@ public class GraveGUI implements Listener {
     public void generatePage(Inventory inventory, int page) {
         int MIN = MAX_ALLOWED * (page - 1);
 
-        GUIHolder guiHolder = (GUIHolder) Objects.requireNonNull(inventory.getHolder());
+        GraveHolder guiHolder = (GraveHolder) Objects.requireNonNull(inventory.getHolder());
 
         for (int i = MIN; i < MAX_ALLOWED * page; i++) {
             try {
@@ -105,7 +104,7 @@ public class GraveGUI implements Listener {
 
     @EventHandler
     public void onInventoryClickEvent(final InventoryClickEvent e) {
-        if (e.getInventory().getHolder() != null && e.getInventory().getHolder() instanceof GUIHolder guiHolder) {
+        if (e.getInventory().getHolder() != null && e.getInventory().getHolder() instanceof GraveHolder guiHolder) {
             e.setCancelled(true);
 
             GUIItem guiItem = guiHolder.getHashMap().get(e.getRawSlot());
@@ -117,13 +116,13 @@ public class GraveGUI implements Listener {
 
     @EventHandler
     public void onInventoryDragEvent(final InventoryDragEvent e) {
-        if (e.getInventory().getHolder() != null && e.getInventory().getHolder() instanceof GUIHolder) {
+        if (e.getInventory().getHolder() != null && e.getInventory().getHolder() instanceof GraveHolder) {
             e.setCancelled(true);
         }
     }
 
-    public void createGravePreview(Player player, GUIHolder guiHolder, GraveInventoryData data) {
-        GUIHolder holder = new GUIHolder(2);
+    public void createGravePreview(Player player, GraveHolder guiHolder, GraveInventoryData data) {
+        GraveHolder holder = new GraveHolder(2);
 
         Inventory inventory = Bukkit.createInventory(holder, 54, Component.text(ChatColor.YELLOW + "お墓" + player.getName() + "の履歴"));
         for (ItemStack itemStack : data.translateSerializable()) {

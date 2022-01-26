@@ -1,4 +1,4 @@
-package xyz.n7mn.dev.survivalsystem.gui.base;
+package xyz.n7mn.dev.survivalsystem.gui.grave;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,13 +7,15 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
 import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
+import xyz.n7mn.dev.survivalsystem.gui.base.GUIData;
+import xyz.n7mn.dev.survivalsystem.gui.base.GUIItem;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Getter @Setter
-public class GUIHolder implements InventoryHolder {
+public class GraveHolder implements InventoryHolder {
 
     private List<GraveInventoryData> data;
     private int commandID;
@@ -22,13 +24,13 @@ public class GUIHolder implements InventoryHolder {
 
     private Player basePlayer;
 
-    public GUIHolder(Player player, List<GraveInventoryData> data, int commandID) {
+    public GraveHolder(Player player, List<GraveInventoryData> data, int commandID) {
         this.data = data;
         this.commandID = commandID;
     }
 
     //空
-    public GUIHolder(int commandID) {
+    public GraveHolder(int commandID) {
         this.commandID = commandID;
     }
 

@@ -6,7 +6,6 @@ import net.roxeez.advancement.Context;
 import net.roxeez.advancement.display.BackgroundType;
 import net.roxeez.advancement.trigger.TriggerType;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;

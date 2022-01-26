@@ -259,7 +259,7 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void advancement(PlayerAdvancementDoneEvent e) {
+    public void onPlayerAdvancementDoneEvent(PlayerAdvancementDoneEvent e) {
         SurvivalInstance.INSTANCE.getAdvancement().getRewardManager().execute(e.getPlayer(), e.getAdvancement().getKey().getKey());
     }
 }

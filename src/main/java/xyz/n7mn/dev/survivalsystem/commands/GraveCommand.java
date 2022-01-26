@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.n7mn.dev.survivalsystem.gui.GraveGUI;
+import xyz.n7mn.dev.survivalsystem.gui.grave.GraveGUI;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIData;
 import xyz.n7mn.dev.survivalsystem.util.MessageManager;
 
