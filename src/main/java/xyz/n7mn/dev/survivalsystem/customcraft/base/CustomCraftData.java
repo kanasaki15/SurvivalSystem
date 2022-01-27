@@ -1,7 +1,6 @@
 package xyz.n7mn.dev.survivalsystem.customcraft.base;
 
 import lombok.Getter;
-import xyz.n7mn.dev.survivalsystem.customcraft.CustomCraft;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
 
@@ -9,7 +8,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 @Getter
 public class CustomCraftData {

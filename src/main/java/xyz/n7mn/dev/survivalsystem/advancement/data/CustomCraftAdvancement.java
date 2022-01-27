@@ -19,7 +19,7 @@ public class CustomCraftAdvancement implements AdvancementCreator {
 
         advancement.setDisplay(show -> {
             show.setTitle("カスタム作業台を開く");
-            show.setDescription("作業台にシフトで開けるようだ・・・・");
+            show.setDescription("作業台にシフトで開く");
             show.setIcon(Material.CRAFTING_TABLE);
         });
 

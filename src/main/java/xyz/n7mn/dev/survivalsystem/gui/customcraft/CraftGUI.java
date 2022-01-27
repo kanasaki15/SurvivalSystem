@@ -2,7 +2,6 @@ package xyz.n7mn.dev.survivalsystem.gui.customcraft;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,6 +13,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftAbstract;
+import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIItem;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 
@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CraftGUI implements Listener {
-    private final ItemStack invalid = ItemStackUtil.createItem(Material.RED_STAINED_GLASS_PANE, ChatColor.RED + "不明！ レシピ通りに置いてください");
+
 
     public Inventory createGUI() {
         CraftHolder craftHolder = new CraftHolder(1);
@@ -43,26 +43,54 @@ public class CraftGUI implements Listener {
                 craftHolder.addListener(i, player -> Bukkit.getScheduler().runTask(SurvivalInstance.INSTANCE.getPlugin(), () -> checkUpdates(craftHolder)));
             }
         }
-        inventory.setItem(24, invalid);
+        inventory.setItem(24, ItemDataUtils.INVALID_ITEM.getItemStack());
     }
 
     public void checkUpdates(CraftHolder craftHolder) {
         for (CustomCraftAbstract data : SurvivalInstance.INSTANCE.getCustomCraft().getCraftAbstractHashMap().values()) {
             if (data.create().equals(craftHolder.translateCustomCraftData())) {
-                Bukkit.broadcastMessage("a");
+                craftHolder.getInventory().setItem(24, data.getItem().getItemStack());
+                return;
             }
         }
+        craftHolder.getInventory().setItem(24, ItemDataUtils.INVALID_ITEM.getItemStack());
+    }
+
+    public boolean craft(CraftHolder craftHolder, ItemStack cursor) {
+        if (cursor != null && cursor.getType() == Material.AIR) {
+            for (CustomCraftAbstract data : SurvivalInstance.INSTANCE.getCustomCraft().getCraftAbstractHashMap().values()) {
+                if (data.create().equals(craftHolder.translateCustomCraftData())) {
+
+                    List<Integer> deny = denyList();
+
+                    for (int i = 0; i < 9; i++) {
+                        ItemStack itemStack = craftHolder.getInventory().getItem(deny.get(i));
+
+                        if (itemStack != null && itemStack.getType() != Material.AIR) {
+                            itemStack.setAmount(itemStack.getAmount() - data.getUsesItem().getItemData().get(i).getItemStack().getAmount());
+                        }
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @EventHandler
     public void onInventoryClickEvent(final InventoryClickEvent e) {
         if (e.getClickedInventory() == e.getView().getTopInventory() && e.getView().getTopInventory().getHolder() instanceof CraftHolder craftHolder) {
-            if (!deny(e.getRawSlot())) e.setCancelled(true);
+            if (!deny(e.getRawSlot()) && e.getRawSlot() != 24) e.setCancelled(true);
             else craftHolder.setInventory(e.getClickedInventory());
 
             GUIItem guiItem = craftHolder.getHashMap().get(e.getRawSlot());
             if (guiItem != null) {
                 guiItem.execute((Player) e.getWhoClicked());
+            }
+
+            if (e.getRawSlot() == 24) {
+                if (!craft(craftHolder, e.getCursor())) e.setCancelled(true);
+                else Bukkit.getScheduler().runTask(SurvivalInstance.INSTANCE.getPlugin(), () -> checkUpdates(craftHolder));
             }
         }
     }
@@ -78,6 +106,11 @@ public class CraftGUI implements Listener {
                     guiItem.execute((Player) e.getWhoClicked());
 
                     break;
+                }
+
+                if (slot == 24) {
+                    if (!craft(craftHolder, e.getCursor())) e.setCancelled(true);
+                    else checkUpdates(craftHolder);
                 }
             }
         }
@@ -98,6 +131,7 @@ public class CraftGUI implements Listener {
         return (rawSlot >= 10 && rawSlot <= 12) ||
                 (rawSlot >= 19 && rawSlot <= 21) ||
                 (rawSlot >= 28 && rawSlot <= 30);
+
     }
 
     public List<Integer> denyList() {

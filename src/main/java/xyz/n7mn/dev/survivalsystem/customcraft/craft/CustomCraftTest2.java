@@ -12,6 +12,11 @@ public class CustomCraftTest2 extends CustomCraftAbstract {
     }
 
     @Override
+    public CustomCraftData getUsesItem() {
+        return create();
+    }
+
+    @Override
     public CustomCraftData create() {
 
         CustomCraftData data = new CustomCraftData();

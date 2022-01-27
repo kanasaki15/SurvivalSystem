@@ -11,7 +11,12 @@ public class CustomCraftTest1 extends CustomCraftAbstract {
 
     @Override
     public ItemData getItem() {
-        return null;
+        return ItemDataUtils.DIRT_HELMET;
+    }
+
+    @Override
+    public CustomCraftData getUsesItem() {
+        return create();
     }
 
     @Override
