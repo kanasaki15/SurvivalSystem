@@ -10,6 +10,7 @@ import xyz.n7mn.dev.survivalsystem.commands.GraveCommand;
 import xyz.n7mn.dev.survivalsystem.commands.ReloadCommand;
 import xyz.n7mn.dev.survivalsystem.commands.VanishCommand;
 import xyz.n7mn.dev.survivalsystem.event.EventListener;
+import xyz.n7mn.dev.survivalsystem.gui.customcraft.CraftGUI;
 import xyz.n7mn.dev.survivalsystem.util.MessageManager;
 import xyz.n7mn.dev.survivalsystem.gui.grave.GraveGUI;
 import xyz.n7mn.dev.survivalsystem.util.PlayerDataUtil;
@@ -55,6 +56,7 @@ public final class SurvivalSystem extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         getServer().getPluginManager().registerEvents(new GraveGUI(), this);
+        getServer().getPluginManager().registerEvents(new CraftGUI(), this);
 
         getCommand("vanish").setExecutor(new VanishCommand());
         getCommand("reloadConfig").setExecutor(new ReloadCommand());

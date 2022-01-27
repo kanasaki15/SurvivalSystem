@@ -32,6 +32,7 @@ import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
 import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackSerializable;
 import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
+import xyz.n7mn.dev.survivalsystem.gui.customcraft.CraftGUI;
 import xyz.n7mn.dev.survivalsystem.playerdata.PlayerData;
 import xyz.n7mn.dev.survivalsystem.sql.table.GraveTable;
 import xyz.n7mn.dev.survivalsystem.util.*;
@@ -198,31 +199,40 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent e) {
-        if (e.getClickedBlock() != null && (e.getClickedBlock().getType() == Material.BEE_NEST || e.getClickedBlock().getType() == Material.BEEHIVE)) {
-            if ((e.getHand() == EquipmentSlot.HAND && e.getPlayer().getInventory().getItemInMainHand().getType() == Material.GLASS_BOTTLE) || (e.getHand() == EquipmentSlot.OFF_HAND && e.getPlayer().getInventory().getItemInOffHand().getType() == Material.GLASS_BOTTLE)) {
+        if (e.getClickedBlock() != null) {
+            if ((e.getClickedBlock().getType() == Material.BEE_NEST || e.getClickedBlock().getType() == Material.BEEHIVE)) {
+                if ((e.getHand() == EquipmentSlot.HAND && e.getPlayer().getInventory().getItemInMainHand().getType() == Material.GLASS_BOTTLE) || (e.getHand() == EquipmentSlot.OFF_HAND && e.getPlayer().getInventory().getItemInOffHand().getType() == Material.GLASS_BOTTLE)) {
 
-                final int type = Integer.parseInt(e.getClickedBlock().getBlockData().getAsString().replaceAll("[^0-9]", ""));
+                    final int type = Integer.parseInt(e.getClickedBlock().getBlockData().getAsString().replaceAll("[^0-9]", ""));
 
-                if (type == 5) {
-                    final int chance = MessageManager.getInt("HONEY-RARE-ITEM-CHANCE");
+                    if (type == 5) {
+                        final int chance = MessageManager.getInt("HONEY-RARE-ITEM-CHANCE");
 
-                    if (new SecureRandom().nextInt(100) < chance) {
-                        ItemStack itemStack = ItemStackUtil.createItem(Material.HONEY_BOTTLE, MessageUtil.replaceFromConfig("HONEY-ITEM-NAME"), MessageUtil.replaceList("HONEY-ITEM-LORE", "%grade%|" + "Ⅰ"));
+                        if (new SecureRandom().nextInt(100) < chance) {
+                            ItemStack itemStack = ItemStackUtil.createItem(Material.HONEY_BOTTLE, MessageUtil.replaceFromConfig("HONEY-ITEM-NAME"), MessageUtil.replaceList("HONEY-ITEM-LORE", "%grade%|" + "Ⅰ"));
 
-                        itemStack.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                        itemStack.addEnchant(Enchantment.MENDING, 1, true);
+                            itemStack.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                            itemStack.addEnchant(Enchantment.MENDING, 1, true);
 
-                        ItemMeta itemMeta = itemStack.getItemMeta();
+                            ItemMeta itemMeta = itemStack.getItemMeta();
 
-                        itemMeta.getPersistentDataContainer().set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "gq_honey"), PersistentDataType.INTEGER, 1);
+                            itemMeta.getPersistentDataContainer().set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "gq_honey"), PersistentDataType.INTEGER, 1);
 
-                        itemStack.setItemMeta(itemMeta);
+                            itemStack.setItemMeta(itemMeta);
 
-                        MessageUtil.sendChat(e.getPlayer(), "HONEY-RARE-ITEM", "%chance%|" + chance);
+                            MessageUtil.sendChat(e.getPlayer(), "HONEY-RARE-ITEM", "%chance%|" + chance);
 
-                        ItemStackUtil.addItem(e.getPlayer(), itemStack);
+                            ItemStackUtil.addItem(e.getPlayer(), itemStack);
+                        }
                     }
                 }
+            }
+            if (e.getClickedBlock().getType() == Material.CRAFTING_TABLE && e.getPlayer().isSneaking()) {
+                e.getPlayer().openInventory(new CraftGUI().createGUI());
+
+                e.getPlayer().getAdvancementProgress(Bukkit.getAdvancement(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "custom_craft"))).awardCriteria("grant");
+
+                e.setCancelled(true);
             }
         }
     }

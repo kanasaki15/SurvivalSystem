@@ -5,6 +5,7 @@ import net.roxeez.advancement.AdvancementManager;
 import org.bukkit.Bukkit;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.advancement.base.AdvancementRewardManager;
+import xyz.n7mn.dev.survivalsystem.advancement.data.CustomCraftAdvancement;
 import xyz.n7mn.dev.survivalsystem.advancement.data.EnterServerAdvancement;
 import xyz.n7mn.dev.survivalsystem.advancement.data.GlassBottleAdvancement;
 import xyz.n7mn.dev.survivalsystem.advancement.data.GreatHoneyAdvancement;
@@ -20,8 +21,11 @@ public class Advancement {
 
         //register advancement
         manager.register(new EnterServerAdvancement());
+
         manager.register(new GlassBottleAdvancement());
         manager.register(new GreatHoneyAdvancement());
+
+        manager.register(new CustomCraftAdvancement());
 
         rewardManager.register(EnterServerAdvancement.ID, new EnterServerAdvancement());
 

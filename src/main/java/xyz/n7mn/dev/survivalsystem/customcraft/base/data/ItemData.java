@@ -2,7 +2,6 @@ package xyz.n7mn.dev.survivalsystem.customcraft.base.data;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +18,18 @@ public class ItemData {
     private NamespacedKey namespacedKey;
 
     public ItemData(ItemStack itemStack) {
-        this.itemStack = itemStack;
+        if (itemStack != null) {
+            this.itemStack = itemStack;
+            if (itemStack.getItemMeta() != null) {
+                for (NamespacedKey namespacedKey : itemStack.getPersistentDataContainer().getKeys()) {
+                    this.namespacedKey = namespacedKey;
+
+                    break;
+                }
+            }
+        } else {
+            this.itemStack = ItemDataUtils.AIR_DUMMY.itemStack;
+        }
     }
 
     public ItemData(NamespacedKey namespacedKey, ItemStack itemStack) {
@@ -28,11 +38,13 @@ public class ItemData {
     }
 
     public boolean equals(ItemData data) {
-        if (checkDurability && data.getItemStack().getDurability() != itemStack.getMaxItemUseDuration()) return false;
+        if (checkDurability && data.getItemStack().getDurability() != itemStack.getDurability()) return false;
 
         if (data.getItemStack().getType() != itemStack.getType()) return false;
 
         if (namespacedKey == null && data.getNamespacedKey() == null) return true;
+
+        if (namespacedKey == null || data.getNamespacedKey() == null) return false;
 
         return data.getNamespacedKey().getKey().equals(namespacedKey.getKey());
     }

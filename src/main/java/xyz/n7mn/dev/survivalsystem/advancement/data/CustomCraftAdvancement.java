@@ -7,22 +7,20 @@ import net.roxeez.advancement.trigger.TriggerType;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
-import xyz.n7mn.dev.survivalsystem.util.MessageUtil;
 
-public class GreatHoneyAdvancement implements AdvancementCreator {
-
-    public static final String ID = "great_honey";
+public class CustomCraftAdvancement implements AdvancementCreator {
+    public static final String ID = "custom_craft";
 
     @Override
     public @NotNull Advancement create(@NotNull Context context) {
         Advancement advancement = new Advancement(context.getPlugin(), ID);
 
-        advancement.setParent(new NamespacedKey(context.getPlugin(), GlassBottleAdvancement.ID));
+        advancement.setParent(new NamespacedKey(context.getPlugin(), EnterServerAdvancement.ID));
 
         advancement.setDisplay(show -> {
-            show.setTitle("上質なはちみつを飲む");
-            show.setDescription(MessageUtil.replaceMessage("はちみつを手に入れるときに%chance%%の確率で手に入るらしい", "%chance%|"  + MessageUtil.replaceFromConfig("HONEY-RARE-ITEM-CHANCE")));
-            show.setIcon(Material.HONEY_BOTTLE);
+            show.setTitle("カスタム作業台を開く");
+            show.setDescription("作業台にシフトで開けるようだ・・・・");
+            show.setIcon(Material.CRAFTING_TABLE);
         });
 
         advancement.addCriteria("grant", TriggerType.IMPOSSIBLE, trigger -> {

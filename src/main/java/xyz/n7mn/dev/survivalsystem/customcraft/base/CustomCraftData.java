@@ -1,21 +1,21 @@
 package xyz.n7mn.dev.survivalsystem.customcraft.base;
 
 import lombok.Getter;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
+import xyz.n7mn.dev.survivalsystem.customcraft.CustomCraft;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
+import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 @Getter
 public class CustomCraftData {
 
+    //TODO: 正直まとめたほうがよさそう
     private ItemData recipe1, recipe2, recipe3, recipe4, recipe5, recipe6, recipe7, recipe8, recipe9;
-
-    private ItemData itemData = new ItemData(new ItemStack(Material.AIR));
 
     public void setItemData(ItemData itemData, int... t) {
         for (int i : t) {
@@ -45,17 +45,25 @@ public class CustomCraftData {
         Map<Integer, ItemData> hashMap = new HashMap<>();
 
         for (int i = 0; i < 9; i++) {
-            hashMap.put(i, getItemData().get(i));
+            hashMap.put(i + 1, getItemData().get(i));
         }
 
         return hashMap;
     }
 
     public boolean equals(CustomCraftData data) {
-        return getItemData().stream().allMatch(i -> data.getItemData().stream().anyMatch(itemData -> {
-            ItemData item = i != null ? i : itemData;
+        for (int i = 0; i < 9; i++) {
+            if (!equals(data, i)) return false;
+        }
+        return true;
+    }
 
-            return item.equals(i != null ? i : data);
-        }));
+    public boolean equals(CustomCraftData data, int count) {
+        return nullCheck(data.getItemData().get(count)).equals(nullCheck(getItemData().get(count)));
+    }
+
+    public ItemData nullCheck(ItemData itemData) {
+        if (itemData == null) return ItemDataUtils.AIR_DUMMY;
+        else return itemData;
     }
 }

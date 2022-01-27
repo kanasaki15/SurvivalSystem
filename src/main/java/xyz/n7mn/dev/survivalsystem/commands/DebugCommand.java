@@ -9,8 +9,6 @@ import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 public class DebugCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        sender.sendMessage(String.valueOf(SurvivalInstance.INSTANCE.getCustomCraft().init()));
-
         return true;
     }
 }
