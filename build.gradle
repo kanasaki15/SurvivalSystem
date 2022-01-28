@@ -29,7 +29,6 @@ repositories {
 
 dependencies {
     implementation 'org.purpurmc.purpur:purpur-api:1.18.1-R0.1-SNAPSHOT'
-    implementation 'com.github.retrooper:packetevents:v1.8-pre-19'
     implementation 'com.github.Roxeez:AdvancementAPI:9b959a88cc'
     implementation 'mysql:mysql-connector-java:8.0.28'
     implementation 'org.xerial:sqlite-jdbc:3.36.0.3'
@@ -45,7 +44,6 @@ shadowJar {
     minimize()
 
     dependencies {
-        include(dependency('com.github.retrooper:packetevents:v1.8-pre-19'))
         include(dependency('org.xerial:sqlite-jdbc:3.36.0.3'))
         include(dependency('com.github.Roxeez:AdvancementAPI:9b959a88cc'))
     }
