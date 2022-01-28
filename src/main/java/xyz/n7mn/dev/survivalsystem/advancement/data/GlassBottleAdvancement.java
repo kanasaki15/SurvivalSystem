@@ -24,10 +24,10 @@ public class GlassBottleAdvancement implements AdvancementCreator {
             show.setIcon(Material.GLASS_BOTTLE);
         });
 
-        advancement.addCriteria("glass_bottle", TriggerType.INVENTORY_CHANGED, trigger -> trigger.hasItemMatching(item -> {
-            item.setType(Material.GLASS_BOTTLE);
-            item.setCount(1);
-        }));
+        //なぜかバグってる
+        advancement.addCriteria("grant", TriggerType.IMPOSSIBLE, trigger -> {
+            //文字通り何もなし
+        });
 
         return advancement;
     }

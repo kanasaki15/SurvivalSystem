@@ -29,6 +29,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
+import xyz.n7mn.dev.survivalsystem.advancement.data.CustomCraftOpenAdvancement;
+import xyz.n7mn.dev.survivalsystem.advancement.data.GreatHoneyAdvancement;
 import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
 import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackSerializable;
 import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
@@ -188,7 +190,7 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onEntityAddToWorldEvent(EntityAddToWorldEvent e) {
-        if (e.getEntity().getType() == EntityType.ARMOR_STAND) {
+        if (e.getEntity().getType() == EntityType.ARMOR_STAND && e.getEntity().getPersistentDataContainer().has(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "delete_time"))) {
             SurvivalInstance.INSTANCE.getConnection().getGraveTable().get(e.getEntity().getUniqueId(), data -> {
                 if (data != null && GraveCache.graveCache.get(data.getArmorStandUUID()) == null) {
                     GraveCache.graveCache.put(data.getArmorStandUUID(), data);
@@ -207,7 +209,7 @@ public class EventListener implements Listener {
 
                     if (type == 5) {
                         final int chance = MessageManager.getInt("HONEY-RARE-ITEM-CHANCE");
-
+                        //0 ~ 99
                         if (new SecureRandom().nextInt(100) < chance) {
                             ItemStack itemStack = ItemStackUtil.createItem(Material.HONEY_BOTTLE, MessageUtil.replaceFromConfig("HONEY-ITEM-NAME"), MessageUtil.replaceList("HONEY-ITEM-LORE", "%grade%|" + "Ⅰ"));
 
@@ -230,7 +232,7 @@ public class EventListener implements Listener {
             if (e.getClickedBlock().getType() == Material.CRAFTING_TABLE && e.getPlayer().isSneaking()) {
                 e.getPlayer().openInventory(new CraftGUI().createGUI());
 
-                e.getPlayer().getAdvancementProgress(Bukkit.getAdvancement(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "custom_craft"))).awardCriteria("grant");
+                e.getPlayer().getAdvancementProgress(Bukkit.getAdvancement(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), CustomCraftOpenAdvancement.ID))).awardCriteria("grant");
 
                 e.setCancelled(true);
             }
@@ -263,7 +265,7 @@ public class EventListener implements Listener {
                     }
                 }
 
-                e.getPlayer().getAdvancementProgress(Bukkit.getAdvancement(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "great_honey"))).awardCriteria("grant");
+                e.getPlayer().getAdvancementProgress(Bukkit.getAdvancement(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), GreatHoneyAdvancement.ID))).awardCriteria("grant");
             }
         }
     }

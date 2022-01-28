@@ -8,8 +8,8 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
 
-public class CustomCraftAdvancement implements AdvancementCreator {
-    public static final String ID = "custom_craft";
+public class CustomCraftOpenAdvancement implements AdvancementCreator {
+    public static final String ID = "custom_craft_open";
 
     @Override
     public @NotNull Advancement create(@NotNull Context context) {

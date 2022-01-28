@@ -28,6 +28,15 @@ public class ItemStackUtil {
         return item;
     }
 
+    public ItemStack createItem(final Material material, final int count, final String... lore) {
+        final ItemStack item = new ItemStack(material, 1);
+
+        item.setAmount(count);
+        item.setLore(Arrays.asList(lore));
+
+        return item;
+    }
+
     public ItemStack createItem(final Material material, final String name, final List<String> lore) {
         final ItemStack item = new ItemStack(material, 1);
 
