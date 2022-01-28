@@ -7,7 +7,6 @@ import net.roxeez.advancement.trigger.TriggerType;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import xyz.n7mn.dev.survivalsystem.advancement.base.AdvancementReward;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;

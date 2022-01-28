@@ -54,7 +54,7 @@ public class CraftGUI implements Listener {
 
     public void checkUpdates(CraftHolder craftHolder) {
         for (CustomCraftAbstract data : SurvivalInstance.INSTANCE.getCustomCraft().getCraftAbstractHashMap().values()) {
-            if (data.create().equals(craftHolder.translateCustomCraftData())) {
+            if (data.create().equals(craftHolder.translateCustomCraftData(), true)) {
                 craftHolder.getInventory().setItem(24, data.getItem().getItemStack());
                 return;
             }
@@ -66,7 +66,7 @@ public class CraftGUI implements Listener {
         if (cursor != null && cursor.getType() == Material.AIR) {
             if (inventoryAction != InventoryAction.HOTBAR_MOVE_AND_READD) {
                 for (CustomCraftAbstract data : SurvivalInstance.INSTANCE.getCustomCraft().getCraftAbstractHashMap().values()) {
-                    if (data.create().equals(craftHolder.translateCustomCraftData())) {
+                    if (data.create().equals(craftHolder.translateCustomCraftData(), true)) {
                         if (inventoryAction == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
                             while (player.getInventory().firstEmpty() != -1) {
                                 ItemData itemData = getItemChecksData(craftHolder);
@@ -93,7 +93,7 @@ public class CraftGUI implements Listener {
 
     public ItemData getItemChecksData(CraftHolder craftHolder) {
         for (CustomCraftAbstract data : SurvivalInstance.INSTANCE.getCustomCraft().getCraftAbstractHashMap().values()) {
-            if (data.create().equals(craftHolder.translateCustomCraftData())) {
+            if (data.create().equals(craftHolder.translateCustomCraftData(), true)) {
                 return getItem(craftHolder, data);
             }
         }

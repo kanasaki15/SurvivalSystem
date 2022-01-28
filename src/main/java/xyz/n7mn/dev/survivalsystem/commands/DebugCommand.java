@@ -4,7 +4,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 
 public class DebugCommand implements CommandExecutor {
     @Override

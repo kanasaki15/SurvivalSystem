@@ -49,9 +49,9 @@ public class CustomCraftData {
         return hashMap;
     }
 
-    public boolean equals(CustomCraftData data) {
+    public boolean equals(CustomCraftData data, boolean amountCheck) {
         for (int i = 0; i < 9; i++) {
-            if (!equals(data, i)) return false;
+            if (!equals(data, i) || (amountCheck && data.getItemData().get(i).getItemStack().getAmount() < getItemData().get(i).getItemStack().getAmount())) return false;
         }
         return true;
     }
