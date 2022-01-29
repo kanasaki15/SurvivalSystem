@@ -14,8 +14,7 @@ public class ItemData {
 
     private ItemStack itemStack;
 
-    private boolean checkDurability = false;
-    private boolean checkMeta = false;
+    private boolean checkDurability, checkMeta;
 
     private NamespacedKey namespacedKey;
 

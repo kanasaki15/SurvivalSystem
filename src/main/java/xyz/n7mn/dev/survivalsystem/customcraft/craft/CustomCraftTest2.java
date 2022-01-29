@@ -7,7 +7,7 @@ import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
 public class CustomCraftTest2 extends CustomCraftAbstract {
 
     @Override
-    public ItemData getItem() {
+    public ItemData getItem(CustomCraftData data) {
         return null;
     }
 

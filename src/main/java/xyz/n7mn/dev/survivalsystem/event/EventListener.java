@@ -34,7 +34,7 @@ import xyz.n7mn.dev.survivalsystem.advancement.data.GreatHoneyAdvancement;
 import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
 import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackSerializable;
 import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
-import xyz.n7mn.dev.survivalsystem.gui.customcraft.CraftGUI;
+import xyz.n7mn.dev.survivalsystem.gui.customcraft.craft.CraftGUI;
 import xyz.n7mn.dev.survivalsystem.playerdata.PlayerData;
 import xyz.n7mn.dev.survivalsystem.sql.table.GraveTable;
 import xyz.n7mn.dev.survivalsystem.util.*;

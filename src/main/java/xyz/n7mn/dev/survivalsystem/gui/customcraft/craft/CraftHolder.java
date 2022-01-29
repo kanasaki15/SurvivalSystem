@@ -1,4 +1,4 @@
-package xyz.n7mn.dev.survivalsystem.gui.customcraft;
+package xyz.n7mn.dev.survivalsystem.gui.customcraft.craft;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,12 +21,6 @@ public class CraftHolder implements InventoryHolder {
     private final Map<Integer, GUIItem> hashMap = new HashMap<>();
 
     private Inventory inventory;
-
-    private final int commandID;
-
-    public CraftHolder(int commandID) {
-        this.commandID = commandID;
-    }
 
     @Override
     public @NotNull Inventory getInventory() {

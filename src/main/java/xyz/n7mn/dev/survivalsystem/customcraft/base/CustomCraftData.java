@@ -15,6 +15,8 @@ public class CustomCraftData {
     //TODO: 正直まとめたほうがよさそう
     private ItemData recipe1, recipe2, recipe3, recipe4, recipe5, recipe6, recipe7, recipe8, recipe9;
 
+    private boolean checkDurability, checkMeta;
+
     public void setItemData(ItemData itemData, int... t) {
         for (int i : t) {
             setItemData(itemData, i);
@@ -57,7 +59,7 @@ public class CustomCraftData {
     }
 
     public boolean equals(CustomCraftData data, int count) {
-        return nullCheck(data.getItemData().get(count)).equals(nullCheck(getItemData().get(count)));
+        return nullCheck(data.getItemData().get(count)).equals(nullCheck(getItemData().get(count)), checkMeta, checkDurability);
     }
 
     public ItemData nullCheck(ItemData itemData) {
