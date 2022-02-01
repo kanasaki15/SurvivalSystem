@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -51,6 +52,8 @@ public class GraveCache {
     }
 
     public void refundItem(Player player, GraveInventoryData data) {
+        player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1f, 1f);
+
         data.translateSerializable().forEach(itemStack -> {
             if (player.getInventory().firstEmpty() != -1) {
                 player.getInventory().addItem(itemStack);

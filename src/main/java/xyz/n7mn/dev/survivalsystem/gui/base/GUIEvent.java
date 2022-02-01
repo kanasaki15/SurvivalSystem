@@ -7,11 +7,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class GUIEvent implements Listener {
 
+    @EventHandler
     public void onInventoryClickEvent(final InventoryClickEvent e) {
         SurvivalInstance.INSTANCE.getGuiManager().getAll().forEach(event -> event.onInventoryClickEvent(e));
     }

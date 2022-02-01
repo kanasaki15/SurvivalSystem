@@ -27,7 +27,6 @@ import java.util.List;
 
 public class CraftGUI implements Listener, GUIListener {
 
-
     public Inventory createGUI() {
         CraftHolder craftHolder = new CraftHolder();
 

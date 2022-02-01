@@ -10,7 +10,6 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIListener;
-import xyz.n7mn.dev.survivalsystem.gui.customcraft.craft.CraftHolder;
 
 public class RecipeGUI implements GUIListener {
     public void previewCraftRecipe(Player player) {
@@ -45,12 +44,12 @@ public class RecipeGUI implements GUIListener {
     }
 
     @Override
-    public void onInventoryCloseEvent(final InventoryCloseEvent e) {
+    public void onInventoryDragEvent(final InventoryDragEvent e) {
 
     }
 
     @Override
-    public void onInventoryDragEvent(final InventoryDragEvent e) {
+    public void onInventoryCloseEvent(final InventoryCloseEvent e) {
 
     }
 }
