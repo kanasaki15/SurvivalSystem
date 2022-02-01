@@ -8,12 +8,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
 import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
+import xyz.n7mn.dev.survivalsystem.gui.base.GUIListener;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 import xyz.n7mn.dev.survivalsystem.util.MessageUtil;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIData;
@@ -25,7 +27,7 @@ import java.util.Objects;
  * https://www.spigotmc.org/threads/custom-inventoryholders.253149/
  * https://www.spigotmc.org/threads/inventory-system-tutorial-gui.258035/
  */
-public class GraveGUI implements Listener {
+public class GraveGUI implements Listener, GUIListener {
 
     public int MAX_ALLOWED = 45;
 
@@ -119,6 +121,11 @@ public class GraveGUI implements Listener {
         if (e.getInventory().getHolder() != null && e.getInventory().getHolder() instanceof GraveHolder) {
             e.setCancelled(true);
         }
+    }
+
+    @Override
+    public void onInventoryCloseEvent(final InventoryCloseEvent e) {
+
     }
 
     public void createGravePreview(Player player, GraveHolder guiHolder, GraveInventoryData data) {

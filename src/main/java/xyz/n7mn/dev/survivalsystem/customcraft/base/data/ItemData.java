@@ -8,6 +8,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
+import java.util.Set;
 
 @Getter @Setter
 public class ItemData {
@@ -16,26 +17,17 @@ public class ItemData {
 
     private boolean checkDurability, checkMeta;
 
-    private NamespacedKey namespacedKey;
+    private Set<NamespacedKey> namespacedKey;
 
     public ItemData(ItemStack itemStack) {
         if (itemStack != null) {
             this.itemStack = itemStack;
             if (itemStack.getItemMeta() != null) {
-                for (NamespacedKey namespacedKey : itemStack.getPersistentDataContainer().getKeys()) {
-                    this.namespacedKey = namespacedKey;
-
-                    break;
-                }
+                namespacedKey = itemStack.getPersistentDataContainer().getKeys();
             }
         } else {
             this.itemStack = ItemDataUtils.AIR_DUMMY.itemStack;
         }
-    }
-
-    public ItemData(NamespacedKey namespacedKey, ItemStack itemStack) {
-        this.itemStack = itemStack;
-        this.namespacedKey = namespacedKey;
     }
 
     public boolean equals(ItemData data, boolean checkMeta, boolean checkDurability) {
@@ -56,7 +48,7 @@ public class ItemData {
 
         if (namespacedKey == null || data.getNamespacedKey() == null) return false;
 
-        return data.getNamespacedKey().getKey().equals(namespacedKey.getKey());
+        return data.getNamespacedKey().stream().allMatch(namespace -> namespacedKey.stream().anyMatch(name -> name.equals(namespace)));
     }
 
     public boolean hasEnchant(ItemData data, Enchantment... enchantments) {

@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNull;
 import xyz.n7mn.dev.survivalsystem.advancement.Advancement;
 import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
 import xyz.n7mn.dev.survivalsystem.customcraft.CustomCraft;
+import xyz.n7mn.dev.survivalsystem.gui.GUIManager;
+import xyz.n7mn.dev.survivalsystem.gui.base.GUIListener;
 import xyz.n7mn.dev.survivalsystem.sql.SQLConnection;
 import xyz.n7mn.dev.survivalsystem.timer.Timer;
 
@@ -29,6 +31,8 @@ public enum SurvivalInstance {
 
     private final CustomCraft customCraft = new CustomCraft();
 
+    private final GUIManager guiManager = new GUIManager();
+
     public void init() {
         timer.start();
 
@@ -40,5 +44,7 @@ public enum SurvivalInstance {
         advancement.init();
 
         customCraft.init();
+
+        guiManager.init();
     }
 }

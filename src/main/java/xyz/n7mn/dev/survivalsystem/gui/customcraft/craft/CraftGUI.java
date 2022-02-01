@@ -18,12 +18,14 @@ import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftAbstract;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIItem;
+import xyz.n7mn.dev.survivalsystem.gui.base.GUIListener;
+import xyz.n7mn.dev.survivalsystem.gui.customcraft.recipe.RecipeGUI;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class CraftGUI implements Listener {
+public class CraftGUI implements Listener, GUIListener {
 
 
     public Inventory createGUI() {
@@ -48,7 +50,7 @@ public class CraftGUI implements Listener {
         }
 
         inventory.setItem(53, ItemStackUtil.createItem(Material.KNOWLEDGE_BOOK, ChatColor.YELLOW + "レシピ本を見る"));
-        craftHolder.addListener(53, this::previewCraftRecipe);
+        craftHolder.addListener(53, player -> new RecipeGUI().previewCraftRecipe(player));
         inventory.setItem(24, ItemDataUtils.INVALID_ITEM.getItemStack());
     }
 
@@ -90,30 +92,6 @@ public class CraftGUI implements Listener {
         return false;
     }
 
-    public void previewCraftRecipe(Player player) {
-        Inventory inventory = Bukkit.createInventory(new CraftHolder(), 54);
-
-        player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1f, 1f);
-
-        ItemStack itemStack = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-
-        for (int i = 0; i < 9; i++) {
-            inventory.setItem(i, itemStack);
-        }
-
-        for (int i = 45; i < 54; i++) {
-            inventory.setItem(i, itemStack);
-        }
-
-        setItem(inventory, itemStack, 9, 17, 18, 26, 27, 35, 36, 44, 45, 53);
-    }
-
-    public void setItem(Inventory inventory, ItemStack itemStack, int... range) {
-        for (int rawId : range) {
-            inventory.setItem(rawId, itemStack);
-        }
-    }
-
     public ItemData getItemChecksData(CraftHolder craftHolder) {
         for (CustomCraftAbstract data : SurvivalInstance.INSTANCE.getCustomCraft().getCraftAbstractHashMap().values()) {
             if (craftHolder.translateCustomCraftData().equals(data.create(), true)) {
@@ -146,7 +124,6 @@ public class CraftGUI implements Listener {
         getItem(craftHolder, data);
     }
 
-    @EventHandler
     public void onInventoryClickEvent(final InventoryClickEvent e) {
         if (e.getClickedInventory() == e.getView().getTopInventory() && e.getView().getTopInventory().getHolder() instanceof CraftHolder craftHolder) {
             if (!deny(e.getRawSlot()) && e.getRawSlot() != 24) e.setCancelled(true);
@@ -164,7 +141,6 @@ public class CraftGUI implements Listener {
         }
     }
 
-    @EventHandler
     public void onInventoryDragEvent(final InventoryDragEvent e) {
         if (e.getWhoClicked().getOpenInventory().getTopInventory() == e.getInventory() && e.getView().getTopInventory().getHolder() instanceof CraftHolder craftHolder) {
             for (int slot : e.getRawSlots()) {
@@ -185,9 +161,8 @@ public class CraftGUI implements Listener {
         }
     }
 
-    @EventHandler
     public void onInventoryCloseEvent(final InventoryCloseEvent e) {
-        if (e.getInventory().getHolder() != null && e.getInventory().getHolder() instanceof CraftHolder craftHolder) {
+        if (e.getInventory().getHolder() != null && e.getInventory().getHolder() instanceof CraftHolder) {
             for (int refund : denyList()) {
                 ItemStack itemStack = e.getInventory().getItem(refund);
 
