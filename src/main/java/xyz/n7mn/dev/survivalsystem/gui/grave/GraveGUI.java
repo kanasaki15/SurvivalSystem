@@ -5,7 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -15,11 +14,11 @@ import org.bukkit.inventory.ItemStack;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
 import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
+import xyz.n7mn.dev.survivalsystem.gui.base.GUIData;
+import xyz.n7mn.dev.survivalsystem.gui.base.GUIItem;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIListener;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 import xyz.n7mn.dev.survivalsystem.util.MessageUtil;
-import xyz.n7mn.dev.survivalsystem.gui.base.GUIData;
-import xyz.n7mn.dev.survivalsystem.gui.base.GUIItem;
 
 import java.util.Objects;
 
@@ -104,7 +103,7 @@ public class GraveGUI implements Listener, GUIListener {
         guiHolder.addListener(53, p -> nextPage(p, guiHolder, UP));
     }
 
-    @EventHandler
+    @Override
     public void onInventoryClickEvent(final InventoryClickEvent e) {
         if (e.getInventory().getHolder() != null && e.getInventory().getHolder() instanceof GraveHolder guiHolder) {
             e.setCancelled(true);
@@ -116,7 +115,7 @@ public class GraveGUI implements Listener, GUIListener {
         }
     }
 
-    @EventHandler
+    @Override
     public void onInventoryDragEvent(final InventoryDragEvent e) {
         if (e.getInventory().getHolder() != null && e.getInventory().getHolder() instanceof GraveHolder) {
             e.setCancelled(true);

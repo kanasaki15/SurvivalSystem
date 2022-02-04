@@ -24,12 +24,6 @@ public class GraveHolder implements InventoryHolder {
 
     private Player basePlayer;
 
-    public GraveHolder(Player player, List<GraveInventoryData> data, int commandID) {
-        this.data = data;
-        this.commandID = commandID;
-    }
-
-    //空
     public GraveHolder(int commandID) {
         this.commandID = commandID;
     }

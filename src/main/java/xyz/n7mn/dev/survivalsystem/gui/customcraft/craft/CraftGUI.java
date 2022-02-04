@@ -65,7 +65,7 @@ public class CraftGUI implements Listener, GUIListener {
         craftHolder.getInventory().setItem(24, ItemDataUtils.INVALID_ITEM.getItemStack());
     }
 
-    public boolean craft(CraftHolder craftHolder, ItemStack cursor, HumanEntity player, InventoryAction inventoryAction) {
+    public boolean craftItem(CraftHolder craftHolder, ItemStack cursor, HumanEntity player, InventoryAction inventoryAction) {
         if (cursor != null && cursor.getType() == Material.AIR) {
             if (inventoryAction != InventoryAction.HOTBAR_MOVE_AND_READD) {
                 for (CustomCraftAbstract data : SurvivalInstance.INSTANCE.getCustomCraft().getCraftAbstractHashMap().values()) {
@@ -75,7 +75,7 @@ public class CraftGUI implements Listener, GUIListener {
 
                         if (inventoryAction == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
                             while (player.getInventory().firstEmpty() != -1) {
-                                ItemData itemData = getItemChecksData(craftHolder);
+                                ItemData itemData = getItemCheckData(craftHolder);
                                 if (itemData == null) break;
 
                                 player.getInventory().addItem(itemData.getItemStack());
@@ -99,7 +99,7 @@ public class CraftGUI implements Listener, GUIListener {
         return false;
     }
 
-    public ItemData getItemChecksData(CraftHolder craftHolder) {
+    public ItemData getItemCheckData(CraftHolder craftHolder) {
         for (CustomCraftAbstract data : SurvivalInstance.INSTANCE.getCustomCraft().getCraftAbstractHashMap().values()) {
             if (craftHolder.translateCustomCraftData().equals(data.create(), true)) {
                 return getItem(craftHolder, data);
@@ -117,7 +117,8 @@ public class CraftGUI implements Listener, GUIListener {
             if (itemStack != null && itemStack.getType() != Material.AIR) {
                 ItemData itemData = data.getUsesItem().getItemData().get(i);
 
-                if (itemStack.getType() != itemData.getItemStack().getType()) itemStack.setType(itemData.getItemStack().getType());
+                if (itemStack.getType() != itemData.getItemStack().getType())
+                    itemStack.setType(itemData.getItemStack().getType());
 
                 itemStack.setAmount(itemStack.getAmount() - data.getUsesItem().getItemData().get(i).getItemStack().getAmount());
             }
@@ -142,7 +143,7 @@ public class CraftGUI implements Listener, GUIListener {
             }
 
             if (e.getRawSlot() == 24) {
-                if (!craft(craftHolder, e.getCursor(), e.getWhoClicked(), e.getAction())) e.setCancelled(true);
+                if (!craftItem(craftHolder, e.getCursor(), e.getWhoClicked(), e.getAction())) e.setCancelled(true);
                 else Bukkit.getScheduler().runTask(SurvivalInstance.INSTANCE.getPlugin(), () -> checkUpdates(craftHolder));
             }
         }
@@ -161,7 +162,7 @@ public class CraftGUI implements Listener, GUIListener {
                 }
 
                 if (slot == 24) {
-                    if (!craft(craftHolder, e.getCursor(), e.getWhoClicked(), null)) e.setCancelled(true);
+                    if (!craftItem(craftHolder, e.getCursor(), e.getWhoClicked(), null)) e.setCancelled(true);
                     else checkUpdates(craftHolder);
                 }
             }
@@ -184,6 +185,9 @@ public class CraftGUI implements Listener, GUIListener {
                 (rawSlot >= 28 && rawSlot <= 30);
     }
 
+    /**
+     * @return - クラフトスロットを返します
+     */
     public List<Integer> denyList() {
         return Arrays.asList(10, 11, 12, 19, 20, 21, 28, 29, 30);
     }
