@@ -36,9 +36,9 @@ public class GraveGUI implements Listener, GUIListener {
 
         guiHolder.setGuiData(guiData);
 
-        Inventory inventory = Bukkit.createInventory(guiHolder, 54, Component.text(ChatColor.YELLOW + "お墓" + guiData.getName() + "の履歴"));
+        Inventory inventory = Bukkit.createInventory(guiHolder, 54, Component.text(ChatColor.YELLOW + "お墓" + guiData.name() + "の履歴"));
 
-        SurvivalInstance.INSTANCE.getConnection().getGraveTable().getAll(guiData.getUUID(), list -> {
+        SurvivalInstance.INSTANCE.getConnection().getGraveTable().getAll(guiData.uuid(), list -> {
             list.sort(((o1, o2) -> Long.compare(o2.getTimestamp().getTime(), o1.getTimestamp().getTime())));
 
             guiHolder.setData(list);
@@ -59,7 +59,7 @@ public class GraveGUI implements Listener, GUIListener {
             holder.setData(guiHolder.getData());
             holder.setBasePlayer(player);
 
-            Inventory inventory = Bukkit.createInventory(holder, 54, Component.text(ChatColor.YELLOW + "お墓" + holder.getTargetPlayer().getName() + "の履歴"));
+            Inventory inventory = Bukkit.createInventory(holder, 54, Component.text(ChatColor.YELLOW + "お墓" + holder.getTargetPlayer().name() + "の履歴"));
 
             generatePage(inventory, page);
 

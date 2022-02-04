@@ -1,10 +1,12 @@
 package xyz.n7mn.dev.survivalsystem.gui.customcraft.craft;
 
 import net.kyori.adventure.text.Component;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -42,7 +44,7 @@ public class CraftGUI implements Listener, GUIListener {
     public void createCraftGUI(CraftHolder craftHolder, Inventory inventory) {
         for (int i = 0; i < 54; i++) {
             if (!deny(i)) {
-                inventory.setItem(i, new ItemStack(Material.GRAY_STAINED_GLASS_PANE));
+                inventory.setItem(i, ItemStackUtil.createItem(Material.GRAY_STAINED_GLASS_PANE, String.valueOf(ChatColor.GRAY)));
             } else {
                 craftHolder.addListener(i, player -> Bukkit.getScheduler().runTask(SurvivalInstance.INSTANCE.getPlugin(), () -> checkUpdates(craftHolder)));
             }
@@ -67,7 +69,10 @@ public class CraftGUI implements Listener, GUIListener {
         if (cursor != null && cursor.getType() == Material.AIR) {
             if (inventoryAction != InventoryAction.HOTBAR_MOVE_AND_READD) {
                 for (CustomCraftAbstract data : SurvivalInstance.INSTANCE.getCustomCraft().getCraftAbstractHashMap().values()) {
+
+                    //レシピが一致しているか確認する
                     if (craftHolder.translateCustomCraftData().equals(data.create(), true)) {
+
                         if (inventoryAction == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
                             while (player.getInventory().firstEmpty() != -1) {
                                 ItemData itemData = getItemChecksData(craftHolder);
@@ -79,10 +84,13 @@ public class CraftGUI implements Listener, GUIListener {
                         } else {
                             push(craftHolder, data);
                         }
+
+                        //実績を付与する
                         ((Player) player).getAdvancementProgress(Bukkit.getAdvancement(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), CustomCraftCreateAdvancement.ID))).awardCriteria("grant");
 
                         return inventoryAction != InventoryAction.MOVE_TO_OTHER_INVENTORY;
                     }
+
                 }
             } else {
                 player.sendMessage(Component.text(ChatColor.RED + "[!] それはできませんよ"));
@@ -174,7 +182,6 @@ public class CraftGUI implements Listener, GUIListener {
         return (rawSlot >= 10 && rawSlot <= 12) ||
                 (rawSlot >= 19 && rawSlot <= 21) ||
                 (rawSlot >= 28 && rawSlot <= 30);
-
     }
 
     public List<Integer> denyList() {

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 
+//補足: record だとエラーが出た気がする
 public class ItemStackSerializable implements Serializable {
 
     public ItemStackSerializable(List<Map<String, Object>> itemStack) {
