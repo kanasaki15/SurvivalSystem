@@ -10,20 +10,44 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
+import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftAbstract;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIItem;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIListener;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 
+import java.util.HashMap;
+import java.util.List;
+
 public class RecipeGUI implements GUIListener {
     public void previewCraftRecipe(Player player) {
-        Inventory inventory = Bukkit.createInventory(new RecipeHolder(), 54);
+        RecipeHolder recipeHolder = new RecipeHolder();
+
+        Inventory inventory = Bukkit.createInventory(recipeHolder, 54);
 
         player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1f, 1f);
 
         ItemStack itemStack = ItemStackUtil.createItem(Material.GRAY_STAINED_GLASS_PANE, String.valueOf(ChatColor.GRAY));
 
+        HashMap<String, CustomCraftAbstract> data = new HashMap<>(SurvivalInstance.INSTANCE.getCustomCraft().getCraftAbstractHashMap());
+        recipeHolder.setCraftRecipe(data);
+
+        int id = 0;
+        final List<CustomCraftAbstract> list = recipeHolder.getCraftRecipe().values().stream().toList();
+
         for (int i = 0; i < 54; i++) {
-            if (!recipeSlot(i)) inventory.setItem(i, itemStack);
+            if (!recipeSlot(i)) {
+                inventory.setItem(i, itemStack);
+            } else {
+                if (list.size() > id) {
+                    CustomCraftAbstract craftAbstract = list.get(id);
+                    if (craftAbstract != null) {
+                        inventory.setItem(i, craftAbstract.getItem(null).getItemStack());
+
+                        id++;
+                    }
+                }
+            }
         }
 
         player.openInventory(inventory);

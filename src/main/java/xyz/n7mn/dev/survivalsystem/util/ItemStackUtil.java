@@ -1,8 +1,6 @@
 package xyz.n7mn.dev.survivalsystem.util;
 
-import com.mysql.cj.jdbc.JdbcPropertySetImpl;
 import lombok.experimental.UtilityClass;
-import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EntityType;

@@ -4,10 +4,7 @@ import lombok.Getter;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 public class CustomCraftData {
@@ -20,6 +17,17 @@ public class CustomCraftData {
     public void setItemData(ItemData itemData, int... t) {
         for (int i : t) {
             setItemData(itemData, i);
+        }
+    }
+
+    public void setItemData(ItemData itemData) {
+        List<ItemData> itemDataList = getItemData();
+
+        for (int i = 0; i < 9; i++) {
+            if (itemDataList.get(i) == null) {
+                setItemData(itemData, i + 1);
+                break;
+            }
         }
     }
 
@@ -53,7 +61,7 @@ public class CustomCraftData {
 
     public boolean equals(CustomCraftData data, boolean amountCheck) {
         for (int i = 0; i < 9; i++) {
-            if (!equals(data, i) || (amountCheck && data.getItemData().get(i).getItemStack().getAmount() > getItemData().get(i).getItemStack().getAmount())) return false;
+            if (!equals(data, i) || (amountCheck && nullCheck(data.getItemData().get(i)).getItemStack().getAmount() > nullCheck(getItemData().get(i)).getItemStack().getAmount())) return false;
         }
         return true;
     }

@@ -48,7 +48,7 @@ public class ItemData {
 
         if (namespacedKey == null || data.getNamespacedKey() == null) return false;
 
-        return data.getNamespacedKey().stream().allMatch(namespace -> namespacedKey.stream().anyMatch(name -> name.equals(namespace)));
+        return data.getNamespacedKey().stream().allMatch(namespace -> namespacedKey.stream().anyMatch(anyKey -> anyKey.getKey().equals(namespace.getKey()) && anyKey.getNamespace().equals(namespace.getNamespace())));
     }
 
     public boolean hasEnchant(ItemData data, Enchantment... enchantments) {

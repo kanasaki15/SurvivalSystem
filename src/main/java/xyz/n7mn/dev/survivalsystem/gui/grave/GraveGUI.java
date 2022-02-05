@@ -67,7 +67,7 @@ public class GraveGUI implements Listener, GUIListener {
     }
 
     public void generatePage(Inventory inventory, int page) {
-        int MIN = MAX_ALLOWED * (page - 1);
+        final int MIN = MAX_ALLOWED * (page - 1);
 
         GraveHolder guiHolder = (GraveHolder) Objects.requireNonNull(inventory.getHolder());
 
