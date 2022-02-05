@@ -1,12 +1,12 @@
 plugins {
     id 'java'
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 group = 'xyz.n7mn.dev'
 version = '1.0'
 
 repositories {
-    mavenCentral()
     maven {
         name = 'papermc-repo'
         url = 'https://papermc.io/repo/repository/maven-public/'
@@ -17,39 +17,36 @@ repositories {
     }
 
     maven {
-        name = 'purpur'
-        url = 'https://repo.pl3x.net/'
+        url = 'https://jitpack.io'
     }
 
-    maven { url "https://repo.dmulloy2.net/repository/public/" }
+    maven {
+        url = 'https://repo.purpurmc.org/snapshots'
+    }
+
+    mavenCentral()
 }
 
 dependencies {
-    compileOnly 'net.pl3x.purpur:purpur-api:1.17.1-R0.1-SNAPSHOT'
-    compileOnly 'com.comphenix.protocol:ProtocolLib:4.7.0'
+    implementation 'org.purpurmc.purpur:purpur-api:1.18.1-R0.1-SNAPSHOT'
+    implementation 'com.github.Roxeez:AdvancementAPI:9b959a88cc'
+    implementation 'mysql:mysql-connector-java:8.0.28'
+    implementation 'org.xerial:sqlite-jdbc:3.36.0.3'
+
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 }
 
-def targetJavaVersion = 16
-java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+shadowJar {
+    minimize()
+
+    dependencies {
+        include(dependency('org.xerial:sqlite-jdbc:3.36.0.3'))
+        include(dependency('com.github.Roxeez:AdvancementAPI:9b959a88cc'))
     }
 }
 
-tasks.withType(JavaCompile).configureEach {
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        options.release = targetJavaVersion
-    }
-}
-
-processResources {
-    def props = [version: version]
-    inputs.properties props
-    filteringCharset 'UTF-8'
-    filesMatching('plugin.yml') {
-        expand props
-    }
-}
+build.dependsOn shadowJar

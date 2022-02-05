@@ -1,0 +1,34 @@
+PREFIX: '&e[ななみ生活鯖]'
+
+DISCORD-LINK: 'https://discord.gg/MEYEPgN3T6'
+
+JOIN-MESSAGE: '&a[+] &e%player% が参加しました'
+QUIT-MESSAGE: '&c[-] &e%player% が抜けました'
+
+CANNOT-EXECUTE-FROM-CONSOLE: '%prefix% &cコンソールからこのコマンドは使えません'
+
+VANISH-ON: '%prefix% Vanish を&aON&eにしました'
+VANISH-OFF: '%prefix% Vanish を&cOFF&eにしました'
+
+VANISH-ACTIONBAR: '&a[!] あなたは現在Vanishしています /vanish で解除可能です'
+
+RELOAD-COMMAND: 'メッセージファイル / コンフィグファイルを再読込しました'
+
+CANNOT-USE: '&c使用できません！'
+
+GRAVE-NAME: '&a%name%のお墓撤去まで・・・ %time%秒'
+GRAVE-DROP-ITEM: '&cアイテムが一杯なので%item%を地面に捨てました・・・！'
+
+## 特別にCHANCEをここに置いてあります
+## - %grade% 1まで 多分今後も1
+## - %chance% 確率を表示
+HONEY-RARE-ITEM: '&6ラッキー！あなたは運良く上質なはちみつをついでに手に入れた！ (%chance%%)'
+HONEY-ITEM-NAME: '&e上質なはちみつ'
+HONEY-ITEM-LORE:
+  - '&eとても上質なはちみつ'
+  - '&e飲むとなにか効果が付くようだ'
+  - ''
+  - '&7上質なはちみつ %grade%'
+HONEY-RARE-ITEM-CHANCE: 15
+
+ADVANCEMENT:
