@@ -1,19 +1,21 @@
 package xyz.n7mn.dev.survivalsystem.customcraft.craft;
 
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftAbstract;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
+import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
 
-public class CustomCraftTest2 extends CustomCraftAbstract {
-
+public class CustomCraftResistanceRing extends CustomCraftAbstract {
     @Override
     public String getRecipeID() {
-        return null;
+        return "resistance_ring_1";
     }
 
     @Override
     public ItemData getItem(CustomCraftData data) {
-        return null;
+        return ItemDataUtils.RESISTANCE_RING1;
     }
 
     @Override
@@ -23,12 +25,10 @@ public class CustomCraftTest2 extends CustomCraftAbstract {
 
     @Override
     public CustomCraftData create() {
-
         CustomCraftData data = new CustomCraftData();
 
-        // 1 2 3
-        // 4 5 6
-        // 7 8 9
+        data.setItemData(new ItemStack(Material.WHITE_STAINED_GLASS), 1, 2, 3, 4, 6, 7, 8, 9);
+        data.setItemData(new ItemStack(Material.DRAGON_EGG), 5);
 
         return data;
     }

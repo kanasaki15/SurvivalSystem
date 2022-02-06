@@ -1,6 +1,7 @@
 package xyz.n7mn.dev.survivalsystem.customcraft.base;
 
 import lombok.Getter;
+import org.bukkit.inventory.ItemStack;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
 
@@ -17,6 +18,12 @@ public class CustomCraftData {
     public void setItemData(ItemData itemData, int... t) {
         for (int i : t) {
             setItemData(itemData, i);
+        }
+    }
+
+    public void setItemData(ItemStack itemStack, int... t) {
+        for (int i : t) {
+            setItemData(new ItemData(itemStack), i);
         }
     }
 

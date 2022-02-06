@@ -10,6 +10,11 @@ import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
 public class CustomCraftTest1 extends CustomCraftAbstract {
 
     @Override
+    public String getRecipeID() {
+        return null;
+    }
+
+    @Override
     public ItemData getItem(CustomCraftData data) {
         return ItemDataUtils.DIRT_HELMET;
     }

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.n7mn.dev.survivalsystem.advancement.Advancement;
 import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
 import xyz.n7mn.dev.survivalsystem.customcraft.CustomCraft;
+import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
 import xyz.n7mn.dev.survivalsystem.gui.GUIManager;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIListener;
 import xyz.n7mn.dev.survivalsystem.sql.SQLConnection;
@@ -40,6 +41,7 @@ public enum SurvivalInstance {
         connection.init();
 
         GraveCache.init();
+        ItemDataUtils.init();
 
         advancement.init();
 

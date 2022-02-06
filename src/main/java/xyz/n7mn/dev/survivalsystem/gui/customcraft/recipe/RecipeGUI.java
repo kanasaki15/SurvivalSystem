@@ -1,5 +1,6 @@
 package xyz.n7mn.dev.survivalsystem.gui.customcraft.recipe;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -40,11 +41,32 @@ public class RecipeGUI implements GUIListener {
                 inventory.setItem(i, itemStack);
             } else {
                 if (list.size() > id) {
-                    CustomCraftAbstract craftAbstract = list.get(id);
-                    if (craftAbstract != null) {
-                        inventory.setItem(i, craftAbstract.getItem(null).getItemStack());
+                    while (true) {
+                        if (list.size() > id) {
+                            CustomCraftAbstract craftAbstract = list.get(id);
+                            if (craftAbstract != null && craftAbstract.isShow()) {
+                                ItemStack item = craftAbstract.getItem(null).getItemStack();
 
-                        id++;
+                                //lore!
+                                if (item.hasLore()) {
+                                    List<Component> components = item.lore();
+                                    components.add(Component.text(""));
+                                    components.add(Component.text( ChatColor.YELLOW + "レシピID: " + craftAbstract.getRecipeID()));
+
+                                    item.lore(components);
+                                } else {
+                                    item.lore(List.of(Component.text(ChatColor.YELLOW + "レシピID: " + craftAbstract.getRecipeID())));
+                                }
+
+                                inventory.setItem(i, craftAbstract.getItem(null).getItemStack());
+
+                                id++;
+                                break;
+                            }
+                            id++;
+                        } else {
+                            break;
+                        }
                     }
                 }
             }
