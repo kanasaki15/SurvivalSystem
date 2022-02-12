@@ -70,12 +70,8 @@ public class ItemStackUtil {
     }
 
     public void addItem(HumanEntity player, ItemStack... itemStack) {
-        for (ItemStack item : itemStack) {
-            if (player.getInventory().firstEmpty() != -1) {
-                player.getInventory().addItem(item);
-            } else {
-                ((Item) player.getWorld().spawnEntity(player.getLocation(), EntityType.DROPPED_ITEM)).setItemStack(item);
-            }
+        if (player instanceof Player p) {
+            addItem(p, itemStack);
         }
     }
 }

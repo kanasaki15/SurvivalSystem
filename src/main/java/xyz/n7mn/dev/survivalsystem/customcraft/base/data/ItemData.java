@@ -2,7 +2,6 @@ package xyz.n7mn.dev.survivalsystem.customcraft.base.data;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
