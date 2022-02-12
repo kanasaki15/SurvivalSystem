@@ -10,6 +10,7 @@ import xyz.n7mn.dev.survivalsystem.customcraft.CustomCraft;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
 import xyz.n7mn.dev.survivalsystem.gui.GUIManager;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIListener;
+import xyz.n7mn.dev.survivalsystem.itemchecker.ItemChecker;
 import xyz.n7mn.dev.survivalsystem.sql.SQLConnection;
 import xyz.n7mn.dev.survivalsystem.timer.Timer;
 

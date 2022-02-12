@@ -6,9 +6,12 @@ import net.roxeez.advancement.Context;
 import net.roxeez.advancement.trigger.TriggerType;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import xyz.n7mn.dev.survivalsystem.advancement.base.check.ItemCheck;
 
-public class GlassBottleAdvancement implements AdvancementCreator {
+public class GlassBottleAdvancement extends ItemCheck implements AdvancementCreator {
 
     public static final String ID = "glass_bottle";
 
@@ -30,5 +33,12 @@ public class GlassBottleAdvancement implements AdvancementCreator {
         });
 
         return advancement;
+    }
+
+    @Override
+    public void item(Player player, ItemStack itemStack) {
+        if (itemStack.getType() == Material.GLASS_BOTTLE) {
+            grant(player, ID);
+        }
     }
 }

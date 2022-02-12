@@ -39,34 +39,32 @@ public class RecipeGUI implements GUIListener {
         for (int i = 0; i < 54; i++) {
             if (!recipeSlot(i)) {
                 inventory.setItem(i, itemStack);
-            } else {
-                if (list.size() > id) {
-                    while (true) {
-                        if (list.size() > id) {
-                            CustomCraftAbstract craftAbstract = list.get(id);
-                            if (craftAbstract != null && craftAbstract.isShow()) {
-                                ItemStack item = craftAbstract.getItem(null).getItemStack();
+            } else if (list.size() > id) {
+                while (true) {
+                    if (list.size() > id) {
+                        CustomCraftAbstract craftAbstract = list.get(id);
+                        if (craftAbstract != null && craftAbstract.isShow()) {
+                            ItemStack item = craftAbstract.getItem(null).getItemStack().clone();
 
-                                //lore!
-                                if (item.hasLore()) {
-                                    List<Component> components = item.lore();
-                                    components.add(Component.text(""));
-                                    components.add(Component.text( ChatColor.YELLOW + "レシピID: " + craftAbstract.getRecipeID()));
+                            //lore!
+                            if (item.hasLore()) {
+                                List<Component> components = item.lore();
+                                components.add(Component.text(""));
+                                components.add(Component.text(ChatColor.YELLOW + "レシピID: " + craftAbstract.getRecipeID()));
 
-                                    item.lore(components);
-                                } else {
-                                    item.lore(List.of(Component.text(ChatColor.YELLOW + "レシピID: " + craftAbstract.getRecipeID())));
-                                }
-
-                                inventory.setItem(i, craftAbstract.getItem(null).getItemStack());
-
-                                id++;
-                                break;
+                                item.lore(components);
+                            } else {
+                                item.lore(List.of(Component.text(ChatColor.YELLOW + "レシピID: " + craftAbstract.getRecipeID())));
                             }
+
+                            inventory.setItem(i, item);
+
                             id++;
-                        } else {
                             break;
                         }
+                        id++;
+                    } else {
+                        break;
                     }
                 }
             }
