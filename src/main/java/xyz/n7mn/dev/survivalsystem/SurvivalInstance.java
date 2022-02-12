@@ -9,8 +9,7 @@ import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
 import xyz.n7mn.dev.survivalsystem.customcraft.CustomCraft;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
 import xyz.n7mn.dev.survivalsystem.gui.GUIManager;
-import xyz.n7mn.dev.survivalsystem.gui.base.GUIListener;
-import xyz.n7mn.dev.survivalsystem.itemchecker.ItemChecker;
+import xyz.n7mn.dev.survivalsystem.itemchecker.InventoryItemChecker;
 import xyz.n7mn.dev.survivalsystem.sql.SQLConnection;
 import xyz.n7mn.dev.survivalsystem.timer.Timer;
 
@@ -35,7 +34,11 @@ public enum SurvivalInstance {
 
     private final GUIManager guiManager = new GUIManager();
 
+    private final InventoryItemChecker itemChecker = new InventoryItemChecker();
+
     public void init() {
+        itemChecker.init();
+
         timer.start();
 
         connection.setUseSQL(plugin.getConfig().getBoolean("useSQL"));

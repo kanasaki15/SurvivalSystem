@@ -10,7 +10,6 @@ import xyz.n7mn.dev.survivalsystem.commands.GraveCommand;
 import xyz.n7mn.dev.survivalsystem.commands.ReloadCommand;
 import xyz.n7mn.dev.survivalsystem.commands.VanishCommand;
 import xyz.n7mn.dev.survivalsystem.event.EventListener;
-import xyz.n7mn.dev.survivalsystem.itemchecker.ItemChecker;
 import xyz.n7mn.dev.survivalsystem.util.MessageManager;
 import xyz.n7mn.dev.survivalsystem.util.PlayerDataUtil;
 

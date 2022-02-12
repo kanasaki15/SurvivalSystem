@@ -44,7 +44,7 @@ public class ItemStackUtil {
         return item;
     }
 
-    public <T,Z> ItemStack createItem(final Material material, final String name, NamespacedKey namespacedKey, PersistentDataType<T, Z> type, Z value, final String... lore) {
+    public <T, Z> ItemStack createItem(final Material material, final String name, NamespacedKey namespacedKey, PersistentDataType<T, Z> type, Z value, final String... lore) {
         final ItemStack item = new ItemStack(material, 1);
 
         item.setDisplayName(name);

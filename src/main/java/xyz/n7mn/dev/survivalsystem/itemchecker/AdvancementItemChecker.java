@@ -17,7 +17,7 @@ import java.util.List;
 
 import static org.bukkit.Bukkit.getServer;
 
-public class ItemChecker implements GUIListener, Listener {
+public class AdvancementItemChecker implements GUIListener, Listener {
     private final List<ItemCheck> itemChecks = new ArrayList<>();
 
     public void init() {
@@ -36,7 +36,7 @@ public class ItemChecker implements GUIListener, Listener {
 
     @Override
     public void onInventoryClickEvent(InventoryClickEvent e) {
-        if (!e.isCancelled() && e.getWhoClicked() instanceof Player player) {
+        if (!e.isCancelled() && e.getCurrentItem() != null && e.getWhoClicked() instanceof Player player) {
             forEach(player, e.getCurrentItem());
         }
     }

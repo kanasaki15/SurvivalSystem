@@ -27,7 +27,7 @@ public class CustomCraftResistanceRing extends CustomCraftAbstract {
     public CustomCraftData create() {
         CustomCraftData data = new CustomCraftData();
 
-        data.setItemData(new ItemStack(Material.WHITE_STAINED_GLASS), 1, 2, 3, 4, 6, 7, 8, 9);
+        data.setItemData(new ItemStack(Material.YELLOW_STAINED_GLASS), 1, 2, 3, 4, 6, 7, 8, 9);
         data.setItemData(new ItemStack(Material.DRAGON_EGG), 5);
 
         return data;
