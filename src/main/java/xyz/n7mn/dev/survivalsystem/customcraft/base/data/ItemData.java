@@ -50,9 +50,6 @@ public class ItemData {
 
         if (namespacedKey == null || namespacedKey.isEmpty() || data.getNamespacedKey() == null || data.getNamespacedKey().isEmpty()) return false;
 
-        data.getNamespacedKey().forEach(item -> Bukkit.broadcast(Component.text(item.getKey() + " two:" + item.getNamespace())));
-        namespacedKey.forEach(item -> Bukkit.broadcast(Component.text(item.getKey() + " two:" + item.getNamespace())));
-
         return data.getNamespacedKey().stream().allMatch(this::has);
     }
 
