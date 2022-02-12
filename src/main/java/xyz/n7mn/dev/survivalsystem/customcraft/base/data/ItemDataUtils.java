@@ -18,6 +18,7 @@ public class ItemDataUtils {
     public static final ItemData DIRT_HELMET = new ItemData(ItemStackUtil.createItem(Material.LEATHER_HELMET, ChatColor.DARK_GREEN + "テスト装備"));
 
     public static ItemData RESISTANCE_RING1;
+    public static ItemData RESISTANCE_RING2;
 
     public static void init() {
         ItemData RESISTANCE_RING1 = new ItemData(ItemStackUtil.createItem(Material.GOLD_NUGGET, ChatColor.YELLOW + "耐性のリング Ⅰ", new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "resistance_ring"), PersistentDataType.INTEGER, 1, ChatColor.YELLOW + "耐性のリング", ChatColor.YELLOW + "このアイテムをインベントリーに持つことで", ChatColor.YELLOW + "HPが半分以下になったとき耐性 Ⅰをつける。"));
@@ -25,5 +26,11 @@ public class ItemDataUtils {
         RESISTANCE_RING1.getItemStack().addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
         ItemDataUtils.RESISTANCE_RING1 = RESISTANCE_RING1;
+
+        ItemData RESISTANCE_RING2 = new ItemData(ItemStackUtil.createItem(Material.GOLD_NUGGET, ChatColor.YELLOW + "耐性のリング Ⅱ", new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "resistance_ring"), PersistentDataType.INTEGER, 2, ChatColor.YELLOW + "耐性のリング", ChatColor.YELLOW + "このアイテムをインベントリーに持つことで", ChatColor.YELLOW + "HPが半分以下になったとき耐性 Ⅱをつける。"));
+        RESISTANCE_RING2.getItemStack().addEnchant(Enchantment.MENDING, 1, true);
+        RESISTANCE_RING2.getItemStack().addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
+        ItemDataUtils.RESISTANCE_RING2 = RESISTANCE_RING2;
     }
 }

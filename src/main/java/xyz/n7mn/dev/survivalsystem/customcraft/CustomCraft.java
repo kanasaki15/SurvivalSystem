@@ -7,7 +7,8 @@ import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftAbstract;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
-import xyz.n7mn.dev.survivalsystem.customcraft.craft.CustomCraftResistanceRing;
+import xyz.n7mn.dev.survivalsystem.customcraft.craft.CustomCraftResistanceRing1;
+import xyz.n7mn.dev.survivalsystem.customcraft.craft.CustomCraftResistanceRing2;
 import xyz.n7mn.dev.survivalsystem.customcraft.craft.CustomCraftTest1;
 
 import java.util.HashMap;
@@ -20,7 +21,8 @@ public class CustomCraft {
 
     public void init() {
         add(new CustomCraftTest1());
-        add(new CustomCraftResistanceRing());
+        add(new CustomCraftResistanceRing1());
+        add(new CustomCraftResistanceRing2());
 
         AtomicInteger count = new AtomicInteger();
 

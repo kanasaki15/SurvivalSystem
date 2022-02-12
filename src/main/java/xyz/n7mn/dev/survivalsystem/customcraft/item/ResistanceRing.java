@@ -15,10 +15,8 @@ public class ResistanceRing extends ItemCheck {
     @Override
     public void item(Player player, ItemStack itemStack) {
         if (itemStack.getPersistentDataContainer().has(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "resistance_ring"), PersistentDataType.INTEGER)
-                && itemStack.getPersistentDataContainer().get(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "resistance_ring"), PersistentDataType.INTEGER) == 1
                 && player.getHealth() <= player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() / 2) {
-
-            SyncUtil.addPotionEffect(player, new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 30, 0));
+            SyncUtil.addPotionEffect(player, new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 30, itemStack.getPersistentDataContainer().get(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "resistance_ring"), PersistentDataType.INTEGER) - 1));
         }
     }
 }

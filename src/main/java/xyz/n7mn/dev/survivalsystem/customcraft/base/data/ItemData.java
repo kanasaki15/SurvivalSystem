@@ -2,6 +2,7 @@ package xyz.n7mn.dev.survivalsystem.customcraft.base.data;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -45,10 +46,18 @@ public class ItemData {
         if (!checkMeta && data.getItemStack().getType() != itemStack.getType()) return false;
 
         if (namespacedKey == null && data.getNamespacedKey() == null) return true;
+        if (namespacedKey.isEmpty() && data.getNamespacedKey().isEmpty()) return true;
 
-        if (namespacedKey == null || data.getNamespacedKey() == null) return false;
+        if (namespacedKey == null || namespacedKey.isEmpty() || data.getNamespacedKey() == null || data.getNamespacedKey().isEmpty()) return false;
 
-        return data.getNamespacedKey().stream().allMatch(namespace -> namespacedKey.stream().anyMatch(anyKey -> anyKey.getKey().equals(namespace.getKey()) && anyKey.getNamespace().equals(namespace.getNamespace())));
+        data.getNamespacedKey().forEach(item -> Bukkit.broadcast(Component.text(item.getKey() + " two:" + item.getNamespace())));
+        namespacedKey.forEach(item -> Bukkit.broadcast(Component.text(item.getKey() + " two:" + item.getNamespace())));
+
+        return data.getNamespacedKey().stream().allMatch(this::has);
+    }
+
+    public boolean has(NamespacedKey key) {
+        return namespacedKey.stream().anyMatch(namespace -> namespace.getKey().equals(key.getKey()) && namespace.getNamespace().equals(key.getNamespace()));
     }
 
     public boolean hasEnchant(ItemData data, Enchantment... enchantments) {

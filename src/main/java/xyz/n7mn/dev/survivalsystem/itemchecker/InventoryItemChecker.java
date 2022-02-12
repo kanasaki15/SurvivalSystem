@@ -1,6 +1,5 @@
 package xyz.n7mn.dev.survivalsystem.itemchecker;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.n7mn.dev.survivalsystem.advancement.base.check.ItemCheck;
