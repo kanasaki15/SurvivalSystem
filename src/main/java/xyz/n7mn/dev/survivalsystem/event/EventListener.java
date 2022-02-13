@@ -32,7 +32,9 @@ import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.advancement.data.CustomCraftOpenAdvancement;
 import xyz.n7mn.dev.survivalsystem.advancement.data.GreatHoneyAdvancement;
 import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
+import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackData;
 import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackSerializable;
+import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
 import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
 import xyz.n7mn.dev.survivalsystem.gui.customcraft.craft.CraftGUI;
 import xyz.n7mn.dev.survivalsystem.playerdata.PlayerData;
@@ -144,10 +146,10 @@ public class EventListener implements Listener {
             armorStand.setCustomName(MessageUtil.replaceFromConfig("GRAVE-NAME", "%name%|" + e.getPlayer().getName(), "%time%|" + time));
             armorStand.getPersistentDataContainer().set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(),"delete_time"), PersistentDataType.INTEGER, time);
 
-            List<Map<String, Object>> list = new ArrayList<>();
-            e.getDrops().forEach(i -> list.add(i.serialize()));
+            List<ItemStackData> list = new ArrayList<>();
+            e.getDrops().forEach(i -> list.add(ItemStackSerializable.serialize(i)));
 
-            GraveInventoryData data = new GraveInventoryData(Timestamp.valueOf(LocalDateTime.now()), player.getWorld().getName(), player.getName(), e.getPlayer().getUniqueId(), new ItemStackSerializable(list), armorStand.getUniqueId());
+            GraveInventoryData data = new GraveInventoryData(Timestamp.valueOf(LocalDateTime.now()), player.getWorld().getName(), player.getName(), e.getPlayer().getUniqueId(), list, armorStand.getUniqueId());
             deathTable.put(data);
             GraveCache.graveCache.put(armorStand.getUniqueId(), data);
         } else {

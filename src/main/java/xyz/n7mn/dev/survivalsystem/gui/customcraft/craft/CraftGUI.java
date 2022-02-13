@@ -51,7 +51,7 @@ public class CraftGUI implements Listener, GUIListener {
         }
 
         inventory.setItem(53, ItemStackUtil.createItem(Material.KNOWLEDGE_BOOK, ChatColor.YELLOW + "レシピ本を見る"));
-        craftHolder.addListener(53, player -> new RecipeGUI().previewCraftRecipe(player));
+        craftHolder.addListener(53, player -> new RecipeGUI().createRecipePreview(player));
         inventory.setItem(24, ItemDataUtils.INVALID_ITEM.getItemStack());
     }
 

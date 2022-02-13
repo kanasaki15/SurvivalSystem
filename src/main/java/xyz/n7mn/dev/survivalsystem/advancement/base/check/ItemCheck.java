@@ -5,7 +5,6 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
-import xyz.n7mn.dev.survivalsystem.advancement.data.GreatHoneyAdvancement;
 
 public abstract class ItemCheck {
     public abstract void item(Player player, ItemStack itemStack);

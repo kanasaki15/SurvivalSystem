@@ -21,7 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class RecipeGUI implements GUIListener {
-    public void previewCraftRecipe(Player player) {
+
+    public void createRecipePreview(Player player) {
         RecipeHolder recipeHolder = new RecipeHolder();
 
         Inventory inventory = Bukkit.createInventory(recipeHolder, 54);

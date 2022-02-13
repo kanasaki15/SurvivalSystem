@@ -7,7 +7,6 @@ import org.bukkit.potion.PotionEffect;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 
 import java.util.Collection;
-import java.util.Collections;
 
 @UtilityClass
 public class SyncUtil {
@@ -16,8 +15,6 @@ public class SyncUtil {
     }
 
     public void addPotionEffects(Player player, Collection<PotionEffect> effects) {
-        Bukkit.getScheduler().runTask(SurvivalInstance.INSTANCE.getPlugin(), () -> {
-            player.addPotionEffects(effects);
-        });
+        Bukkit.getScheduler().runTask(SurvivalInstance.INSTANCE.getPlugin(), () -> player.addPotionEffects(effects));
     }
 }
