@@ -20,6 +20,8 @@ public class ItemDataUtils {
     public static ItemData RESISTANCE_RING1;
     public static ItemData RESISTANCE_RING2;
 
+    public static ItemData DIAMOND_PICKAXE = new ItemData(ItemStackUtil.createItem(Material.DIAMOND_PICKAXE, ChatColor.YELLOW + "すごいピッケル", new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "great_pickaxe"), PersistentDataType.INTEGER, 1, ChatColor.YELLOW + "テスト"));
+
     public static void init() {
         ItemData RESISTANCE_RING1 = new ItemData(ItemStackUtil.createItem(Material.GOLD_NUGGET, ChatColor.YELLOW + "耐性のリング Ⅰ", new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "resistance_ring"), PersistentDataType.INTEGER, 1, ChatColor.YELLOW + "耐性のリング", ChatColor.YELLOW + "このアイテムをインベントリーに持つことで", ChatColor.YELLOW + "HPが半分以下になったとき耐性 Ⅰをつける。"));
         RESISTANCE_RING1.getItemStack().addEnchant(Enchantment.MENDING, 1, true);

@@ -7,6 +7,7 @@ import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftAbstract;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
+import xyz.n7mn.dev.survivalsystem.customcraft.craft.CustomCraftPickaxe;
 import xyz.n7mn.dev.survivalsystem.customcraft.craft.CustomCraftResistanceRing1;
 import xyz.n7mn.dev.survivalsystem.customcraft.craft.CustomCraftResistanceRing2;
 import xyz.n7mn.dev.survivalsystem.customcraft.craft.CustomCraftTest1;
@@ -23,6 +24,7 @@ public class CustomCraft {
         add(new CustomCraftTest1());
         add(new CustomCraftResistanceRing1());
         add(new CustomCraftResistanceRing2());
+        add(new CustomCraftPickaxe());
 
         AtomicInteger count = new AtomicInteger();
 

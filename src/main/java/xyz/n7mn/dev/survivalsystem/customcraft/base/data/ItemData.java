@@ -30,6 +30,17 @@ public class ItemData {
         }
     }
 
+    public ItemData(ItemStack itemStack, Set<NamespacedKey> namespacedKey) {
+        if (itemStack != null) {
+            this.itemStack = itemStack;
+
+            this.namespacedKey = namespacedKey;
+        } else {
+            this.itemStack = ItemDataUtils.AIR_DUMMY.itemStack;
+        }
+    }
+
+
     public boolean equals(ItemData data, boolean checkMeta, boolean checkDurability, boolean checkPersistentData) {
         return checkEquals(data, checkMeta, checkDurability, checkPersistentData);
     }
@@ -103,5 +114,10 @@ public class ItemData {
         }
 
         return null;
+    }
+
+    @Override
+    public ItemData clone() {
+        return new ItemData(itemStack, namespacedKey);
     }
 }
