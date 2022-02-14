@@ -44,7 +44,6 @@ shadowJar {
     minimize()
 
     dependencies {
-        include(dependency('org.xerial:sqlite-jdbc:3.36.0.3'))
         include(dependency('com.github.Roxeez:AdvancementAPI:9b959a88cc'))
     }
 }

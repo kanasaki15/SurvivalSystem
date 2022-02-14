@@ -1,9 +1,8 @@
 package xyz.n7mn.dev.survivalsystem.cache.serializable;
 
+import com.google.common.collect.ImmutableMap;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Utility;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -11,41 +10,26 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 
-//補足: record だとエラーが出た気がする
-public class ItemStackSerializable implements Serializable {
-
-    public ItemStackSerializable(List<Map<String, Object>> itemStack) {
-        this.itemStack = itemStack;
-    }
-
-    @Serial //現在のバージョンは1...
-    private static final long serialVersionUID = 1;
-
-    private List<Map<String, Object>> itemStack;
-
-    public List<Map<String, Object>> getSerializable() {
-        return itemStack;
-    }
-
-    public void setSerializable(List<Map<String, Object>> itemStack) {
-        this.itemStack = itemStack;
-    }
+@SuppressWarnings("deprecation")
+public class ItemStackSerializable {
 
     @NotNull
-    @Utility
     public static ItemStackData serialize(ItemStack itemStack) {
-        return new ItemStackData(translate(itemStack), itemStack.getItemMeta().serialize());
+        @NotNull Map<String, Object> object = itemStack.getItemMeta().serialize();
+
+        return new ItemStackData(translate(itemStack), object);
     }
 
+    /**
+     * @see ItemStack
+     * taken from Spigot/Bukkit ItemStack
+     */
     private static Map<String, Object> translate(ItemStack itemStack) {
-        Map<String, Object> result = new LinkedHashMap<String, Object>();
+        Map<String, Object> result = new LinkedHashMap<>();
 
         result.put("v", Bukkit.getUnsafe().getDataVersion()); // Include version to indicate we are using modern material names (or LEGACY prefix)
         result.put("type", itemStack.getType().name());
@@ -57,6 +41,10 @@ public class ItemStackSerializable implements Serializable {
         return result;
     }
 
+    /**
+     * @see ItemStack
+     * taken from Spigot/Bukkit ItemStack
+     */
     @NotNull
     public static ItemStack deserialize(@NotNull Map<String, Object> itemStack, Map<String, Object> itemMeta) {
         int version = (itemStack.containsKey("v")) ? ((Number) itemStack.get("v")).intValue() : -1;
@@ -69,7 +57,7 @@ public class ItemStackSerializable implements Serializable {
 
         Material type;
         if (version < 0) {
-            type = Material.getMaterial(Material.LEGACY_PREFIX + (String) itemStack.get("type"));
+            type = Material.getMaterial(Material.LEGACY_PREFIX + itemStack.get("type"));
 
             byte dataVal = (type != null && type.getMaxDurability() == 0) ? (byte) damage : 0; // Actually durable items get a 0 passed into conversion
             type = Bukkit.getUnsafe().fromLegacy(new MaterialData(type, dataVal), true);
@@ -88,9 +76,23 @@ public class ItemStackSerializable implements Serializable {
 
         ItemStack result = new ItemStack(type, amount, damage);
 
-        Object object = ConfigurationSerialization.deserializeObject(itemMeta);
-        if (object instanceof ItemMeta meta) {
+        if (translate(itemMeta) instanceof ItemMeta meta) {
             result.setItemMeta(meta);
+        }
+
+        if (itemMeta.containsKey("enchants")) { // Backward compatiblity, @deprecated
+            Object raw = itemMeta.get("enchants");
+
+            if (raw instanceof Map<?, ?> map) {
+                for (Map.Entry<?, ?> entry : map.entrySet()) {
+                    Enchantment enchantment = Enchantment.getByName(entry.getKey().toString());
+
+                    //gsonのバグ？でdoubleで判定しないといけません！
+                    if ((enchantment != null) && (entry.getValue() instanceof Double value)) {
+                        result.addUnsafeEnchantment(enchantment, value.intValue());
+                    }
+                }
+            }
         }
 
         if (version < 0) {
@@ -101,5 +103,17 @@ public class ItemStackSerializable implements Serializable {
         }
 
         return result.ensureServerConversions(); // Paper
+    }
+
+    /**
+     * protectedで保護されているので愚直に判定を入れる
+     */
+    private static Object translate(@NotNull Map<String, Object> args) {
+        ImmutableMap<String,Object> map = ImmutableMap.<String, Object>builder()
+                .putAll(args)
+                .put(ConfigurationSerialization.SERIALIZED_TYPE_KEY, "ItemMeta")
+                .build();
+
+        return ConfigurationSerialization.deserializeObject(map);
     }
 }

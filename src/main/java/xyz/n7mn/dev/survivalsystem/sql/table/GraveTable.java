@@ -2,10 +2,9 @@ package xyz.n7mn.dev.survivalsystem.sql.table;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.bukkit.Bukkit;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
-import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
+import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackData;
 import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
 import xyz.n7mn.dev.survivalsystem.sql.SQLFormat;
 
@@ -35,7 +34,7 @@ public class GraveTable extends SQLFormat {
         createSQL("grave", "(date datetime2, world string, name string, uuid string, itemstack text, armorStand string, active boolean)");
     }
 
-    Type type = new TypeToken<List<ItemData>>(){}.getType();
+    Type type = new TypeToken<List<ItemStackData>>(){}.getType();
 
     public void put(String world, String playerName, UUID uuid, String itemGson, UUID armorStand) {
         Bukkit.getScheduler().runTaskAsynchronously(SurvivalInstance.INSTANCE.getPlugin(), () -> {
@@ -63,14 +62,11 @@ public class GraveTable extends SQLFormat {
             try {
                 PreparedStatement preparedStatement = SurvivalInstance.INSTANCE.getConnection().getConnection().prepareStatement("insert into grave values(?,?,?,?,?,?,?)");
 
-                Gson gson = new GsonBuilder()
-                        .create();
-
                 preparedStatement.setTimestamp(1, data.getTimestamp());
                 preparedStatement.setString(2, data.getWorld().getName());
                 preparedStatement.setString(3, data.getPlayerName());
                 preparedStatement.setString(4, data.getUUID().toString());
-                preparedStatement.setString(5, gson.toJson(data.getItemStack()));
+                preparedStatement.setString(5, new Gson().toJson(data.getItemStack()));
                 preparedStatement.setString(6, data.getArmorStandUUID().toString());
                 preparedStatement.setBoolean(7, true);
 
@@ -106,7 +102,6 @@ public class GraveTable extends SQLFormat {
                 preparedStatement.setString(1, uuid.toString());
 
                 ResultSet resultSet = preparedStatement.executeQuery();
-
 
                 if (resultSet.next() && resultSet.getBoolean(7)) {
                     consumer.accept(new GraveInventoryData(resultSet.getTimestamp(1), resultSet.getString(2), resultSet.getString(3), UUID.fromString(resultSet.getString(4)), new Gson().fromJson(resultSet.getString(5), type), UUID.fromString(resultSet.getString(6))));

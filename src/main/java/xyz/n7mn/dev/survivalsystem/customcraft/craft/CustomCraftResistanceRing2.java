@@ -30,6 +30,8 @@ public class CustomCraftResistanceRing2 extends CustomCraftAbstract {
         data.setItemData(new ItemStack(Material.DIAMOND), 1, 2, 3, 4, 6, 7, 8, 9);
         data.setItemData(ItemDataUtils.RESISTANCE_RING1, 5);
 
+        data.setCheckPersistentData(true);
+
         return data;
     }
 }

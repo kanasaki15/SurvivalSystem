@@ -63,6 +63,6 @@ public class GraveInventoryData {
     }
 
     public void remove() {
-        remove(true);
+        remove(false);
     }
 }
