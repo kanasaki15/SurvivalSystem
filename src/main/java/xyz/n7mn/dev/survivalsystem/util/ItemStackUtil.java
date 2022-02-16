@@ -1,6 +1,8 @@
 package xyz.n7mn.dev.survivalsystem.util;
 
 import lombok.experimental.UtilityClass;
+import net.kyori.adventure.text.Component;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EntityType;
@@ -72,6 +74,37 @@ public class ItemStackUtil {
     public void addItem(HumanEntity player, ItemStack... itemStack) {
         if (player instanceof Player p) {
             addItem(p, itemStack);
+        }
+    }
+
+    public boolean isArmor(ItemStack itemStack) {
+        return isArmorHelmet(itemStack) || isArmorChestPlate(itemStack) || isArmorLeggings(itemStack) || isArmorBoots(itemStack);
+    }
+
+    public boolean isArmorHelmet(ItemStack itemStack) {
+        return itemStack.getType().name().toLowerCase().endsWith("helmet");
+    }
+
+    public boolean isArmorChestPlate(ItemStack itemStack) {
+        return itemStack.getType().name().toLowerCase().endsWith("chestplate");
+    }
+
+    public boolean isArmorLeggings(ItemStack itemStack) {
+        return itemStack.getType().name().toLowerCase().endsWith("leggings");
+    }
+
+    public boolean isArmorBoots(ItemStack itemStack) {
+        return itemStack.getType().name().toLowerCase().endsWith("boots");
+    }
+
+    public void addLore(ItemStack itemStack, Component... component) {
+        if (itemStack.hasLore()) {
+            List<Component> components = itemStack.lore();
+
+            components.addAll(List.of(component));
+            itemStack.lore(components);
+        } else {
+            itemStack.lore(List.of(component));
         }
     }
 }

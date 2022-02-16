@@ -59,7 +59,7 @@ public class Timer {
         if (announceTime++ > SurvivalInstance.INSTANCE.getPlugin().getConfig().getInt("announceTime")) {
             List<String> list = MessageManager.getStringList("TipsList");
 
-            int pick = new SecureRandom().nextInt(list.size());
+            final int pick = new SecureRandom().nextInt(list.size());
 
             for (Player player : getServer().getOnlinePlayers()) {
                 player.sendMessage(ChatColor.YELLOW + "[ななみ鯖 Tips] " + ChatColor.RESET + ChatColor.translateAlternateColorCodes('&', list.get(pick)));
@@ -70,6 +70,9 @@ public class Timer {
     }
 
     public void stop() {
-        if (bukkitTask != null) bukkitTask.cancel();
+        if (bukkitTask != null) {
+            bukkitTask.cancel();
+            bukkitTask = null;
+        }
     }
 }

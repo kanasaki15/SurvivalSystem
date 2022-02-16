@@ -27,6 +27,7 @@ public class InventoryItemChecker {
 
 
     public void tasks(Player player) {
+        //TODO: player.getInventory().getArmorContents() が必要か確認する必要があります
         Arrays.stream(player.getInventory().getContents()).forEach(item -> forEach(player, item));
     }
 }

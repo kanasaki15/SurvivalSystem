@@ -1,26 +1,29 @@
 package xyz.n7mn.dev.survivalsystem.event;
 
 import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
+import com.destroystokyo.paper.event.inventory.PrepareResultEvent;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.event.world.ChunkPopulateEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.GrindstoneInventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -34,6 +37,8 @@ import xyz.n7mn.dev.survivalsystem.advancement.data.GreatHoneyAdvancement;
 import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
 import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackData;
 import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackSerializable;
+import xyz.n7mn.dev.survivalsystem.customenchant.CustomEnchantAbstract;
+import xyz.n7mn.dev.survivalsystem.customenchant.CustomEnchantUtils;
 import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
 import xyz.n7mn.dev.survivalsystem.gui.customcraft.craft.CraftGUI;
 import xyz.n7mn.dev.survivalsystem.playerdata.PlayerData;
@@ -45,6 +50,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class EventListener implements Listener {
 
@@ -142,7 +148,7 @@ public class EventListener implements Listener {
             final int time = SurvivalInstance.INSTANCE.getPlugin().getConfig().getInt("GraveTime");
 
             armorStand.setCustomName(MessageUtil.replaceFromConfig("GRAVE-NAME", "%name%|" + e.getPlayer().getName(), "%time%|" + time));
-            armorStand.getPersistentDataContainer().set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(),"delete_time"), PersistentDataType.INTEGER, time);
+            armorStand.getPersistentDataContainer().set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "delete_time"), PersistentDataType.INTEGER, time);
 
             List<ItemStackData> list = new ArrayList<>();
             e.getDrops().forEach(i -> list.add(ItemStackSerializable.serialize(i)));
@@ -183,6 +189,27 @@ public class EventListener implements Listener {
                 GraveCache.refundItem(e.getPlayer(), data);
 
                 data.remove();
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEnchantEvent(final EnchantItemEvent e) {
+        for (CustomEnchantAbstract data : CustomEnchantUtils.AllEnchants) {
+            if (data.isActiveEnchant() && data.canEnchantItem(e.getItem())) {
+                final double chance = ThreadLocalRandom.current().nextDouble(0, 100);
+
+                final double enchantChance = data.getEnchantChance(e.getExpLevelCost());
+
+                if (enchantChance > chance) {
+                    final int levels = ThreadLocalRandom.current().nextInt(0, data.getEnchantMax() + 1);
+
+                    if (levels > 0) {
+                        CustomEnchantUtils.addCustomEnchant(e.getItem(), data, levels, true);
+
+                        MessageUtil.sendChat(e.getEnchanter(), "ENCHANT-MESSAGE", "%enchant-name%|" + data.displayNameToString(levels), "%chance%|" + enchantChance);
+                    }
+                }
             }
         }
     }
@@ -270,7 +297,31 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
+    public void onPrepareResultEvent(PrepareResultEvent e) {
+        //CUSTOM ENCHANTS!
+        if (e.getView().getType() == InventoryType.GRINDSTONE && e.getResult() != null) {
+            SurvivalInstance.INSTANCE.getCustomEnchant().onPrepareGrindstoneEvent((GrindstoneInventory) e.getInventory());
+        }
+    }
+
+    @EventHandler
+    public void onPrepareAnvilEvent(PrepareAnvilEvent e) {
+        SurvivalInstance.INSTANCE.getCustomEnchant().onPrepareAnvilEvent(e);
+    }
+
+    @EventHandler
     public void onPlayerAdvancementDoneEvent(PlayerAdvancementDoneEvent e) {
         SurvivalInstance.INSTANCE.getAdvancement().getRewardManager().execute(e.getPlayer(), e.getAdvancement().getKey().getKey());
     }
+
+    //TODO: ダンジョンを作成する
+    //@EventHandler
+
+    // x1 = x2 = x3 = x4 = x5
+    // x1 = x2 = x3 = x4 = x5
+
+    //public void onA(ChunkPopulateEvent e) {
+    //e.getChunk().getBlock(5,e.getChunk().getChunkSnapshot().getHighestBlockYAt(5,5),5).setType(Material.DIAMOND_BLOCK);
+
+    //}
 }

@@ -106,10 +106,10 @@ public class ItemStackSerializable {
     }
 
     /**
-     * protectedで保護されているので愚直に判定を入れる
+     * protectedで保護されているので愚直に判定を入れてから実行する
      */
     private static Object translate(@NotNull Map<String, Object> args) {
-        ImmutableMap<String,Object> map = ImmutableMap.<String, Object>builder()
+        ImmutableMap<String, Object> map = ImmutableMap.<String, Object>builder()
                 .putAll(args)
                 .put(ConfigurationSerialization.SERIALIZED_TYPE_KEY, "ItemMeta")
                 .build();

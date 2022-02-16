@@ -3,6 +3,7 @@ package xyz.n7mn.dev.survivalsystem.customcraft;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ShapedRecipe;
+import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftAbstract;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
@@ -26,48 +27,51 @@ public class CustomCraft {
         add(new CustomCraftResistanceRing2());
         add(new CustomCraftPickaxe());
 
-        AtomicInteger count = new AtomicInteger();
+        if (SurvivalInstance.INSTANCE.getPlugin().getConfig().getBoolean("registerVanillaRecipes")) {
 
-        Bukkit.recipeIterator().forEachRemaining(recipeIterator -> {
-            if (recipeIterator instanceof ShapedRecipe recipe) {
-                CustomCraftData customCraftData = new CustomCraftData();
+            AtomicInteger count = new AtomicInteger();
 
-                recipe.getIngredientMap().values().forEach(action -> {
-                    if (action != null) customCraftData.setItemData(new ItemData(action));
-                    else customCraftData.setItemData(ItemDataUtils.AIR_DUMMY);
-                });
+            Bukkit.recipeIterator().forEachRemaining(recipeIterator -> {
+                if (recipeIterator instanceof ShapedRecipe recipe) {
+                    CustomCraftData customCraftData = new CustomCraftData();
 
-                CustomCraftAbstract craftAbstract = new CustomCraftAbstract() {
-                    @Override
-                    public String getRecipeID() {
-                        return "vanilla-" + (craftAbstractHashMap.size() + 1);
-                    }
+                    recipe.getIngredientMap().values().forEach(action -> {
+                        if (action != null) customCraftData.setItemData(new ItemData(action));
+                        else customCraftData.setItemData(ItemDataUtils.AIR_DUMMY);
+                    });
 
-                    @Override
-                    public ItemData getItem(CustomCraftData data) {
-                        return new ItemData(recipeIterator.getResult());
-                    }
+                    CustomCraftAbstract craftAbstract = new CustomCraftAbstract() {
+                        @Override
+                        public String getRecipeID() {
+                            return "vanilla-" + (craftAbstractHashMap.size() + 1);
+                        }
 
-                    @Override
-                    public CustomCraftData getUsesItem() {
-                        return create();
-                    }
+                        @Override
+                        public ItemData getItem(CustomCraftData data) {
+                            return new ItemData(recipeIterator.getResult());
+                        }
 
-                    @Override
-                    public CustomCraftData create() {
-                        return customCraftData;
-                    }
-                };
-                craftAbstract.setShow(false);
+                        @Override
+                        public CustomCraftData getUsesItem() {
+                            return create();
+                        }
 
-                add(craftAbstract);
+                        @Override
+                        public CustomCraftData create() {
+                            return customCraftData;
+                        }
+                    };
+                    craftAbstract.setShow(false);
 
-                count.getAndIncrement();
-            }
-            Bukkit.getConsoleSender().sendMessage("Register Vanilla Recipes..! " + recipeIterator.getResult().getType());
-        });
+                    add(craftAbstract);
 
-        Bukkit.getLogger().info("Complete Register Vanilla Recipes!:" + count);
+                    count.getAndIncrement();
+                }
+                Bukkit.getConsoleSender().sendMessage("Register Vanilla Recipes..! " + recipeIterator.getResult().getType());
+            });
+
+            Bukkit.getLogger().info("Complete Register Vanilla Recipes!:" + count);
+        }
     }
 
     public void add(CustomCraftAbstract data) {

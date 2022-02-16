@@ -9,7 +9,6 @@ import java.util.Map;
 public class ItemStackData {
     public ItemStackData(Map<String, Object> stack, Map<String, Object> meta) {
         this.stack = stack;
-
         this.meta = meta;
     }
 

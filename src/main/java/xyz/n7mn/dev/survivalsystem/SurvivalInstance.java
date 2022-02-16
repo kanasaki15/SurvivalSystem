@@ -8,6 +8,7 @@ import xyz.n7mn.dev.survivalsystem.advancement.Advancement;
 import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
 import xyz.n7mn.dev.survivalsystem.customcraft.CustomCraft;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
+import xyz.n7mn.dev.survivalsystem.customenchant.CustomEnchant;
 import xyz.n7mn.dev.survivalsystem.gui.GUIManager;
 import xyz.n7mn.dev.survivalsystem.itemchecker.InventoryItemChecker;
 import xyz.n7mn.dev.survivalsystem.sql.SQLConnection;
@@ -32,6 +33,8 @@ public enum SurvivalInstance {
 
     private final CustomCraft customCraft = new CustomCraft();
 
+    private final CustomEnchant customEnchant = new CustomEnchant();
+
     private final GUIManager guiManager = new GUIManager();
 
     private final InventoryItemChecker itemChecker = new InventoryItemChecker();
@@ -50,6 +53,7 @@ public enum SurvivalInstance {
         advancement.init();
 
         customCraft.init();
+        customEnchant.init();
 
         guiManager.init();
     }

@@ -19,6 +19,8 @@ CANNOT-USE: '&c使用できません！'
 GRAVE-NAME: '&a%name%のお墓撤去まで・・・ %time%秒'
 GRAVE-DROP-ITEM: '&cアイテムが一杯なので%item%を地面に捨てました・・・！'
 
+ENCHANT-MESSAGE: '&bラッキー！ %enchant-name%&bを獲得！ (&e%chance%%&bで獲得しました)'
+
 ## 特別にCHANCEをここに置いてあります
 ## - %grade% 1まで 多分今後も1
 ## - %chance% 確率を表示
