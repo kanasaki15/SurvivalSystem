@@ -33,6 +33,9 @@ dependencies {
     implementation 'mysql:mysql-connector-java:8.0.28'
     implementation 'org.xerial:sqlite-jdbc:3.36.0.3'
 
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.0.1")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.0.1")
+
     compileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
 
@@ -45,6 +48,8 @@ shadowJar {
 
     dependencies {
         include(dependency('com.github.Roxeez:AdvancementAPI:9b959a88cc'))
+        include(dependency('com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.0.1'))
+        include(dependency('com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.0.1'))
     }
 }
 

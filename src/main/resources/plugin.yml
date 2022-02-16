@@ -5,7 +5,7 @@ api-version: 1.17
 load: STARTUP
 authors: [ 7mi_chan ]
 description: SurvivalSystem
-softdepend:  [ ViaVersion ]
+softdepend:  [ ViaVersion, FastAsyncWorldEdit ]
 commands:
   tipsoff:
     description: ''
