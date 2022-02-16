@@ -2,12 +2,17 @@ package xyz.n7mn.dev.survivalsystem.event;
 
 import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent;
+import com.fastasyncworldedit.core.FaweAPI;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.math.BlockVector3;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
+import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
@@ -31,6 +36,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.advancement.data.CustomCraftOpenAdvancement;
 import xyz.n7mn.dev.survivalsystem.advancement.data.GreatHoneyAdvancement;
@@ -45,6 +51,9 @@ import xyz.n7mn.dev.survivalsystem.playerdata.PlayerData;
 import xyz.n7mn.dev.survivalsystem.sql.table.GraveTable;
 import xyz.n7mn.dev.survivalsystem.util.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -320,8 +329,33 @@ public class EventListener implements Listener {
     // x1 = x2 = x3 = x4 = x5
     // x1 = x2 = x3 = x4 = x5
 
-    //public void onA(ChunkPopulateEvent e) {
-    //e.getChunk().getBlock(5,e.getChunk().getChunkSnapshot().getHighestBlockYAt(5,5),5).setType(Material.DIAMOND_BLOCK);
+    @EventHandler
+    public void onA(ChunkPopulateEvent e) {
 
-    //}
+        double next = new SecureRandom().nextDouble(100);
+
+        if (next < 0.05) {
+
+            @NotNull Block block = e.getChunk().getBlock(0, e.getChunk().getChunkSnapshot().getHighestBlockYAt(0, 0), 0);
+
+            if (block.getType() != Material.WATER
+                    && !block.getBiome().toString().endsWith("RIVER")
+                    && !block.getBiome().toString().endsWith("OCEAN")
+                    && !block.getBiome().toString().endsWith("SWAMP")) {
+
+                @NotNull Location location = block.getLocation();
+
+                try {
+                    File file = Paths.get(SurvivalInstance.INSTANCE.getPlugin().getDataFolder().getPath(), "dungeons", "mine-entrance-1.schem").toFile();
+
+                    FaweAPI.load(file)
+                            .paste(new BukkitWorld(e.getWorld()), BlockVector3.at(location.getX(), location.getY(), location.getZ()));
+
+                    e.getChunk().getPersistentDataContainer().set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "dungeons"), PersistentDataType.STRING, "mineDungeons");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
 }

@@ -56,5 +56,13 @@ public enum SurvivalInstance {
         customEnchant.init();
 
         guiManager.init();
+
+        SurvivalInstance.INSTANCE.getPlugin().saveResource("dungeons/mine-entrance-1.schem", false);
+        SurvivalInstance.INSTANCE.getPlugin().saveResource("dungeons/mine-road-first-1-1", false);
+        SurvivalInstance.INSTANCE.getPlugin().saveResource("dungeons/mine-road-first-1-2", false);
+        SurvivalInstance.INSTANCE.getPlugin().saveResource("dungeons/mine-road-first-2-1", false);
+        SurvivalInstance.INSTANCE.getPlugin().saveResource("dungeons/mine-road-first-2-2", false);
+        SurvivalInstance.INSTANCE.getPlugin().saveResource("dungeons/mine-road-first-3-1", false);
+        SurvivalInstance.INSTANCE.getPlugin().saveResource("dungeons/mine-road-first-3-2", false);
     }
 }

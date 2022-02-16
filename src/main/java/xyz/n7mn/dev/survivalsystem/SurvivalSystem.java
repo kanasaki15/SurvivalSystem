@@ -24,12 +24,16 @@ public final class SurvivalSystem extends JavaPlugin {
             PlayerDataUtil.putPlayerData(player);
         }
 
+
+
         getServer().getPluginManager().registerEvents(new EventListener(), this);
 
         getCommand("vanish").setExecutor(new VanishCommand());
         getCommand("reloadConfig").setExecutor(new ReloadCommand());
         getCommand("grave").setExecutor(new GraveCommand());
         getCommand("debug").setExecutor(new DebugCommand());
+
+
 
         SurvivalInstance.INSTANCE.init();
     }
