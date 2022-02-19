@@ -2,8 +2,6 @@ package xyz.n7mn.dev.survivalsystem.customenchant.enchant;
 
 import io.papermc.paper.enchantments.EnchantmentRarity;
 import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
@@ -13,24 +11,42 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.customenchant.CustomEnchantAbstract;
-import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
-import xyz.n7mn.dev.survivalsystem.util.RomanNumber;
 
 import java.util.Set;
 
-public class ResistanceEnchant extends CustomEnchantAbstract {
-    public ResistanceEnchant() {
-        super(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "enchant_resistance"));
+public class HeroOfTheVillageEnchant extends CustomEnchantAbstract {
+    public HeroOfTheVillageEnchant() {
+        super(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "enchant_hero_of_village"));
+    }
+
+    @Override
+    public String displayNameToString(int level) {
+        return null;
+    }
+
+    @Override
+    public double getEnchantChance(int level) {
+        return 0;
+    }
+
+    @Override
+    public int getEnchantMax() {
+        return 0;
+    }
+
+    @Override
+    public boolean isActiveEnchant() {
+        return false;
     }
 
     @Override
     public @NotNull String getName() {
-        return "Resistance";
+        return null;
     }
 
     @Override
     public int getMaxLevel() {
-        return 5;
+        return 0;
     }
 
     @Override
@@ -60,12 +76,12 @@ public class ResistanceEnchant extends CustomEnchantAbstract {
 
     @Override
     public boolean canEnchantItem(@NotNull ItemStack item) {
-        return ItemStackUtil.isArmor(item) || item.getType() == Material.ENCHANTED_BOOK;
+        return false;
     }
 
     @Override
     public @NotNull Component displayName(int level) {
-        return Component.text(displayNameToString(level));
+        return null;
     }
 
     @Override
@@ -90,31 +106,11 @@ public class ResistanceEnchant extends CustomEnchantAbstract {
 
     @Override
     public @NotNull Set<EquipmentSlot> getActiveSlots() {
-        return Set.of(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET, EquipmentSlot.HAND, EquipmentSlot.OFF_HAND);
+        return null;
     }
 
     @Override
     public @NotNull String translationKey() {
         return null;
-    }
-
-    @Override
-    public String displayNameToString(int level) {
-        return ChatColor.YELLOW + "耐性 " + RomanNumber.toRoman(level);
-    }
-
-    @Override
-    public double getEnchantChance(int level) {
-        return level * 1.5;
-    }
-
-    @Override
-    public int getEnchantMax() {
-        return 3;
-    }
-
-    @Override
-    public boolean isActiveEnchant() {
-        return true;
     }
 }

@@ -8,7 +8,6 @@ import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.GrindstoneInventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
@@ -55,7 +54,7 @@ public class CustomEnchant {
                     CustomEnchantUtils.removeLore(itemStack, inventory.getLowerItem(), true);
                 }
             } else {
-
+                //TODO:
             }
 
             //WHY?!??!
@@ -80,9 +79,9 @@ public class CustomEnchant {
 
         ItemStack result = pickup(event);
 
-        final AtomicBoolean atomicBoolean = new AtomicBoolean();
-
         if (result != null && inventory.getFirstItem() != null && inventory.getRepairCost() < inventory.getMaximumRepairCost()) {
+            final AtomicBoolean atomicBoolean = new AtomicBoolean();
+
             final boolean hasFirstCustomEnchant = CustomEnchantUtils.hasCustomEnchant(inventory.getFirstItem());
 
             final boolean force = event.getView().getPlayer().getGameMode() == GameMode.CREATIVE;
@@ -99,6 +98,8 @@ public class CustomEnchant {
                 }
             } else if (event.getInventory().getRenameText() != null) {
                 result.addEnchantments(inventory.getFirstItem().getEnchantments());
+
+                atomicBoolean.set(true);
             }
 
             //それっぽいから適当な式
@@ -148,8 +149,6 @@ public class CustomEnchant {
                     displayable.set(true);
                 }
             } else if (notVanillaEnchantment && enchantment.canEnchantItem(result)) {
-                Bukkit.broadcastMessage("add" + enchantment.toString());
-
                 result.getItemMeta().addEnchant(enchantment, firstLevel, true);
             }
         });
@@ -160,8 +159,6 @@ public class CustomEnchant {
                     displayable.set(true);
                 }
             } else if (notVanillaEnchantment && enchantment.canEnchantItem(result)) {
-                Bukkit.broadcastMessage("add" + enchantment.toString());
-
                 result.addEnchant(enchantment, level, true);
             }
         });

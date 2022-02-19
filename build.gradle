@@ -8,19 +8,11 @@ version = '1.0'
 
 repositories {
     maven {
-        name = 'papermc-repo'
-        url = 'https://papermc.io/repo/repository/maven-public/'
-    }
-    maven {
-        name = 'sonatype'
-        url = 'https://oss.sonatype.org/content/groups/public/'
-    }
-
-    maven {
         url = 'https://jitpack.io'
     }
 
     maven {
+        name = 'purpurmc-repo'
         url = 'https://repo.purpurmc.org/snapshots'
     }
 
@@ -29,6 +21,7 @@ repositories {
 
 dependencies {
     implementation 'org.purpurmc.purpur:purpur-api:1.18.1-R0.1-SNAPSHOT'
+
     implementation 'com.github.Roxeez:AdvancementAPI:9b959a88cc'
     implementation 'mysql:mysql-connector-java:8.0.28'
     implementation 'org.xerial:sqlite-jdbc:3.36.0.3'
@@ -41,6 +34,8 @@ dependencies {
 
     testCompileOnly 'org.projectlombok:lombok:1.18.22'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    implementation fileTree(dir: 'libs', include: '*.jar')
 }
 
 shadowJar {

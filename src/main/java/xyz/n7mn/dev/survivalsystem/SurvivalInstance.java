@@ -2,6 +2,8 @@ package xyz.n7mn.dev.survivalsystem;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import xyz.n7mn.dev.survivalsystem.advancement.Advancement;
@@ -57,12 +59,6 @@ public enum SurvivalInstance {
 
         guiManager.init();
 
-        SurvivalInstance.INSTANCE.getPlugin().saveResource("dungeons/mine-entrance-1.schem", false);
-        SurvivalInstance.INSTANCE.getPlugin().saveResource("dungeons/mine-road-first-1-1", false);
-        SurvivalInstance.INSTANCE.getPlugin().saveResource("dungeons/mine-road-first-1-2", false);
-        SurvivalInstance.INSTANCE.getPlugin().saveResource("dungeons/mine-road-first-2-1", false);
-        SurvivalInstance.INSTANCE.getPlugin().saveResource("dungeons/mine-road-first-2-2", false);
-        SurvivalInstance.INSTANCE.getPlugin().saveResource("dungeons/mine-road-first-3-1", false);
-        SurvivalInstance.INSTANCE.getPlugin().saveResource("dungeons/mine-road-first-3-2", false);
+        SurvivalInstance.INSTANCE.getPlugin().saveResource("dungeons/mine-1-entrance.schem", false);
     }
 }

@@ -11,7 +11,6 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
-import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ArmorStand;
@@ -26,6 +25,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
+import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.world.ChunkPopulateEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.GrindstoneInventory;
@@ -68,6 +69,11 @@ public class EventListener implements Listener {
         Component message = e.message();
 
         e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void Vechnile(VehicleMoveEvent e) {
+        Bukkit.broadcastMessage(e.getFrom().subtract(e.getTo()).toString());
     }
 
 
@@ -332,6 +338,9 @@ public class EventListener implements Listener {
     @EventHandler
     public void onA(ChunkPopulateEvent e) {
 
+
+
+
         double next = new SecureRandom().nextDouble(100);
 
         if (next < 0.05) {
@@ -341,15 +350,18 @@ public class EventListener implements Listener {
             if (block.getType() != Material.WATER
                     && !block.getBiome().toString().endsWith("RIVER")
                     && !block.getBiome().toString().endsWith("OCEAN")
-                    && !block.getBiome().toString().endsWith("SWAMP")) {
+                    && !block.getBiome().toString().endsWith("SWAMP")
+                    && block.getY() > 65) {
 
                 @NotNull Location location = block.getLocation();
 
+                BukkitWorld world = new BukkitWorld(e.getWorld());
+
                 try {
-                    File file = Paths.get(SurvivalInstance.INSTANCE.getPlugin().getDataFolder().getPath(), "dungeons", "mine-entrance-1.schem").toFile();
+                    File file = Paths.get(SurvivalInstance.INSTANCE.getPlugin().getDataFolder().getPath(), "dungeons", "mine-1-entrance.schem").toFile();
 
                     FaweAPI.load(file)
-                            .paste(new BukkitWorld(e.getWorld()), BlockVector3.at(location.getX(), location.getY(), location.getZ()));
+                            .paste(world, BlockVector3.at(location.getX(), location.getY(), location.getZ()));
 
                     e.getChunk().getPersistentDataContainer().set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "dungeons"), PersistentDataType.STRING, "mineDungeons");
                 } catch (IOException ex) {

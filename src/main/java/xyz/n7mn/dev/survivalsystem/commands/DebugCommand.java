@@ -1,5 +1,6 @@
 package xyz.n7mn.dev.survivalsystem.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -30,6 +31,8 @@ public class DebugCommand implements CommandExecutor {
             player.getInventory().getItemInMainHand().getEnchantments().forEach(((enchantment, integer) ->
                     player.sendMessage(enchantment.toString() + integer.toString())
             ));
+
+            player.teleport(Bukkit.getWorld(args[1]).getSpawnLocation());
         }
 
         return true;
