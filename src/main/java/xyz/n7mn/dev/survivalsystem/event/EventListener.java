@@ -10,22 +10,30 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.md_5.bungee.api.ChatColor;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.ai.goal.PathfinderGoalBowShoot;
+import net.minecraft.world.entity.monster.EntitySkeleton;
+import net.minecraft.world.entity.monster.EntitySkeletonAbstract;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftSkeleton;
+import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Skeleton;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.world.ChunkPopulateEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -54,6 +62,9 @@ import xyz.n7mn.dev.survivalsystem.util.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
@@ -110,6 +121,54 @@ public class EventListener implements Listener {
 
                 e.getPlayer().sendMessage(text1);
                 e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityShootEvent(EntityShootBowEvent e) {
+        if (e.getEntity() instanceof Skeleton && e.getEntity().getPersistentDataContainer().has(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "bow_cool"), PersistentDataType.INTEGER)) {
+
+            EntitySkeleton entitySkeleton = ((CraftSkeleton) e.getEntity()).getHandle();
+
+            final int bow = e.getEntity().getPersistentDataContainer().get(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "bow_cool"), PersistentDataType.INTEGER);
+
+            try {
+                Field field = EntitySkeletonAbstract.class.getDeclaredField("b");
+                field.setAccessible(true);
+
+                PathfinderGoalBowShoot<EntitySkeletonAbstract> abstractPathfinderGoalBowShoot = (PathfinderGoalBowShoot<EntitySkeletonAbstract>) field.get(entitySkeleton);
+
+                entitySkeleton.bR.a(abstractPathfinderGoalBowShoot); //clear
+
+                abstractPathfinderGoalBowShoot.c(bow); // use ticks
+
+                Field speed = PathfinderGoalBowShoot.class.getDeclaredField("b");
+                speed.setAccessible(true);
+
+                speed.setDouble(abstractPathfinderGoalBowShoot, 0.3); // target speed
+
+                // set allowed use items //
+
+                Field itemCoolDown = EntityLiving.class.getDeclaredField("bB");
+                itemCoolDown.setAccessible(true);
+                itemCoolDown.setInt(entitySkeleton, -100);
+
+
+                Field item = EntityLiving.class.getDeclaredField("bA");
+                item.setAccessible(true);
+                item.set(entitySkeleton, CraftItemStack.asNMSCopy(e.getEntity().getEquipment().getItemInMainHand()));
+
+                Method method = EntityLiving.class.getDeclaredMethod("c", int.class, boolean.class);
+                method.setAccessible(true);
+                method.invoke(entitySkeleton, 1, true);
+
+                // set allowed use items //
+
+                entitySkeleton.bR.a(4, abstractPathfinderGoalBowShoot); // apply bow use ticks...
+
+            } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
+                ex.printStackTrace();
             }
         }
     }

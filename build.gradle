@@ -17,6 +17,8 @@ repositories {
     }
 
     mavenCentral()
+
+    mavenLocal()
 }
 
 dependencies {
@@ -36,6 +38,9 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
     implementation fileTree(dir: 'libs', include: '*.jar')
+
+    //need to build jars...
+    compileOnly 'org.spigotmc:spigot:1.18.1-R0.1-SNAPSHOT'
 }
 
 shadowJar {

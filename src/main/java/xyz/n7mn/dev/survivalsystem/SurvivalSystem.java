@@ -67,6 +67,8 @@ public final class SurvivalSystem extends JavaPlugin {
         generatorConfig.getNoiseGeneration().setMinY(-128);
         generatorConfig.getNoiseGeneration().setHeight(256+128);
 
+        biomeCreator.addBiomeFeature(BiomeDecorationType.RAW_GENERATION, BiomeDecoration.ORE_COPPER_LARGE);
+
         //generatorConfig.setOreVeinsEnabled(true);
         generatorConfig.getNoiseGeneration().setIslandNoiseOverride(true);
 
@@ -81,8 +83,6 @@ public final class SurvivalSystem extends JavaPlugin {
         creator.setEnvironmentBuilder(new EnvironmentBuilder());
         creator.setAdvancedBiomeProvider(biomeprovider);
         Bukkit.getScheduler().runTask(this, () -> creator.createWorld());
-
-
 
         SurvivalInstance.INSTANCE.init();
     }
