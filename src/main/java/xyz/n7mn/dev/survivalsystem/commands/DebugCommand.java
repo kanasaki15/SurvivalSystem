@@ -2,7 +2,6 @@ package xyz.n7mn.dev.survivalsystem.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,10 +9,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
-import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.customenchant.CustomEnchantUtils;
+import xyz.n7mn.dev.survivalsystem.infernal.InfernalManager;
+import xyz.n7mn.dev.survivalsystem.infernal.InfernalUtils;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 
 public class DebugCommand implements CommandExecutor {
@@ -35,7 +34,7 @@ public class DebugCommand implements CommandExecutor {
 
             @NotNull Entity skeleton = player.getWorld().spawnEntity(player.getLocation(), EntityType.SKELETON);
 
-            skeleton.getPersistentDataContainer().set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "bow_cool"), PersistentDataType.INTEGER, 0);
+            InfernalUtils.addInfernal(skeleton, InfernalManager.Infernal.QUICK_SHOT, 5);
 
             player.getInventory().getItemInMainHand().getEnchantments().forEach(((enchantment, integer) ->
                     player.sendMessage(enchantment.toString() + integer.toString())

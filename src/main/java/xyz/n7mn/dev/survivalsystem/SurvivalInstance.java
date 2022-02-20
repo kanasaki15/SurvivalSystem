@@ -12,6 +12,7 @@ import xyz.n7mn.dev.survivalsystem.customcraft.CustomCraft;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
 import xyz.n7mn.dev.survivalsystem.customenchant.CustomEnchant;
 import xyz.n7mn.dev.survivalsystem.gui.GUIManager;
+import xyz.n7mn.dev.survivalsystem.infernal.InfernalManager;
 import xyz.n7mn.dev.survivalsystem.itemchecker.InventoryItemChecker;
 import xyz.n7mn.dev.survivalsystem.sql.SQLConnection;
 import xyz.n7mn.dev.survivalsystem.timer.Timer;
@@ -33,6 +34,8 @@ public enum SurvivalInstance {
 
     private final Advancement advancement = new Advancement();
 
+    private final InfernalManager infernalManager = new InfernalManager();
+
     private final CustomCraft customCraft = new CustomCraft();
 
     private final CustomEnchant customEnchant = new CustomEnchant();
@@ -53,6 +56,8 @@ public enum SurvivalInstance {
         ItemDataUtils.init();
 
         advancement.init();
+
+        infernalManager.init();
 
         customCraft.init();
         customEnchant.init();
