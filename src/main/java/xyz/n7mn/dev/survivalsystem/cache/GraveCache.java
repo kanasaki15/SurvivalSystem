@@ -26,9 +26,9 @@ public class GraveCache {
         for (GraveInventoryData data : graveCache.values()) {
             Bukkit.getScheduler().runTask(SurvivalInstance.INSTANCE.getPlugin(), () -> {
 
-                if (data.getWorld() == null) {
+                if (data.getWorld() == null || !data.isActive()) {
 
-                    data.remove(true);
+                    data.remove(data.isActive());
 
                     return;
                 }

@@ -2,7 +2,6 @@ package xyz.n7mn.dev.survivalsystem.util;
 
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EntityType;
@@ -91,6 +90,14 @@ public class ItemStackUtil {
 
     public boolean isArmorLeggings(ItemStack itemStack) {
         return itemStack.getType().name().toLowerCase().endsWith("leggings");
+    }
+
+    public boolean isSword(ItemStack itemStack) {
+        return itemStack.getType().name().toLowerCase().endsWith("sword");
+    }
+
+    public boolean isBook(ItemStack itemStack) {
+        return itemStack.getType() == Material.ENCHANTED_BOOK || itemStack.getType() == Material.BOOK;
     }
 
     public boolean isArmorBoots(ItemStack itemStack) {

@@ -24,7 +24,6 @@ public class CustomCraftCreateAdvancement implements AdvancementCreator, Advance
             show.setTitle("カスタム作業台で何か作る");
             show.setDescription("カスタム作業台でレシピを確認できるそうですよ！");
             show.setIcon(Material.CRAFTING_TABLE);
-            show.setHidden(true);
         });
 
         advancement.addCriteria("grant", TriggerType.IMPOSSIBLE, trigger -> {

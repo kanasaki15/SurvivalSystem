@@ -31,10 +31,6 @@ public class QuickShot extends InfernalAbstract {
 
             PathfinderGoalBowShoot<EntitySkeletonAbstract> abstractPathfinderGoalBowShoot = (PathfinderGoalBowShoot<EntitySkeletonAbstract>) field.get(entitySkeleton);
 
-            //entitySkeleton.bR.a(abstractPathfinderGoalBowShoot); //clear
-
-            //abstractPathfinderGoalBowShoot.c(bow); // use ticks
-
             Field speed = PathfinderGoalBowShoot.class.getDeclaredField("b");
             speed.setAccessible(true);
 
@@ -51,8 +47,6 @@ public class QuickShot extends InfernalAbstract {
             Method method = EntityLiving.class.getDeclaredMethod("c", int.class, boolean.class);
             method.setAccessible(true);
             method.invoke(entitySkeleton, 1, true);
-
-            //entitySkeleton.bR.a(4, abstractPathfinderGoalBowShoot); // apply bow use ticks...
 
         } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
             ex.printStackTrace();

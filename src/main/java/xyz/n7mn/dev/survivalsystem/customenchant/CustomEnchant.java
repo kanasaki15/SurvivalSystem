@@ -31,6 +31,7 @@ public class CustomEnchant {
 
         register(CustomEnchantUtils.RESISTANCE);
         register(CustomEnchantUtils.TEST);
+        register(CustomEnchantUtils.LIFE_STEAL);
 
         Enchantment.stopAcceptingRegistrations();
     }

@@ -17,13 +17,9 @@ public class InfernalManager implements Listener {
 
     public void init() {
         Bukkit.getPluginManager().registerEvents(this, SurvivalInstance.INSTANCE.getPlugin());
-
-        InfernalNameSpace.init();
-
-        quickShot = new QuickShot();
     }
 
-    public QuickShot quickShot;
+    public QuickShot quickShot = new QuickShot();
 
     @EventHandler
     public void onEntityShootBowEvent(EntityShootBowEvent e) {
@@ -37,7 +33,6 @@ public class InfernalManager implements Listener {
                 quickShot.handle(e.getEntity());
             }
         }
-
     }
 
     public enum Infernal {

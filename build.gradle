@@ -22,7 +22,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.purpurmc.purpur:purpur-api:1.18.1-R0.1-SNAPSHOT'
+    implementation ('org.purpurmc.purpur:purpur-api:1.18.1-R0.1-SNAPSHOT')
+    compileOnly ('org.spigotmc:spigot:1.18.1-R0.1-SNAPSHOT')
 
     implementation 'com.github.Roxeez:AdvancementAPI:9b959a88cc'
     implementation 'mysql:mysql-connector-java:8.0.28'
@@ -39,8 +40,11 @@ dependencies {
 
     implementation fileTree(dir: 'libs', include: '*.jar')
 
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
+
+    implementation 'com.google.code.gson:gson:2.9.0'
     //need to build jars...
-    compileOnly 'org.spigotmc:spigot:1.18.1-R0.1-SNAPSHOT'
+
 }
 
 shadowJar {
@@ -50,7 +54,11 @@ shadowJar {
         include(dependency('com.github.Roxeez:AdvancementAPI:9b959a88cc'))
         include(dependency('com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.0.1'))
         include(dependency('com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.0.1'))
+
+        include(dependency('com.google.code.gson:gson:2.9.0'))
     }
+
+    relocate 'com.google.gson', 'xyz.n7mn.dev.gson'
 }
 
 build.dependsOn shadowJar

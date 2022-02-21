@@ -14,12 +14,14 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -170,6 +172,23 @@ public class EventListener implements Listener {
         e.setKeepLevel(true);
         e.setShouldDropExperience(false);
         e.getDrops().clear();
+    }
+
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent e) {
+        Entity killer = e.getEntity().getKiller();
+
+        if (killer instanceof Player player) {
+
+            if (player.getEquipment().getItemInMainHand() != null && ItemStackUtil.isSword(player.getEquipment().getItemInMainHand())) {
+
+                final int level = player.getEquipment().getItemInMainHand().getEnchantmentLevel(CustomEnchantUtils.LIFE_STEAL);
+
+                if (level != 0) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 60, level - 1));
+                }
+            }
+        }
     }
 
     @EventHandler

@@ -88,7 +88,7 @@ public class ItemStackSerializable {
                     Enchantment enchantment = Enchantment.getByName(entry.getKey().toString());
 
                     //gsonのバグ？でdoubleで判定しないといけません！
-                    if ((enchantment != null) && (entry.getValue() instanceof Double value)) {
+                    if ((enchantment != null) && (entry.getValue() instanceof Number value)) {
                         result.addUnsafeEnchantment(enchantment, value.intValue());
                     }
                 }

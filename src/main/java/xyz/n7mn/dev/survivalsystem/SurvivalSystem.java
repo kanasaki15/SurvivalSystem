@@ -79,7 +79,6 @@ public final class SurvivalSystem extends JavaPlugin {
 
         creator.setGeneratorConfiguration(generatorConfig);
 
-
         creator.setEnvironmentBuilder(new EnvironmentBuilder());
         creator.setAdvancedBiomeProvider(biomeprovider);
         Bukkit.getScheduler().runTask(this, () -> creator.createWorld());
