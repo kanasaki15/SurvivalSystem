@@ -8,7 +8,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
-import xyz.n7mn.dev.survivalsystem.advancement.base.check.ItemCheck;
+import xyz.n7mn.dev.survivalsystem.itemchecker.base.ItemCheck;
 import xyz.n7mn.dev.survivalsystem.util.SyncUtil;
 
 public class ResistanceRing extends ItemCheck {

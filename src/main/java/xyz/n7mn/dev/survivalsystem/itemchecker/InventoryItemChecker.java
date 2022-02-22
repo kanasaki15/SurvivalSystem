@@ -2,8 +2,8 @@ package xyz.n7mn.dev.survivalsystem.itemchecker;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import xyz.n7mn.dev.survivalsystem.advancement.base.check.ItemCheck;
 import xyz.n7mn.dev.survivalsystem.customcraft.item.ResistanceRing;
+import xyz.n7mn.dev.survivalsystem.itemchecker.base.ItemCheck;
 
 import java.util.ArrayList;
 import java.util.Arrays;

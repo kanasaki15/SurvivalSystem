@@ -50,8 +50,6 @@ shadowJar {
 
     dependencies {
         include(dependency('com.github.Roxeez:AdvancementAPI:9b959a88cc'))
-        include(dependency('com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.0.1'))
-        include(dependency('com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.0.1'))
 
         include(dependency('com.google.code.gson:gson:2.9.0'))
     }

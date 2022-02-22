@@ -9,7 +9,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import xyz.n7mn.dev.survivalsystem.advancement.base.check.ItemCheck;
+import xyz.n7mn.dev.survivalsystem.itemchecker.base.ItemCheck;
 
 public class GlassBottleAdvancement extends ItemCheck implements AdvancementCreator {
 

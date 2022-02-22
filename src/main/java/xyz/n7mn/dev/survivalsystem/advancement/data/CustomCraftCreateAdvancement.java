@@ -8,7 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import xyz.n7mn.dev.survivalsystem.advancement.base.reward.AdvancementReward;
+import xyz.n7mn.dev.survivalsystem.advancement.reward.AdvancementReward;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 
 public class CustomCraftCreateAdvancement implements AdvancementCreator, AdvancementReward {

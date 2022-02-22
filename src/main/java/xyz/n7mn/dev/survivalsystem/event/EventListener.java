@@ -244,7 +244,7 @@ public class EventListener implements Listener {
     public void onEntityAddToWorldEvent(EntityAddToWorldEvent e) {
         if (e.getEntity().getType() == EntityType.ARMOR_STAND && e.getEntity().getPersistentDataContainer().has(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "delete_time"))) {
             SurvivalInstance.INSTANCE.getConnection().getGraveTable().get(e.getEntity().getUniqueId(), data -> {
-                if (data != null && GraveCache.graveCache.get(data.getArmorStandUUID()) == null) {
+                if (data != null && data.isActive() && GraveCache.graveCache.get(data.getArmorStandUUID()) == null) {
                     GraveCache.graveCache.put(data.getArmorStandUUID(), data);
                 }
             });

@@ -32,6 +32,7 @@ public class CustomEnchant {
         register(CustomEnchantUtils.RESISTANCE);
         register(CustomEnchantUtils.TEST);
         register(CustomEnchantUtils.LIFE_STEAL);
+        register(CustomEnchantUtils.NIGHT_VISION);
 
         Enchantment.stopAcceptingRegistrations();
     }

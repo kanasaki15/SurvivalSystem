@@ -7,6 +7,7 @@ import org.bukkit.scheduler.BukkitTask;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
 import xyz.n7mn.dev.survivalsystem.itemchecker.InventoryItemChecker;
+import xyz.n7mn.dev.survivalsystem.itemchecker.TickChecker;
 import xyz.n7mn.dev.survivalsystem.playerdata.PlayerData;
 import xyz.n7mn.dev.survivalsystem.util.MessageManager;
 import xyz.n7mn.dev.survivalsystem.util.PlayerDataUtil;
@@ -48,6 +49,11 @@ public class Timer {
             InventoryItemChecker itemCheck = SurvivalInstance.INSTANCE.getItemChecker();
 
             if (itemCheck != null) itemCheck.tasks(onlinePlayers);
+
+            TickChecker tickChecker = SurvivalInstance.INSTANCE.getTickChecker();
+
+            if (tickChecker != null) tickChecker.forEach(onlinePlayers);
+
         });
 
         announce();

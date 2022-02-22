@@ -110,8 +110,6 @@ public class GraveTable extends SQLFormat {
 
                 if (resultSet.next() && resultSet.getBoolean(7)) {
                     consumer.accept(new GraveInventoryData(resultSet.getTimestamp(1), resultSet.getString(2), resultSet.getString(3), UUID.fromString(resultSet.getString(4)), gson.fromJson(resultSet.getString(5), type), UUID.fromString(resultSet.getString(6))));
-                } else {
-                    consumer.accept(null);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

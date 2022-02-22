@@ -4,7 +4,7 @@ import lombok.Getter;
 import net.roxeez.advancement.AdvancementManager;
 import org.bukkit.Bukkit;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
-import xyz.n7mn.dev.survivalsystem.advancement.base.reward.AdvancementRewardManager;
+import xyz.n7mn.dev.survivalsystem.advancement.reward.AdvancementRewardManager;
 import xyz.n7mn.dev.survivalsystem.advancement.data.*;
 import xyz.n7mn.dev.survivalsystem.itemchecker.AdvancementItemChecker;
 

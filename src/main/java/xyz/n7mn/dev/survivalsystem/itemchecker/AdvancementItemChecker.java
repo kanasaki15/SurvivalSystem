@@ -9,8 +9,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.ItemStack;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
-import xyz.n7mn.dev.survivalsystem.advancement.base.check.ItemCheck;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIListener;
+import xyz.n7mn.dev.survivalsystem.itemchecker.base.ItemCheck;
 
 import java.util.ArrayList;
 import java.util.List;

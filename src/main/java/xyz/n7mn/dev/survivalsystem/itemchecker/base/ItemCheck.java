@@ -1,4 +1,4 @@
-package xyz.n7mn.dev.survivalsystem.advancement.base.check;
+package xyz.n7mn.dev.survivalsystem.itemchecker.base;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;

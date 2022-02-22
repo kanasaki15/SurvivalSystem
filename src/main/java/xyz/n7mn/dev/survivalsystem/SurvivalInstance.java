@@ -2,8 +2,6 @@ package xyz.n7mn.dev.survivalsystem;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.block.Biome;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import xyz.n7mn.dev.survivalsystem.advancement.Advancement;
@@ -14,6 +12,7 @@ import xyz.n7mn.dev.survivalsystem.customenchant.CustomEnchant;
 import xyz.n7mn.dev.survivalsystem.gui.GUIManager;
 import xyz.n7mn.dev.survivalsystem.infernal.InfernalManager;
 import xyz.n7mn.dev.survivalsystem.itemchecker.InventoryItemChecker;
+import xyz.n7mn.dev.survivalsystem.itemchecker.TickChecker;
 import xyz.n7mn.dev.survivalsystem.sql.SQLConnection;
 import xyz.n7mn.dev.survivalsystem.timer.Timer;
 
@@ -44,8 +43,11 @@ public enum SurvivalInstance {
 
     private final InventoryItemChecker itemChecker = new InventoryItemChecker();
 
+    private final TickChecker tickChecker = new TickChecker();
+
     public void init() {
         itemChecker.init();
+        tickChecker.init();
 
         timer.start();
 

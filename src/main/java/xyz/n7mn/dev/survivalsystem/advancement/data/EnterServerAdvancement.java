@@ -9,7 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import xyz.n7mn.dev.survivalsystem.advancement.base.reward.AdvancementReward;
+import xyz.n7mn.dev.survivalsystem.advancement.reward.AdvancementReward;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 
 public class EnterServerAdvancement implements AdvancementCreator, AdvancementReward {

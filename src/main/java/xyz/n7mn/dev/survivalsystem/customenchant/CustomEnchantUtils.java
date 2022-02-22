@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import xyz.n7mn.dev.survivalsystem.customenchant.enchant.LifeStealEnchant;
+import xyz.n7mn.dev.survivalsystem.customenchant.enchant.NightVisionEnchant;
 import xyz.n7mn.dev.survivalsystem.customenchant.enchant.ResistanceEnchant;
 import xyz.n7mn.dev.survivalsystem.customenchant.enchant.TestEnchant;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
@@ -23,11 +24,13 @@ public class CustomEnchantUtils {
     public CustomEnchantAbstract RESISTANCE = new ResistanceEnchant();
     public CustomEnchantAbstract TEST = new TestEnchant();
     public CustomEnchantAbstract LIFE_STEAL = new LifeStealEnchant();
+    public CustomEnchantAbstract NIGHT_VISION = new NightVisionEnchant();
 
     public CustomEnchantAbstract[] AllEnchants = new CustomEnchantAbstract[]{
             RESISTANCE,
             TEST,
             LIFE_STEAL,
+            NIGHT_VISION,
     };
 
 

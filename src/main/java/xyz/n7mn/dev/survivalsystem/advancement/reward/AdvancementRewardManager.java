@@ -1,4 +1,4 @@
-package xyz.n7mn.dev.survivalsystem.advancement.base.reward;
+package xyz.n7mn.dev.survivalsystem.advancement.reward;
 
 import org.bukkit.entity.Player;
 
