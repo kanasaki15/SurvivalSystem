@@ -2,7 +2,7 @@ package xyz.n7mn.dev.survivalsystem.customenchant.enchant;
 
 import io.papermc.paper.enchantments.EnchantmentRarity;
 import net.kyori.adventure.text.Component;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
@@ -17,24 +17,24 @@ import xyz.n7mn.dev.survivalsystem.util.RomanNumber;
 
 import java.util.Set;
 
-public class NightVisionEnchant extends CustomEnchantAbstract {
-    public NightVisionEnchant() {
-        super(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "enchant_night_vision"));
+public class KineticEnergyResistanceEnchant extends CustomEnchantAbstract {
+    public KineticEnergyResistanceEnchant() {
+        super(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "enchant_kinetic_energy_resistance"));
     }
 
     @Override
     public String displayNameToString(int level) {
-        return ChatColor.BLUE + "暗視 " + RomanNumber.toRoman(level);
+        return ChatColor.YELLOW + "運動エネルギー耐性 " + RomanNumber.toRoman(level);
     }
 
     @Override
     public double getEnchantChance(int level) {
-        return level * 0.5;
+        return level;
     }
 
     @Override
     public int getEnchantMax() {
-        return 1;
+        return 4;
     }
 
     @Override
@@ -44,12 +44,12 @@ public class NightVisionEnchant extends CustomEnchantAbstract {
 
     @Override
     public @NotNull String getName() {
-        return "night_vision".toUpperCase();
+        return "Kinetic_Energy_Resistance".toUpperCase();
     }
 
     @Override
     public int getMaxLevel() {
-        return 1;
+        return 5;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class NightVisionEnchant extends CustomEnchantAbstract {
 
     @Override
     public boolean canEnchantItem(@NotNull ItemStack item) {
-        return ItemStackUtil.isArmorHelmet(item) || ItemStackUtil.isBook(item);
+        return ItemStackUtil.isArmor(item) || ItemStackUtil.isBook(item);
     }
 
     @Override

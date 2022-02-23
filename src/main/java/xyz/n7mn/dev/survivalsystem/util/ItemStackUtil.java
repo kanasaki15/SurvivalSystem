@@ -97,7 +97,7 @@ public class ItemStackUtil {
     }
 
     public boolean isBook(ItemStack itemStack) {
-        return itemStack.getType() == Material.ENCHANTED_BOOK || itemStack.getType() == Material.BOOK;
+        return itemStack.getType() == Material.ENCHANTED_BOOK;
     }
 
     public boolean isArmorBoots(ItemStack itemStack) {

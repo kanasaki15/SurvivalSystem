@@ -44,7 +44,7 @@ public class LifeStealEnchant extends CustomEnchantAbstract {
 
     @Override
     public @NotNull String getName() {
-        return "LifeSteal";
+        return "LifeSteal".toUpperCase();
     }
 
     @Override

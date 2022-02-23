@@ -175,7 +175,7 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent e) {
+    public void onEntityDeathEvent(EntityDeathEvent e) {
         Entity killer = e.getEntity().getKiller();
 
         if (killer instanceof Player player) {
@@ -221,8 +221,10 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onEnchantEvent(final EnchantItemEvent e) {
+        ItemStack useItem = e.getItem().getType() == Material.BOOK ? new ItemStack(Material.ENCHANTED_BOOK) : e.getItem();
+
         for (CustomEnchantAbstract data : CustomEnchantUtils.AllEnchants) {
-            if (data.isActiveEnchant() && data.canEnchantItem(e.getItem())) {
+            if (data.isActiveEnchant() && data.canEnchantItem(useItem)) {
                 final double chance = ThreadLocalRandom.current().nextDouble(0, 100);
 
                 final double enchantChance = data.getEnchantChance(e.getExpLevelCost());
@@ -254,7 +256,7 @@ public class EventListener implements Listener {
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent e) {
         if (e.getClickedBlock() != null) {
-            if ((e.getClickedBlock().getType() == Material.BEE_NEST || e.getClickedBlock().getType() == Material.BEEHIVE)) {
+            if (e.getClickedBlock().getType() == Material.BEE_NEST || e.getClickedBlock().getType() == Material.BEEHIVE) {
                 if ((e.getHand() == EquipmentSlot.HAND && e.getPlayer().getInventory().getItemInMainHand().getType() == Material.GLASS_BOTTLE) || (e.getHand() == EquipmentSlot.OFF_HAND && e.getPlayer().getInventory().getItemInOffHand().getType() == Material.GLASS_BOTTLE)) {
 
                     final int type = Integer.parseInt(e.getClickedBlock().getBlockData().getAsString().replaceAll("[^0-9]", ""));
@@ -315,6 +317,9 @@ public class EventListener implements Listener {
                         e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 20 * 60, 1));
                         e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 60, 1));
                     }
+                    default: {
+                        //TODO: ?
+                    }
                 }
 
                 e.getPlayer().getAdvancementProgress(Bukkit.getAdvancement(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), GreatHoneyAdvancement.ID))).awardCriteria("grant");
@@ -340,16 +345,8 @@ public class EventListener implements Listener {
         SurvivalInstance.INSTANCE.getAdvancement().getRewardManager().execute(e.getPlayer(), e.getAdvancement().getKey().getKey());
     }
 
-    //TODO: ダンジョンを作成する
-    //@EventHandler
-
-    // x1 = x2 = x3 = x4 = x5
-    // x1 = x2 = x3 = x4 = x5
-
     @EventHandler
     public void onA(ChunkPopulateEvent e) {
-
-
 
 
         double next = new SecureRandom().nextDouble(100);

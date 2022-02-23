@@ -25,7 +25,7 @@ public class ResistanceEnchant extends CustomEnchantAbstract {
 
     @Override
     public @NotNull String getName() {
-        return "Resistance";
+        return "Resistance".toUpperCase();
     }
 
     @Override

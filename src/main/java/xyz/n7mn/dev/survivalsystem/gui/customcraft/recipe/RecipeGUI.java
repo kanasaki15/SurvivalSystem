@@ -112,8 +112,6 @@ public class RecipeGUI implements GUIListener {
             inventory.setItem(24, craftAbstract.getItem(null).getItemStack());
         }
 
-
-
         inventory.setItem(45, ItemStackUtil.createItem(Material.ARROW, ChatColor.YELLOW + "← 戻る"));
         recipeHolder.addListener(45, p -> createRecipePreview(p, 1));
 
