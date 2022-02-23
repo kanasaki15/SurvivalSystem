@@ -24,7 +24,7 @@ public class NightVisionEnchant extends CustomEnchantAbstract {
 
     @Override
     public String displayNameToString(int level) {
-        return ChatColor.BLUE + "暗視" + RomanNumber.toRoman(level);
+        return ChatColor.BLUE + "暗視 " + RomanNumber.toRoman(level);
     }
 
     @Override

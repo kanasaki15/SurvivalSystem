@@ -13,65 +13,117 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftAbstract;
+import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIItem;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIListener;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
+import xyz.n7mn.dev.survivalsystem.util.MessageUtil;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 public class RecipeGUI implements GUIListener {
 
-    public void createRecipePreview(Player player) {
-        RecipeHolder recipeHolder = new RecipeHolder();
+    public void createRecipePreview(Player player, int page) {
+        if (1 > page) {
+            MessageUtil.sendChat(player, "CANNOT-USE");
+        } else {
+            RecipeHolder recipeHolder = new RecipeHolder();
 
-        Inventory inventory = Bukkit.createInventory(recipeHolder, 54);
+            Inventory inventory = Bukkit.createInventory(recipeHolder, 54, Component.text(ChatColor.YELLOW + "| レシピ一覧 - ページ " + page));
 
-        player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1f, 1f);
+            player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1f, 1f);
 
-        ItemStack itemStack = ItemStackUtil.createItem(Material.GRAY_STAINED_GLASS_PANE, String.valueOf(ChatColor.GRAY));
+            final ItemStack glass = ItemStackUtil.createItem(Material.GRAY_STAINED_GLASS_PANE, String.valueOf(ChatColor.GRAY));
 
-        HashMap<String, CustomCraftAbstract> data = new HashMap<>(SurvivalInstance.INSTANCE.getCustomCraft().getCraftAbstractHashMap());
-        recipeHolder.setCraftRecipe(data);
+            HashMap<String, CustomCraftAbstract> data = new HashMap<>(SurvivalInstance.INSTANCE.getCustomCraft().getCraftAbstractHashMap());
+            recipeHolder.setCraftRecipe(data);
 
-        int id = 0;
-        final List<CustomCraftAbstract> list = recipeHolder.getCraftRecipe().values().stream().toList();
+            int id = 27 * (page - 1);
+            final List<CustomCraftAbstract> list = recipeHolder.getCraftRecipe().values().parallelStream()
+                    .filter(CustomCraftAbstract::isShow)
+                    .toList();
 
-        for (int i = 0; i < 54; i++) {
-            if (!recipeSlot(i)) {
-                inventory.setItem(i, itemStack);
-            } else if (list.size() > id) {
-                while (true) {
+            for (int slot = 0; slot < 54; slot++) {
+                if (!previewSlot(slot)) {
+                    inventory.setItem(slot, glass);
+                } else {
                     if (list.size() > id) {
                         CustomCraftAbstract craftAbstract = list.get(id);
-                        if (craftAbstract != null && craftAbstract.isShow()) {
-                            ItemStack item = craftAbstract.getItem(null).getItemStack().clone();
 
-                            //lore!
-                            if (item.hasLore()) {
-                                List<Component> components = item.lore();
-                                components.add(Component.text(""));
-                                components.add(Component.text(ChatColor.YELLOW + "レシピID: " + craftAbstract.getRecipeID()));
+                        ItemStack item = craftAbstract.getItem(null).getItemStack().clone();
 
-                                item.lore(components);
-                            } else {
-                                item.lore(List.of(Component.text(ChatColor.YELLOW + "レシピID: " + craftAbstract.getRecipeID())));
-                            }
+                        //lore!
+                        if (item.hasLore()) {
+                            List<Component> components = item.lore();
+                            components.add(Component.empty());
+                            components.add(Component.text(ChatColor.YELLOW + "レシピID: " + craftAbstract.getRecipeID()));
 
-                            inventory.setItem(i, item);
-
-                            id++;
-                            break;
+                            item.lore(components);
+                        } else {
+                            item.lore(List.of(Component.text(ChatColor.YELLOW + "レシピID: " + craftAbstract.getRecipeID())));
                         }
+
+                        inventory.setItem(slot, item);
+
+                        recipeHolder.addListener(slot, p -> showRecipe(p, craftAbstract));
+
                         id++;
-                    } else {
-                        break;
                     }
                 }
             }
+
+            final int DOWN = page - 1;
+            final int UP = page + 1;
+
+            inventory.setItem(45, ItemStackUtil.createItem(Material.ARROW, ChatColor.YELLOW + "← 前のページ (" + DOWN + ")"));
+            recipeHolder.addListener(45, p -> createRecipePreview(p, DOWN));
+
+            inventory.setItem(53, ItemStackUtil.createItem(Material.ARROW, ChatColor.YELLOW + "→ 次のページ (" + UP + ")"));
+            recipeHolder.addListener(53, p -> createRecipePreview(p, UP));
+
+            player.openInventory(inventory);
+        }
+    }
+
+    public void showRecipe(Player player, CustomCraftAbstract craftAbstract) {
+        final RecipeHolder recipeHolder = new RecipeHolder();
+
+        final Inventory inventory = Bukkit.createInventory(recipeHolder, 54, Component.text(ChatColor.YELLOW + "| " + craftAbstract.getRecipeID() + " のレシピ"));
+
+        player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1f, 1f);
+
+        abstractRecipe(inventory);
+
+        if (craftAbstract.isShow()) {
+
+            final List<Integer> allowed = previewCraftList();
+            final List<ItemData> recipe = craftAbstract.getUsesItem().getItemData();
+
+            for (int i = 0; i < 9; i++) {
+
+                final int slot = allowed.get(i);
+                final ItemData itemData = recipe.get(i);
+
+                inventory.setItem(slot, itemData.getItemStack());
+            }
+
+            inventory.setItem(24, craftAbstract.getItem(null).getItemStack());
         }
 
+
+
+        inventory.setItem(45, ItemStackUtil.createItem(Material.ARROW, ChatColor.YELLOW + "← 戻る"));
+        recipeHolder.addListener(45, p -> createRecipePreview(p, 1));
+
         player.openInventory(inventory);
+    }
+
+    public void abstractRecipe(Inventory inventory) {
+        for (int i = 0; i < 54; i++) {
+            inventory.setItem(i, ItemStackUtil.createItem(Material.GRAY_STAINED_GLASS_PANE, String.valueOf(ChatColor.GRAY)));
+        }
     }
 
     @Override
@@ -105,10 +157,17 @@ public class RecipeGUI implements GUIListener {
 
     }
 
-    public boolean recipeSlot(int rawId) {
+    public boolean previewSlot(int rawId) {
         return (rawId >= 10 && rawId <= 16) ||
                 (rawId >= 19 && rawId <= 25) ||
                 (rawId >= 28 && rawId <= 34) ||
                 (rawId >= 37 && rawId <= 43);
+    }
+
+    /**
+     * @return - クラフトスロットを返します
+     */
+    public List<Integer> previewCraftList() {
+        return Arrays.asList(10, 11, 12, 19, 20, 21, 28, 29, 30);
     }
 }

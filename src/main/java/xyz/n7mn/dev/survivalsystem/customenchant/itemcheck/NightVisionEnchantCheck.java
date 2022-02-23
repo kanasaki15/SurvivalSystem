@@ -16,7 +16,7 @@ public class NightVisionEnchantCheck implements TickCheck {
             final int level = player.getEquipment().getHelmet().getEnchantLevel(CustomEnchantUtils.NIGHT_VISION);
 
             if (level != 0) {
-                SyncUtil.addPotionEffect(player, new PotionEffect(PotionEffectType.NIGHT_VISION, 500 * level, level - 1));
+                SyncUtil.addPotionEffect(player, new PotionEffect(PotionEffectType.NIGHT_VISION, 500 * level, level - 1, true));
             }
         }
     }
