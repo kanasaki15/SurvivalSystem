@@ -16,6 +16,7 @@ import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftAbstract;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIItem;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIListener;
+import xyz.n7mn.dev.survivalsystem.gui.customcraft.craft.CraftGUI;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 import xyz.n7mn.dev.survivalsystem.util.MessageUtil;
 
@@ -79,6 +80,9 @@ public class RecipeGUI implements GUIListener {
 
             inventory.setItem(45, ItemStackUtil.createItem(Material.ARROW, ChatColor.YELLOW + "← 前のページ (" + DOWN + ")"));
             recipeHolder.addListener(45, p -> createRecipePreview(p, DOWN));
+
+            inventory.setItem(49, ItemStackUtil.createItem(Material.RED_WOOL, ChatColor.RED + "クラフト画面を開く"));
+            recipeHolder.addListener(49, p -> p.openInventory(new CraftGUI().createGUI()));
 
             inventory.setItem(53, ItemStackUtil.createItem(Material.ARROW, ChatColor.YELLOW + "→ 次のページ (" + UP + ")"));
             recipeHolder.addListener(53, p -> createRecipePreview(p, UP));

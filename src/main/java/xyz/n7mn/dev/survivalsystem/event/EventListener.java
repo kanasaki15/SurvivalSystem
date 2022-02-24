@@ -20,10 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityPortalEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.*;
@@ -188,6 +185,29 @@ public class EventListener implements Listener {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 60, level - 1));
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamageEvent(EntityDamageEvent e) {
+        if (e.getCause() == EntityDamageEvent.DamageCause.FLY_INTO_WALL && e.getEntity() instanceof Player player) {
+            final int value = 1
+                    + getValue(player.getEquipment().getHelmet(), CustomEnchantUtils.KINETIC_RESISTANCE)
+                    + getValue(player.getEquipment().getChestplate(), CustomEnchantUtils.KINETIC_RESISTANCE)
+                    + getValue(player.getEquipment().getLeggings(), CustomEnchantUtils.KINETIC_RESISTANCE)
+                    + getValue(player.getEquipment().getBoots(), CustomEnchantUtils.KINETIC_RESISTANCE);
+
+            final double damage = e.getDamage() / value;
+
+            e.setDamage(damage);
+        }
+    }
+
+    public int getValue(ItemStack itemStack, Enchantment enchantment) {
+        if (itemStack != null) {
+            return itemStack.getEnchantLevel(enchantment);
+        } else {
+            return 0;
         }
     }
 
