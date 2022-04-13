@@ -26,7 +26,7 @@ public class CustomCraftLeather extends CustomCraftAbstract {
     public CustomCraftData create() {
         CustomCraftData data = new CustomCraftData();
 
-        data.setItemData(new ItemData(new ItemStack(Material.ROTTEN_FLESH)), 1, 2, 3, 4, 5, 6, 7, 8, 9);
+        data.setItemData(Material.ROTTEN_FLESH, 1, 2, 3, 4, 5, 6, 7, 8, 9);
 
         return data;
     }

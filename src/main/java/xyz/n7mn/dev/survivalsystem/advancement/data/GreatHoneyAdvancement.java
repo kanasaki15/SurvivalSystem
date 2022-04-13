@@ -21,7 +21,7 @@ public class GreatHoneyAdvancement implements AdvancementCreator {
 
         advancement.setDisplay(show -> {
             show.setTitle("上質なはちみつを飲む");
-            show.setDescription(MessageUtil.replaceMessage("はちみつを手に入れるときに%chance%%の確率で手に入るらしい", "%chance%|"  + MessageUtil.replaceFromConfig("HONEY-RARE-ITEM-CHANCE")));
+            show.setDescription(MessageUtil.replaceMessage("はちみつを手に入れるときに%chance%%の確率で手に入るらしい", "%chance%|" + MessageUtil.replaceFromConfig("HONEY-RARE-ITEM-CHANCE")));
             show.setIcon(Material.HONEY_BOTTLE);
         });
 

@@ -3,6 +3,7 @@ package xyz.n7mn.dev.survivalsystem.customcraft.base.data;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -25,6 +26,14 @@ public class ItemData {
             if (itemStack.getItemMeta() != null) {
                 namespacedKey = itemStack.getPersistentDataContainer().getKeys();
             }
+        } else {
+            this.itemStack = ItemDataUtils.AIR_DUMMY.itemStack;
+        }
+    }
+
+    public ItemData(Material material) {
+        if (material != null) {
+            this.itemStack = new ItemStack(material);
         } else {
             this.itemStack = ItemDataUtils.AIR_DUMMY.itemStack;
         }

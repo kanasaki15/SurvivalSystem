@@ -3,6 +3,7 @@ package xyz.n7mn.dev.survivalsystem.customenchant;
 import com.google.common.collect.ImmutableMap;
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import xyz.n7mn.dev.survivalsystem.customenchant.enchant.*;
@@ -32,42 +33,58 @@ public class CustomEnchantUtils {
             KINETIC_RESISTANCE,
     };
 
-
-    // 再起動すると謎に 空のテキストが発生します
-    // 多分バグ？ だから非推奨のgetLoreを使う
     public void replaceLore(ItemStack target, Component match, Component replace) {
         if (target.hasLore()) {
-            List<Component> newLore = new ArrayList<>();
+            List<Component> format = new ArrayList<>();
 
-            target.getItemMeta().getLore().forEach(lore -> {
-                Component component = Component.text(lore);
+            String mt = GsonComponentSerializer.gson().serialize(match);
 
-                if (String.valueOf(match).equals(String.valueOf(component))) {
-                    newLore.add(replace);
-                } else {
-                    newLore.add(Component.text(lore));
-                }
+            target.lore().forEach(lore -> {
+                String st = GsonComponentSerializer.gson().serialize(lore);
+
+                if (mt.equals(st)) format.add(replace);
+                else format.add(lore);
             });
 
-            target.lore(newLore);
+            //target.getItemMeta().getLore().forEach(lore -> {
+            //    Component component = Component.text(lore);
+            //
+            //    if (String.valueOf(match).equals(String.valueOf(component))) {
+            //        formatter.add(replace);
+            //    } else {
+            //        formatter.add(Component.text(lore));
+            //    }
+            //});
+
+            target.lore(format);
         }
     }
 
     public void replaceLore(ItemStack target, ItemStack itemStack, Enchantment enchantment, Component replace) {
         if (target.hasLore()) {
-            List<Component> newLore = new ArrayList<>();
+            List<Component> format = new ArrayList<>();
 
-            target.getItemMeta().getLore().forEach(lore -> {
-                Component component = Component.text(lore);
+            String enchantLore = GsonComponentSerializer.gson().serialize(enchantment.displayName(getIntValue(itemStack, enchantment)));
 
-                if (String.valueOf(enchantment.displayName(getIntValue(itemStack, enchantment))).equals(String.valueOf(component))) {
-                    newLore.add(replace);
-                } else {
-                    newLore.add(Component.text(lore));
-                }
+            target.lore().forEach(lore -> {
+                String st = GsonComponentSerializer.gson().serialize(lore);
+
+                if (enchantLore.equals(st)) format.add(replace);
+                else format.add(lore);
+
             });
 
-            target.lore(newLore);
+            //target.getItemMeta().getLore().forEach(lore -> {
+            //    Component component = Component.text(lore);
+            //
+            //    if (String.valueOf(enchantment.displayName(getIntValue(itemStack, enchantment))).equals(String.valueOf(component))) {
+            //        format.add(replace);
+            //    } else {
+            //        format.add(Component.text(lore));
+            //    }
+            //});
+
+            target.lore(format);
         }
     }
 
