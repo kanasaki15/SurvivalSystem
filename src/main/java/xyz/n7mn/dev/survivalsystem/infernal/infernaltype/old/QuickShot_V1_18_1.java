@@ -1,11 +1,11 @@
-package xyz.n7mn.dev.survivalsystem.infernal.infernaltype;
+package xyz.n7mn.dev.survivalsystem.infernal.infernaltype.old;
 
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalBowShoot;
 import net.minecraft.world.entity.monster.EntitySkeleton;
 import net.minecraft.world.entity.monster.EntitySkeletonAbstract;
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftSkeleton;
-import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftSkeleton;
+import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Skeleton;
@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
 
 import static xyz.n7mn.dev.survivalsystem.infernal.InfernalNameSpace.quickShotNameSpace;
 
-public class QuickShot extends InfernalAbstract {
+public class QuickShot_V1_18_1 extends InfernalAbstract {
 
     @Override
     public void handle(LivingEntity entity) {

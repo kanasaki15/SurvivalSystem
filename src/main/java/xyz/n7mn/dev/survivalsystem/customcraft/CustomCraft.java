@@ -8,10 +8,7 @@ import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftAbstract;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
-import xyz.n7mn.dev.survivalsystem.customcraft.craft.CustomCraftPickaxe;
-import xyz.n7mn.dev.survivalsystem.customcraft.craft.CustomCraftResistanceRing1;
-import xyz.n7mn.dev.survivalsystem.customcraft.craft.CustomCraftResistanceRing2;
-import xyz.n7mn.dev.survivalsystem.customcraft.craft.CustomCraftTest1;
+import xyz.n7mn.dev.survivalsystem.customcraft.craft.*;
 
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -26,6 +23,7 @@ public class CustomCraft {
         add(new CustomCraftResistanceRing1());
         add(new CustomCraftResistanceRing2());
         add(new CustomCraftPickaxe());
+        add(new CustomCraftLeather());
 
         if (SurvivalInstance.INSTANCE.getPlugin().getConfig().getBoolean("registerVanillaRecipes")) {
 
@@ -67,7 +65,7 @@ public class CustomCraft {
 
                     count.getAndIncrement();
                 }
-                Bukkit.getConsoleSender().sendMessage("Register Vanilla Recipes..! " + recipeIterator.getResult().getType());
+                Bukkit.getLogger().info("Register Vanilla Recipes..! " + recipeIterator.getResult().getType());
             });
 
             Bukkit.getLogger().info("Complete Register Vanilla Recipes!:" + count);

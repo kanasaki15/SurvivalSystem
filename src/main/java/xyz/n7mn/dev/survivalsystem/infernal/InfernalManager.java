@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.persistence.PersistentDataType;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
-import xyz.n7mn.dev.survivalsystem.infernal.infernaltype.QuickShot;
+import xyz.n7mn.dev.survivalsystem.infernal.infernaltype.old.QuickShot_V1_18_1;
 
 import static xyz.n7mn.dev.survivalsystem.infernal.InfernalNameSpace.quickShotNameSpace;
 
@@ -19,7 +19,7 @@ public class InfernalManager implements Listener {
         Bukkit.getPluginManager().registerEvents(this, SurvivalInstance.INSTANCE.getPlugin());
     }
 
-    public QuickShot quickShot = new QuickShot();
+    public QuickShot_V1_18_1 quickShot = new QuickShot_V1_18_1();
 
     @EventHandler
     public void onEntityShootBowEvent(EntityShootBowEvent e) {
