@@ -56,15 +56,8 @@ public class RecipeGUI implements GUIListener {
                         ItemStack item = craftAbstract.getItem(null).getItemStack().clone();
 
                         //lore!
-                        if (item.hasLore()) {
-                            List<Component> components = item.lore();
-                            components.add(Component.empty());
-                            components.add(Component.text(ChatColor.YELLOW + "レシピID: " + craftAbstract.getRecipeID()));
-
-                            item.lore(components);
-                        } else {
-                            item.lore(List.of(Component.text(ChatColor.YELLOW + "レシピID: " + craftAbstract.getRecipeID())));
-                        }
+                        if (item.hasLore()) ItemStackUtil.addLore(item, Component.empty(), Component.text(ChatColor.YELLOW + "レシピID: " + craftAbstract.getRecipeID()));
+                        else ItemStackUtil.addLore(item, Component.text(ChatColor.YELLOW + "レシピID: " + craftAbstract.getRecipeID()));
 
                         inventory.setItem(slot, item);
 

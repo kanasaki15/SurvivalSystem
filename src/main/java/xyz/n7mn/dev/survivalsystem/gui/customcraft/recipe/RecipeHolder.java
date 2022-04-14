@@ -23,7 +23,7 @@ public class RecipeHolder implements InventoryHolder {
         return null;
     }
 
-    public void addListener(int chestID, GUIItem guiItem) {
-        hashMap.put(chestID, guiItem);
+    public void addListener(final int id, final GUIItem guiItem) {
+        hashMap.put(id, guiItem);
     }
 }
