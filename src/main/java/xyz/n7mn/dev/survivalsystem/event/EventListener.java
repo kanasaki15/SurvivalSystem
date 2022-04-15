@@ -2,16 +2,15 @@ package xyz.n7mn.dev.survivalsystem.event;
 
 import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent;
-import com.fastasyncworldedit.core.FaweAPI;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.math.BlockVector3;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.*;
-import org.bukkit.block.Block;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -24,7 +23,6 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.event.world.ChunkPopulateEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.GrindstoneInventory;
 import org.bukkit.inventory.ItemFlag;
@@ -34,7 +32,6 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.jetbrains.annotations.NotNull;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.advancement.data.CustomCraftOpenAdvancement;
 import xyz.n7mn.dev.survivalsystem.advancement.data.GreatHoneyAdvancement;
@@ -49,9 +46,6 @@ import xyz.n7mn.dev.survivalsystem.playerdata.PlayerData;
 import xyz.n7mn.dev.survivalsystem.sql.table.GraveTable;
 import xyz.n7mn.dev.survivalsystem.util.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -249,7 +243,7 @@ public class EventListener implements Listener {
 
                 final double enchantChance = data.getEnchantChance(e.getExpLevelCost());
 
-                if (enchantChance > chance) {
+                if (enchantChance >= chance) {
                     final int levels = ThreadLocalRandom.current().nextInt(0, data.getEnchantMax() + 1);
 
                     if (levels > 0) {
@@ -266,8 +260,12 @@ public class EventListener implements Listener {
     public void onEntityAddToWorldEvent(EntityAddToWorldEvent e) {
         if (e.getEntity().getType() == EntityType.ARMOR_STAND && e.getEntity().getPersistentDataContainer().has(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "delete_time"))) {
             SurvivalInstance.INSTANCE.getConnection().getGraveTable().get(e.getEntity().getUniqueId(), data -> {
-                if (data != null && data.isActive() && GraveCache.graveCache.get(data.getArmorStandUUID()) == null) {
-                    GraveCache.graveCache.put(data.getArmorStandUUID(), data);
+                if (data != null && GraveCache.graveCache.get(data.getArmorStandUUID()) == null) {
+                    if (data.isActive()) {
+                        GraveCache.graveCache.put(data.getArmorStandUUID(), data);
+                    } else {
+                        SyncUtil.remove(e.getEntity());
+                    }
                 }
             });
         }
@@ -363,39 +361,5 @@ public class EventListener implements Listener {
     @EventHandler
     public void onPlayerAdvancementDoneEvent(PlayerAdvancementDoneEvent e) {
         SurvivalInstance.INSTANCE.getAdvancement().getRewardManager().execute(e.getPlayer(), e.getAdvancement().getKey().getKey());
-    }
-
-    @EventHandler
-    public void onA(ChunkPopulateEvent e) {
-
-
-        double next = new SecureRandom().nextDouble(100);
-
-        if (next < 0.05) {
-
-            @NotNull Block block = e.getChunk().getBlock(0, e.getChunk().getChunkSnapshot().getHighestBlockYAt(0, 0), 0);
-
-            if (block.getType() != Material.WATER
-                    && !block.getBiome().toString().endsWith("RIVER")
-                    && !block.getBiome().toString().endsWith("OCEAN")
-                    && !block.getBiome().toString().endsWith("SWAMP")
-                    && block.getY() > 65) {
-
-                @NotNull Location location = block.getLocation();
-
-                BukkitWorld world = new BukkitWorld(e.getWorld());
-
-                try {
-                    File file = Paths.get(SurvivalInstance.INSTANCE.getPlugin().getDataFolder().getPath(), "dungeons", "mine-1-entrance.schem").toFile();
-
-                    FaweAPI.load(file)
-                            .paste(world, BlockVector3.at(location.getX(), location.getY(), location.getZ()));
-
-                    e.getChunk().getPersistentDataContainer().set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "dungeons"), PersistentDataType.STRING, "mineDungeons");
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
     }
 }

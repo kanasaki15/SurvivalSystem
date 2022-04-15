@@ -30,7 +30,7 @@ public class CustomEnchant {
         }
 
         register(CustomEnchantUtils.RESISTANCE);
-        register(CustomEnchantUtils.TEST);
+        //register(CustomEnchantUtils.TEST);
         register(CustomEnchantUtils.LIFE_STEAL);
         register(CustomEnchantUtils.NIGHT_VISION);
         register(CustomEnchantUtils.KINETIC_RESISTANCE);
@@ -106,7 +106,7 @@ public class CustomEnchant {
             }
 
             //それっぽいから適当な式
-            if ((atomicBoolean.get()) || force) {
+            if (atomicBoolean.get() || force) {
                 final int cost = (inventory.getFirstItem().getRepairCost() + 1) + (inventory.getSecondItem() != null ? inventory.getSecondItem().getRepairCost() + 1 : 1);
 
                 event.getInventory().setRepairCost(cost);

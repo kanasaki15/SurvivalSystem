@@ -34,6 +34,10 @@ public class ItemData {
     public ItemData(Material material) {
         if (material != null) {
             this.itemStack = new ItemStack(material);
+
+            if (itemStack.getItemMeta() != null) {
+                namespacedKey = itemStack.getPersistentDataContainer().getKeys();
+            }
         } else {
             this.itemStack = ItemDataUtils.AIR_DUMMY.itemStack;
         }

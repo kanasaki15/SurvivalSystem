@@ -33,7 +33,6 @@ public class AdvancementItemChecker implements GUIListener, Listener {
         itemChecks.forEach(itemCheck -> itemCheck.item(player, itemStack));
     }
 
-
     @Override
     public void onInventoryClickEvent(InventoryClickEvent e) {
         if (!e.isCancelled() && e.getCurrentItem() != null && e.getWhoClicked() instanceof Player player) {

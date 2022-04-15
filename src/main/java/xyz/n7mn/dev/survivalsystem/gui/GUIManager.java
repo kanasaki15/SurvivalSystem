@@ -7,7 +7,6 @@ import xyz.n7mn.dev.survivalsystem.gui.base.GUIListener;
 import xyz.n7mn.dev.survivalsystem.gui.customcraft.craft.CraftGUI;
 import xyz.n7mn.dev.survivalsystem.gui.customcraft.recipe.RecipeGUI;
 import xyz.n7mn.dev.survivalsystem.gui.grave.GraveGUI;
-import xyz.n7mn.dev.survivalsystem.itemchecker.AdvancementItemChecker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ public class GUIManager {
         listener.add(new GraveGUI());
         listener.add(new CraftGUI());
         listener.add(new RecipeGUI());
-        listener.add(new AdvancementItemChecker());
+        //listener.add(new AdvancementItemChecker());
     }
 
     private final List<GUIListener> listener = new ArrayList<>();
