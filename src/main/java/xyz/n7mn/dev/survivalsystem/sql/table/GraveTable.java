@@ -1,12 +1,17 @@
 package xyz.n7mn.dev.survivalsystem.sql.table;
 
-import com.google.gson.Gson;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.MalformedJsonException;
 import org.bukkit.Bukkit;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
-import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackSerializable;
+import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackData;
 import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
 import xyz.n7mn.dev.survivalsystem.sql.SQLFormat;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,6 +36,8 @@ public class GraveTable extends SQLFormat {
     public void create() {
         createSQL("grave", "(date datetime2, world string, name string, uuid string, itemstack text, armorStand string, active boolean)");
     }
+
+    Type type = new TypeToken<List<ItemStackData>>(){}.getType();
 
     public void put(String world, String playerName, UUID uuid, String itemGson, UUID armorStand) {
         Bukkit.getScheduler().runTaskAsynchronously(SurvivalInstance.INSTANCE.getPlugin(), () -> {
@@ -99,11 +106,10 @@ public class GraveTable extends SQLFormat {
 
                 ResultSet resultSet = preparedStatement.executeQuery();
 
+                Gson gson = new GsonBuilder().setObjectToNumberStrategy(CustomNumberStrategy.INTEGER_OR_DOUBLE).create();
 
                 if (resultSet.next() && resultSet.getBoolean(7)) {
-                    consumer.accept(new GraveInventoryData(resultSet.getTimestamp(1), resultSet.getString(2), resultSet.getString(3), UUID.fromString(resultSet.getString(4)), new Gson().fromJson(resultSet.getString(5), ItemStackSerializable.class), UUID.fromString(resultSet.getString(6))));
-                } else {
-                    consumer.accept(null);
+                    consumer.accept(new GraveInventoryData(resultSet.getTimestamp(1), resultSet.getString(2), resultSet.getString(3), UUID.fromString(resultSet.getString(4)), gson.fromJson(resultSet.getString(5), type), UUID.fromString(resultSet.getString(6))));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -124,12 +130,14 @@ public class GraveTable extends SQLFormat {
 
                 ResultSet resultSet = SurvivalInstance.INSTANCE.getConnection().getConnection().prepareStatement("select * from grave").executeQuery();
 
+                Gson gson = new GsonBuilder().setObjectToNumberStrategy(CustomNumberStrategy.INTEGER_OR_DOUBLE).create();
+
                 while (resultSet.next()) {
                     if (resultSet.getBoolean(7)) {
                         //アーマースタンドのUUID
                         UUID armorStand = UUID.fromString(resultSet.getString(6));
 
-                        hashMap.put(armorStand, new GraveInventoryData(resultSet.getTimestamp(1), resultSet.getString(2), resultSet.getString(3), UUID.fromString(resultSet.getString(4)), new Gson().fromJson(resultSet.getString(5), ItemStackSerializable.class), armorStand));
+                        hashMap.put(armorStand, new GraveInventoryData(resultSet.getTimestamp(1), resultSet.getString(2), resultSet.getString(3), UUID.fromString(resultSet.getString(4)), gson.fromJson(resultSet.getString(5), type), armorStand));
                     }
                 }
 
@@ -148,11 +156,13 @@ public class GraveTable extends SQLFormat {
 
                 ResultSet resultSet = SurvivalInstance.INSTANCE.getConnection().getConnection().prepareStatement("select * from grave").executeQuery();
 
+                Gson gson = new GsonBuilder().setObjectToNumberStrategy(CustomNumberStrategy.INTEGER_OR_DOUBLE).create();
+
                 while (resultSet.next()) {
                     //アーマースタンドのUUID
                     UUID armorStand = UUID.fromString(resultSet.getString(6));
 
-                    hashMap.put(armorStand, new GraveInventoryData(resultSet.getTimestamp(1), resultSet.getString(2), resultSet.getString(3), UUID.fromString(resultSet.getString(4)), new Gson().fromJson(resultSet.getString(5), ItemStackSerializable.class), armorStand, resultSet.getBoolean(7)));
+                    hashMap.put(armorStand, new GraveInventoryData(resultSet.getTimestamp(1), resultSet.getString(2), resultSet.getString(3), UUID.fromString(resultSet.getString(4)), gson.fromJson(resultSet.getString(5), type), armorStand, resultSet.getBoolean(7)));
                 }
 
                 resultSet.close();
@@ -172,8 +182,10 @@ public class GraveTable extends SQLFormat {
                 preparedStatement.setString(1, uuid.toString());
                 ResultSet resultSet = preparedStatement.executeQuery();
 
+                Gson gson = new GsonBuilder().setObjectToNumberStrategy(CustomNumberStrategy.INTEGER_OR_DOUBLE).create();
+
                 while (resultSet.next()) {
-                    list.add(new GraveInventoryData(resultSet.getTimestamp(1), resultSet.getString(2), resultSet.getString(3), UUID.fromString(resultSet.getString(4)), new Gson().fromJson(resultSet.getString(5), ItemStackSerializable.class), UUID.fromString(resultSet.getString(6)), resultSet.getBoolean(7)));
+                    list.add(new GraveInventoryData(resultSet.getTimestamp(1), resultSet.getString(2), resultSet.getString(3), UUID.fromString(resultSet.getString(4)), gson.fromJson(resultSet.getString(5), type), UUID.fromString(resultSet.getString(6)), resultSet.getBoolean(7)));
                 }
 
                 resultSet.close();
@@ -182,5 +194,26 @@ public class GraveTable extends SQLFormat {
                 e.printStackTrace();
             }
         });
+    }
+
+    public enum CustomNumberStrategy implements ToNumberStrategy {
+        INTEGER_OR_DOUBLE {
+            public Number readNumber(JsonReader in) throws IOException, JsonParseException {
+                String value = in.nextString();
+                try {
+                    return Integer.parseInt(value);
+                } catch (NumberFormatException integerE) {
+                    try {
+                        Double d = Double.valueOf(value);
+                        if ((d.isInfinite() || d.isNaN()) && !in.isLenient()) {
+                            throw new MalformedJsonException("JSON forbids NaN and infinities: " + d + "; at path " + in.getPreviousPath());
+                        }
+                        return d;
+                    } catch (NumberFormatException doubleE) {
+                        throw new JsonParseException("Cannot parse " + value + "; at path " + in.getPreviousPath(), doubleE);
+                    }
+                }
+            }
+        }
     }
 }

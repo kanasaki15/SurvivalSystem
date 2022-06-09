@@ -1,6 +1,7 @@
 package xyz.n7mn.dev.survivalsystem.event;
 
 import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
+import com.destroystokyo.paper.event.inventory.PrepareResultEvent;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -12,15 +13,18 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityPortalEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.GrindstoneInventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -32,7 +36,10 @@ import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.advancement.data.CustomCraftOpenAdvancement;
 import xyz.n7mn.dev.survivalsystem.advancement.data.GreatHoneyAdvancement;
 import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
+import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackData;
 import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackSerializable;
+import xyz.n7mn.dev.survivalsystem.customenchant.CustomEnchantAbstract;
+import xyz.n7mn.dev.survivalsystem.customenchant.CustomEnchantUtils;
 import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
 import xyz.n7mn.dev.survivalsystem.gui.customcraft.craft.CraftGUI;
 import xyz.n7mn.dev.survivalsystem.playerdata.PlayerData;
@@ -44,7 +51,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class EventListener implements Listener {
 
@@ -54,7 +61,6 @@ public class EventListener implements Listener {
 
         e.setCancelled(true);
     }
-
 
     @EventHandler
     public void PlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent e) {
@@ -142,12 +148,12 @@ public class EventListener implements Listener {
             final int time = SurvivalInstance.INSTANCE.getPlugin().getConfig().getInt("GraveTime");
 
             armorStand.setCustomName(MessageUtil.replaceFromConfig("GRAVE-NAME", "%name%|" + e.getPlayer().getName(), "%time%|" + time));
-            armorStand.getPersistentDataContainer().set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(),"delete_time"), PersistentDataType.INTEGER, time);
+            armorStand.getPersistentDataContainer().set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "delete_time"), PersistentDataType.INTEGER, time);
 
-            List<Map<String, Object>> list = new ArrayList<>();
-            e.getDrops().forEach(i -> list.add(i.serialize()));
+            List<ItemStackData> list = new ArrayList<>();
+            e.getDrops().forEach(i -> list.add(ItemStackSerializable.serialize(i)));
 
-            GraveInventoryData data = new GraveInventoryData(Timestamp.valueOf(LocalDateTime.now()), player.getWorld().getName(), player.getName(), e.getPlayer().getUniqueId(), new ItemStackSerializable(list), armorStand.getUniqueId());
+            GraveInventoryData data = new GraveInventoryData(Timestamp.valueOf(LocalDateTime.now()), player.getWorld().getName(), player.getName(), e.getPlayer().getUniqueId(), list, armorStand.getUniqueId());
             deathTable.put(data);
             GraveCache.graveCache.put(armorStand.getUniqueId(), data);
         } else {
@@ -157,6 +163,46 @@ public class EventListener implements Listener {
         e.setKeepLevel(true);
         e.setShouldDropExperience(false);
         e.getDrops().clear();
+    }
+
+    @EventHandler
+    public void onEntityDeathEvent(EntityDeathEvent e) {
+        Entity killer = e.getEntity().getKiller();
+
+        if (killer instanceof Player player) {
+
+            if (player.getEquipment().getItemInMainHand() != null && ItemStackUtil.isSword(player.getEquipment().getItemInMainHand())) {
+
+                final int level = player.getEquipment().getItemInMainHand().getEnchantmentLevel(CustomEnchantUtils.LIFE_STEAL);
+
+                if (level != 0) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 60, level - 1));
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamageEvent(EntityDamageEvent e) {
+        if (e.getCause() == EntityDamageEvent.DamageCause.FLY_INTO_WALL && e.getEntity() instanceof Player player) {
+            final int value = 1
+                    + getValue(player.getEquipment().getHelmet(), CustomEnchantUtils.KINETIC_RESISTANCE)
+                    + getValue(player.getEquipment().getChestplate(), CustomEnchantUtils.KINETIC_RESISTANCE)
+                    + getValue(player.getEquipment().getLeggings(), CustomEnchantUtils.KINETIC_RESISTANCE)
+                    + getValue(player.getEquipment().getBoots(), CustomEnchantUtils.KINETIC_RESISTANCE);
+
+            final double damage = e.getDamage() / value;
+
+            e.setDamage(damage);
+        }
+    }
+
+    public int getValue(ItemStack itemStack, Enchantment enchantment) {
+        if (itemStack != null) {
+            return itemStack.getEnchantLevel(enchantment);
+        } else {
+            return 0;
+        }
     }
 
     @EventHandler
@@ -188,11 +234,38 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
+    public void onEnchantEvent(final EnchantItemEvent e) {
+        ItemStack useItem = e.getItem().getType() == Material.BOOK ? new ItemStack(Material.ENCHANTED_BOOK) : e.getItem();
+
+        for (CustomEnchantAbstract data : CustomEnchantUtils.AllEnchants) {
+            if (data.isActiveEnchant() && data.canEnchantItem(useItem)) {
+                final double chance = ThreadLocalRandom.current().nextDouble(0, 100);
+
+                final double enchantChance = data.getEnchantChance(e.getExpLevelCost());
+
+                if (enchantChance >= chance) {
+                    final int levels = ThreadLocalRandom.current().nextInt(0, data.getEnchantMax() + 1);
+
+                    if (levels > 0) {
+                        CustomEnchantUtils.addCustomEnchant(e.getItem(), data, levels, true);
+
+                        MessageUtil.sendChat(e.getEnchanter(), "ENCHANT-MESSAGE", "%enchant-name%|" + data.displayNameToString(levels), "%chance%|" + enchantChance);
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
     public void onEntityAddToWorldEvent(EntityAddToWorldEvent e) {
         if (e.getEntity().getType() == EntityType.ARMOR_STAND && e.getEntity().getPersistentDataContainer().has(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "delete_time"))) {
             SurvivalInstance.INSTANCE.getConnection().getGraveTable().get(e.getEntity().getUniqueId(), data -> {
                 if (data != null && GraveCache.graveCache.get(data.getArmorStandUUID()) == null) {
-                    GraveCache.graveCache.put(data.getArmorStandUUID(), data);
+                    if (data.isActive()) {
+                        GraveCache.graveCache.put(data.getArmorStandUUID(), data);
+                    } else {
+                        SyncUtil.remove(e.getEntity());
+                    }
                 }
             });
         }
@@ -201,7 +274,7 @@ public class EventListener implements Listener {
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent e) {
         if (e.getClickedBlock() != null) {
-            if ((e.getClickedBlock().getType() == Material.BEE_NEST || e.getClickedBlock().getType() == Material.BEEHIVE)) {
+            if (e.getClickedBlock().getType() == Material.BEE_NEST || e.getClickedBlock().getType() == Material.BEEHIVE) {
                 if ((e.getHand() == EquipmentSlot.HAND && e.getPlayer().getInventory().getItemInMainHand().getType() == Material.GLASS_BOTTLE) || (e.getHand() == EquipmentSlot.OFF_HAND && e.getPlayer().getInventory().getItemInOffHand().getType() == Material.GLASS_BOTTLE)) {
 
                     final int type = Integer.parseInt(e.getClickedBlock().getBlockData().getAsString().replaceAll("[^0-9]", ""));
@@ -262,11 +335,27 @@ public class EventListener implements Listener {
                         e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 20 * 60, 1));
                         e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 60, 1));
                     }
+                    default: {
+                        //TODO: ?
+                    }
                 }
 
                 e.getPlayer().getAdvancementProgress(Bukkit.getAdvancement(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), GreatHoneyAdvancement.ID))).awardCriteria("grant");
             }
         }
+    }
+
+    @EventHandler
+    public void onPrepareResultEvent(PrepareResultEvent e) {
+        //CUSTOM ENCHANTS!
+        if (e.getView().getType() == InventoryType.GRINDSTONE && e.getResult() != null) {
+            SurvivalInstance.INSTANCE.getCustomEnchant().onPrepareGrindstoneEvent((GrindstoneInventory) e.getInventory());
+        }
+    }
+
+    @EventHandler
+    public void onPrepareAnvilEvent(PrepareAnvilEvent e) {
+        SurvivalInstance.INSTANCE.getCustomEnchant().onPrepareAnvilEvent(e);
     }
 
     @EventHandler

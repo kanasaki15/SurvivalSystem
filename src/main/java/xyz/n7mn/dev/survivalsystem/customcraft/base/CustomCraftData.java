@@ -1,10 +1,16 @@
 package xyz.n7mn.dev.survivalsystem.customcraft.base;
 
 import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 public class CustomCraftData {
@@ -12,11 +18,24 @@ public class CustomCraftData {
     //TODO: 正直まとめたほうがよさそう
     private ItemData recipe1, recipe2, recipe3, recipe4, recipe5, recipe6, recipe7, recipe8, recipe9;
 
-    private boolean checkDurability, checkMeta;
+    @Setter
+    private boolean checkDurability, checkMeta, checkPersistentData;
 
     public void setItemData(ItemData itemData, int... t) {
         for (int i : t) {
             setItemData(itemData, i);
+        }
+    }
+
+    public void setItemData(Material material, int... t) {
+        for (int i : t) {
+            setItemData(new ItemData(material), i);
+        }
+    }
+
+    public void setItemData(ItemStack itemStack, int... t) {
+        for (int i : t) {
+            setItemData(new ItemData(itemStack), i);
         }
     }
 
@@ -67,7 +86,7 @@ public class CustomCraftData {
     }
 
     public boolean equals(CustomCraftData data, int count) {
-        return nullCheck(data.getItemData().get(count)).equals(nullCheck(getItemData().get(count)), checkMeta, checkDurability);
+        return nullCheck(data.getItemData().get(count)).equals(nullCheck(getItemData().get(count)), data.checkMeta, data.checkDurability, data.checkPersistentData);
     }
 
     public ItemData nullCheck(ItemData itemData) {

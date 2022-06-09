@@ -6,6 +6,7 @@ import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
+import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackData;
 import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackSerializable;
 
 import java.sql.Timestamp;
@@ -19,29 +20,29 @@ public class GraveInventoryData {
     private final World world;
     private final String playerName;
     private final UUID UUID;
-    private final ItemStackSerializable itemStack;
+    private final List<ItemStackData> itemStack;
     private final UUID armorStandUUID;
 
     private final List<ItemStack> itemStackList = new ArrayList<>();
 
     private final boolean active;
 
-    public GraveInventoryData(Timestamp timestamp, String world, String playerName, UUID uuid, ItemStackSerializable itemStackSerializable, UUID armorStandUUID) {
+    public GraveInventoryData(Timestamp timestamp, String world, String playerName, UUID uuid, List<ItemStackData> data, UUID armorStandUUID) {
         this.timestamp = timestamp;
         this.world = Bukkit.getWorld(world);
         this.playerName = playerName;
         this.UUID = uuid;
-        this.itemStack = itemStackSerializable;
+        this.itemStack = data;
         this.armorStandUUID = armorStandUUID;
         this.active = true;
     }
 
-    public GraveInventoryData(Timestamp timestamp, String world, String playerName, UUID uuid, ItemStackSerializable itemStackSerializable, UUID armorStandUUID, boolean active) {
+    public GraveInventoryData(Timestamp timestamp, String world, String playerName, UUID uuid, List<ItemStackData> data, UUID armorStandUUID, boolean active) {
         this.timestamp = timestamp;
         this.world = Bukkit.getWorld(world);
         this.playerName = playerName;
         this.UUID = uuid;
-        this.itemStack = itemStackSerializable;
+        this.itemStack = data;
         this.armorStandUUID = armorStandUUID;
         this.active = active;
     }
@@ -49,8 +50,8 @@ public class GraveInventoryData {
 
     //SerializableをItemStackに変換する
     public List<ItemStack> translateSerializable() {
-        if (itemStackList.isEmpty() && !itemStack.getSerializable().isEmpty()) {
-            itemStack.getSerializable().forEach(serializable -> itemStackList.add(ItemStack.deserialize(serializable)));
+        if (itemStackList.isEmpty()) {
+            itemStack.forEach(item -> itemStackList.add(ItemStackSerializable.deserialize(item.getStack(), item.getMeta())));
         }
         return itemStackList;
     }
@@ -62,6 +63,6 @@ public class GraveInventoryData {
     }
 
     public void remove() {
-        remove(true);
+        remove(false);
     }
 }

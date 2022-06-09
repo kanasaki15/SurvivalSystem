@@ -18,6 +18,7 @@ public class GUIManager {
         listener.add(new GraveGUI());
         listener.add(new CraftGUI());
         listener.add(new RecipeGUI());
+        //listener.add(new AdvancementItemChecker());
     }
 
     private final List<GUIListener> listener = new ArrayList<>();

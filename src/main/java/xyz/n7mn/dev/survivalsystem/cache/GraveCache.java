@@ -26,6 +26,13 @@ public class GraveCache {
         for (GraveInventoryData data : graveCache.values()) {
             Bukkit.getScheduler().runTask(SurvivalInstance.INSTANCE.getPlugin(), () -> {
 
+                if (data.getWorld() == null || !data.isActive()) {
+
+                    data.remove(data.isActive());
+
+                    return;
+                }
+
                 Entity entity = data.getWorld().getEntity(data.getArmorStandUUID());
 
                 if (entity != null) {
@@ -35,7 +42,7 @@ public class GraveCache {
                     if (time > 0) {
                         entity.setCustomName(MessageUtil.replaceFromConfig("GRAVE-NAME", "%name%|" + data.getPlayerName(), "%time%|" + time));
 
-                        entity.getPersistentDataContainer().set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(),"delete_time"), PersistentDataType.INTEGER, time);
+                        entity.getPersistentDataContainer().set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "delete_time"), PersistentDataType.INTEGER, time);
                     } else {
                         data.translateSerializable().forEach(itemStack -> ((Item) entity.getWorld().spawnEntity(entity.getLocation(), EntityType.DROPPED_ITEM)).setItemStack(itemStack));
                         entity.remove();
@@ -45,7 +52,8 @@ public class GraveCache {
                 } else {
                     data.remove(true);
 
-                    if (SurvivalInstance.INSTANCE.getPlugin().getConfig().getBoolean("GraveCacheWarning")) Bukkit.getLogger().warning("[お墓] キャッシュにいらないデータが入っていました");
+                    if (SurvivalInstance.INSTANCE.getPlugin().getConfig().getBoolean("GraveCacheWarning"))
+                        Bukkit.getLogger().warning("[お墓] キャッシュにいらないデータが入っていました");
                 }
             });
         }
@@ -62,6 +70,12 @@ public class GraveCache {
                 ((Item) player.getWorld().spawnEntity(player.getLocation(), EntityType.DROPPED_ITEM)).setItemStack(itemStack);
             }
         });
+    }
+
+    public void reEntry() {
+        graveCache.clear();
+
+        SurvivalInstance.INSTANCE.getConnection().getGraveTable().get(result -> graveCache.putAll(result));
     }
 
     public void init() {

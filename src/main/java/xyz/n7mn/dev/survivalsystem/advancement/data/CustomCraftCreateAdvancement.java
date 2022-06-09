@@ -8,7 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import xyz.n7mn.dev.survivalsystem.advancement.base.AdvancementReward;
+import xyz.n7mn.dev.survivalsystem.advancement.reward.AdvancementReward;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 
 public class CustomCraftCreateAdvancement implements AdvancementCreator, AdvancementReward {
@@ -24,7 +24,6 @@ public class CustomCraftCreateAdvancement implements AdvancementCreator, Advance
             show.setTitle("カスタム作業台で何か作る");
             show.setDescription("カスタム作業台でレシピを確認できるそうですよ！");
             show.setIcon(Material.CRAFTING_TABLE);
-            show.setHidden(true);
         });
 
         advancement.addCriteria("grant", TriggerType.IMPOSSIBLE, trigger -> {
