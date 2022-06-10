@@ -19,11 +19,12 @@ public class CustomCraft {
     private final HashMap<String, CustomCraftAbstract> craftAbstractHashMap = new HashMap<>();
 
     public void init() {
-        add(new CustomCraftTest1());
+        //add(new CustomCraftTest1());
         add(new CustomCraftResistanceRing1());
         add(new CustomCraftResistanceRing2());
-        add(new CustomCraftPickaxe());
+        //add(new CustomCraftPickaxe());
         add(new CustomCraftLeather());
+        add(new CustomCraftLaunchPad());
 
         if (SurvivalInstance.INSTANCE.getPlugin().getConfig().getBoolean("registerVanillaRecipes")) {
 

@@ -7,6 +7,10 @@ group = 'xyz.n7mn.dev'
 version = '1.0'
 
 repositories {
+    mavenCentral()
+
+    mavenLocal()
+
     maven {
         url = 'https://jitpack.io'
     }
@@ -15,10 +19,6 @@ repositories {
         name = 'purpurmc-repo'
         url = 'https://repo.purpurmc.org/snapshots'
     }
-
-    mavenCentral()
-
-    mavenLocal()
 }
 
 dependencies {
@@ -28,17 +28,17 @@ dependencies {
     compileOnly ('org.spigotmc:spigot:1.18.2-R0.1-SNAPSHOT')
 
     implementation 'com.github.Roxeez:AdvancementAPI:9b959a88cc'
-    implementation 'mysql:mysql-connector-java:8.0.28'
+    implementation 'mysql:mysql-connector-java:8.0.29'
     implementation 'org.xerial:sqlite-jdbc:3.36.0.3'
 
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.0.1")
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.0.1")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.2.0")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.2.0")
 
-    compileOnly 'org.projectlombok:lombok:1.18.22'
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
 
-    testCompileOnly 'org.projectlombok:lombok:1.18.22'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 
     implementation fileTree(dir: 'libs', include: '*.jar')
 

@@ -18,6 +18,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryType;
@@ -28,16 +31,22 @@ import org.bukkit.inventory.GrindstoneInventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.advancement.data.CustomCraftOpenAdvancement;
 import xyz.n7mn.dev.survivalsystem.advancement.data.GreatHoneyAdvancement;
 import xyz.n7mn.dev.survivalsystem.cache.GraveCache;
 import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackData;
 import xyz.n7mn.dev.survivalsystem.cache.serializable.ItemStackSerializable;
+import xyz.n7mn.dev.survivalsystem.customblockdata.CustomBlockData;
+import xyz.n7mn.dev.survivalsystem.customblockdata.CustomBlockDataEvent;
+import xyz.n7mn.dev.survivalsystem.customblockdata.CustomBlockDataRemoveEvent;
+import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
 import xyz.n7mn.dev.survivalsystem.customenchant.CustomEnchantAbstract;
 import xyz.n7mn.dev.survivalsystem.customenchant.CustomEnchantUtils;
 import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
@@ -124,6 +133,57 @@ public class EventListener implements Listener {
 
         e.joinMessage(Component.empty());
     }
+
+    @EventHandler
+    public void BlockPlaceEvent(BlockPlaceEvent e) {
+        ItemStack item = e.getItemInHand();
+
+        if (item.getType() == Material.HEAVY_WEIGHTED_PRESSURE_PLATE
+            && item.getPersistentDataContainer().has(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "mt_launch_pad"))
+            && !e.isCancelled()) {
+
+            PersistentDataContainer container = new CustomBlockData(e.getBlock(), SurvivalInstance.INSTANCE.getPlugin());
+
+            container.set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "mt_launch_pad"), PersistentDataType.INTEGER, 1);
+        }
+    }
+
+    @EventHandler
+    public void EntityInteractEvent(PlayerInteractEvent e) {
+        if (e.getAction() == Action.PHYSICAL
+                && e.getClickedBlock() != null
+                && e.getClickedBlock().getType() == Material.HEAVY_WEIGHTED_PRESSURE_PLATE) {
+
+            PersistentDataContainer container = new CustomBlockData(e.getClickedBlock(), SurvivalInstance.INSTANCE.getPlugin());
+
+            if (container.has(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "mt_launch_pad"))) {
+
+                Vector vec = e.getPlayer().getLocation().getDirection().multiply(5);
+
+                if (vec.getY() > 0.8) {
+                    vec.setY(0.8);
+                }
+
+                e.getPlayer().setVelocity(vec);
+            }
+        }
+    }
+
+    @EventHandler
+    public void CustomBlockBreakEvent(CustomBlockDataRemoveEvent e) {
+        if (e.getReason() == CustomBlockDataEvent.Reason.BLOCK_BREAK) {
+            if (e.getCustomBlockData().has(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "mt_launch_pad"), PersistentDataType.INTEGER)) {
+                BlockBreakEvent event = (BlockBreakEvent) e.getBukkitEvent();
+
+                if (event.isDropItems()) {
+                    event.setDropItems(false);
+
+                    event.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(), ItemDataUtils.LAUNCH_PAD.getItemStack());
+                }
+            }
+        }
+    }
+
 
     @EventHandler
     public void PlayerDeathEvent(PlayerDeathEvent e) {

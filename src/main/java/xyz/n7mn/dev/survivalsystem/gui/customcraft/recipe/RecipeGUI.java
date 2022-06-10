@@ -21,6 +21,7 @@ import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 import xyz.n7mn.dev.survivalsystem.util.MessageUtil;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -44,6 +45,7 @@ public class RecipeGUI implements GUIListener {
             int id = 27 * (page - 1);
             final List<CustomCraftAbstract> list = recipeHolder.getCraftRecipe().values().parallelStream()
                     .filter(CustomCraftAbstract::isShow)
+                    .sorted(Comparator.comparing(CustomCraftAbstract::getRecipeID))
                     .toList();
 
             for (int slot = 0; slot < 54; slot++) {

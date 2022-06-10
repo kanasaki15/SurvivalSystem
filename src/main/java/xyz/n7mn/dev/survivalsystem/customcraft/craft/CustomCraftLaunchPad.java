@@ -1,21 +1,21 @@
 package xyz.n7mn.dev.survivalsystem.customcraft.craft;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftAbstract;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
+import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
 
-public class CustomCraftLeather extends CustomCraftAbstract
-{
+public class CustomCraftLaunchPad extends CustomCraftAbstract {
+
     @Override
     public String getRecipeID() {
-        return "mt_leather";
+        return "mt_launch_pad";
     }
 
     @Override
     public ItemData getItem(CustomCraftData data) {
-        return new ItemData(new ItemStack(Material.LEATHER));
+        return ItemDataUtils.LAUNCH_PAD;
     }
 
     @Override
@@ -26,8 +26,9 @@ public class CustomCraftLeather extends CustomCraftAbstract
     @Override
     public CustomCraftData create() {
         CustomCraftData data = new CustomCraftData();
-
-        data.setItemData(Material.ROTTEN_FLESH, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+        data.setItemData(Material.IRON_INGOT, 1, 3, 7, 9);
+        data.setItemData(Material.REDSTONE, 2, 4, 6, 8);
+        data.setItemData(Material.HEAVY_WEIGHTED_PRESSURE_PLATE, 5);
 
         return data;
     }

@@ -7,7 +7,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.world.ChunkPopulateEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +19,7 @@ import java.security.SecureRandom;
 
 public class DungeonEvent {
 
-    @EventHandler
+    //@EventHandler
     public void onA(ChunkPopulateEvent e) {
 
 

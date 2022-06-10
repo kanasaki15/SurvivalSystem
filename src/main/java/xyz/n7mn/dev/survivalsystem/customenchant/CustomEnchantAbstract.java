@@ -22,4 +22,24 @@ public abstract class CustomEnchantAbstract extends Enchantment {
     public abstract int getEnchantMax();
 
     public abstract boolean isActiveEnchant();
+
+    @Override
+    public boolean isTradeable() {
+        return false;
+    }
+
+    @Override
+    public boolean isCursed() {
+        return false;
+    }
+
+    @Override
+    public boolean isDiscoverable() {
+        return false;
+    }
+
+    @Override
+    public boolean isTreasure() {
+        return false;
+    }
 }

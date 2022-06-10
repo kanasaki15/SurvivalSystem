@@ -66,8 +66,8 @@ public class ItemData {
     private boolean checkEquals(ItemData data, boolean checkMeta, boolean checkDurability, boolean checkPersistentData) {
         if (checkDurability && data.getItemStack().getDurability() != itemStack.getDurability()) return false;
 
+        if (data.getItemStack().getType() != itemStack.getType()) return false;
         if (checkMeta && (data.getItemStack().hasItemMeta() != getItemStack().hasItemMeta() || !Bukkit.getItemFactory().equals(data.getItemStack().getItemMeta(), getItemStack().getItemMeta()))) return false;
-        if (!checkMeta && data.getItemStack().getType() != itemStack.getType()) return false;
 
         if ((namespacedKey == null && data.getNamespacedKey() == null) || (namespacedKey.isEmpty() && data.getNamespacedKey().isEmpty())) return true;
 

@@ -8,15 +8,13 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.advancement.data.CustomCraftCreateAdvancement;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftAbstract;
+import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIItem;
@@ -26,6 +24,7 @@ import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class CraftGUI implements Listener, GUIListener {
 
@@ -66,37 +65,46 @@ public class CraftGUI implements Listener, GUIListener {
     }
 
     public boolean craftItem(CraftHolder craftHolder, ItemStack cursor, HumanEntity player, InventoryAction inventoryAction) {
-        if (cursor != null && cursor.getType() == Material.AIR) {
-            if (inventoryAction != InventoryAction.HOTBAR_MOVE_AND_READD) {
-                for (CustomCraftAbstract data : SurvivalInstance.INSTANCE.getCustomCraft().getCraftAbstractHashMap().values()) {
+        if (inventoryAction != InventoryAction.HOTBAR_MOVE_AND_READD) {
+            for (CustomCraftAbstract data : SurvivalInstance.INSTANCE.getCustomCraft().getCraftAbstractHashMap().values()) {
+                CustomCraftData customCraftData = data.create();
 
-                    //レシピが一致しているか確認する
-                    if (craftHolder.translateCustomCraftData().equals(data.create(), true)) {
+                //レシピが一致しているか確認する
+                if (craftHolder.translateCustomCraftData().equals(customCraftData, true)) {
 
-                        if (inventoryAction == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
-                            while (player.getInventory().firstEmpty() != -1) {
-                                ItemData itemData = getItemCheckData(craftHolder);
-                                if (itemData == null) break;
+                    if (inventoryAction == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
+                        ItemData item = data.getItem(customCraftData);
 
-                                player.getInventory().addItem(itemData.getItemStack());
-                            }
-                            checkUpdates(craftHolder);
-                        } else {
-                            push(craftHolder, data);
+                        while (player.getInventory().firstEmpty() != -1 && getItemCheckData(craftHolder) != null) {
+                            //TODO: もっといい条件式にしよう
+                            player.getInventory().addItem(item.getItemStack());
                         }
 
-                        //実績を付与する
-                        ((Player) player).getAdvancementProgress(Bukkit.getAdvancement(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), CustomCraftCreateAdvancement.ID))).awardCriteria("grant");
+                        checkUpdates(craftHolder);
+                    } else if (cursor != null && cursor.getType() == Material.AIR) {
+                        return push(craftHolder, data);
+                    } else if (cursor != null
+                            && new ItemData(cursor).equals(data.getItem(customCraftData), true, true, true)
+                            && cursor.getType().getMaxStackSize() > cursor.getAmount()) {
+                        cursor.setAmount(cursor.getAmount() + 1);
 
-                        return inventoryAction != InventoryAction.MOVE_TO_OTHER_INVENTORY;
+                        push(craftHolder, data);
+                        checkUpdates(craftHolder);
                     }
 
+                    return true;
                 }
-            } else {
-                player.sendMessage(Component.text(ChatColor.RED + "[!] それはできませんよ"));
             }
+        } else {
+            player.sendMessage(Component.text(ChatColor.RED + "[!] それはできませんよ"));
         }
-        return false;
+        return true;
+    }
+
+    public void grant(HumanEntity player) {
+        if (player instanceof Player it) {
+            it.getAdvancementProgress(Objects.requireNonNull(Bukkit.getAdvancement(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), CustomCraftCreateAdvancement.ID)))).awardCriteria("grant");
+        }
     }
 
     public ItemData getItemCheckData(CraftHolder craftHolder) {
@@ -117,10 +125,9 @@ public class CraftGUI implements Listener, GUIListener {
             if (itemStack != null && itemStack.getType() != Material.AIR) {
                 ItemData itemData = data.getUsesItem().getItemData().get(i);
 
-                if (itemStack.getType() != itemData.getItemStack().getType())
-                    itemStack.setType(itemData.getItemStack().getType());
-
-                itemStack.setAmount(itemStack.getAmount() - data.getUsesItem().getItemData().get(i).getItemStack().getAmount());
+                if (itemStack.getType() != itemData.getItemStack().getType()) itemStack.setType(itemData.getItemStack().getType());
+                //typeが変わることは特殊です、それを変更することは自己責任
+                else itemStack.setAmount(itemStack.getAmount() - data.getUsesItem().getItemData().get(i).getItemStack().getAmount());
             }
         }
 
@@ -128,31 +135,43 @@ public class CraftGUI implements Listener, GUIListener {
     }
 
 
-    public void push(CraftHolder craftHolder, CustomCraftAbstract data) {
-        getItem(craftHolder, data);
+    public boolean push(CraftHolder craftHolder, CustomCraftAbstract data) {
+        return getItem(craftHolder, data) == null;
     }
 
     public void onInventoryClickEvent(final InventoryClickEvent e) {
-        if (e.getClickedInventory() == e.getView().getTopInventory() && e.getView().getTopInventory().getHolder() instanceof CraftHolder craftHolder) {
-            if (!deny(e.getRawSlot()) && e.getRawSlot() != 24) e.setCancelled(true);
-            else craftHolder.setInventory(e.getClickedInventory());
+        final boolean isGUI = e.getClickedInventory() == e.getView().getTopInventory();
+
+        if ((isGUI || e.isShiftClick())
+                && e.getView().getTopInventory().getHolder() instanceof CraftHolder craftHolder) {
 
             GUIItem guiItem = craftHolder.getHashMap().get(e.getRawSlot());
-            if (guiItem != null) {
-                guiItem.execute((Player) e.getWhoClicked());
-            }
 
-            if (e.getRawSlot() == 24) {
-                if (!craftItem(craftHolder, e.getCursor(), e.getWhoClicked(), e.getAction())) e.setCancelled(true);
-                else Bukkit.getScheduler().runTask(SurvivalInstance.INSTANCE.getPlugin(), () -> checkUpdates(craftHolder));
+            if (isGUI) {
+                if (guiItem != null) {
+                    guiItem.execute((Player) e.getWhoClicked());
+                } else if (e.getRawSlot() == 24) {
+                    if (craftItem(craftHolder, e.getCursor(), e.getWhoClicked(), e.getAction())) {
+                        e.setCancelled(true);
+                    } else {
+                        Bukkit.getScheduler().runTask(SurvivalInstance.INSTANCE.getPlugin(), () -> checkUpdates(craftHolder));
+                    }
+                }
+
+                if (!deny(e.getRawSlot()) && e.getRawSlot() != 24) {
+                    e.setCancelled(true);
+                }
+
+            } else if (e.isShiftClick()) {
+                Bukkit.getScheduler().runTask(SurvivalInstance.INSTANCE.getPlugin(), () -> checkUpdates(craftHolder));
             }
         }
     }
 
     public void onInventoryDragEvent(final InventoryDragEvent e) {
-        if (e.getWhoClicked().getOpenInventory().getTopInventory() == e.getInventory() && e.getView().getTopInventory().getHolder() instanceof CraftHolder craftHolder) {
+        if (e.getWhoClicked().getOpenInventory().getTopInventory() == e.getInventory()
+                && e.getView().getTopInventory().getHolder() instanceof CraftHolder craftHolder) {
             for (int slot : e.getRawSlots()) {
-                if (deny(slot)) craftHolder.setInventory(e.getView().getTopInventory());
 
                 GUIItem guiItem = craftHolder.getHashMap().get(slot);
                 if (guiItem != null) {
@@ -162,8 +181,11 @@ public class CraftGUI implements Listener, GUIListener {
                 }
 
                 if (slot == 24) {
-                    if (!craftItem(craftHolder, e.getCursor(), e.getWhoClicked(), null)) e.setCancelled(true);
-                    else checkUpdates(craftHolder);
+                    if (craftItem(craftHolder, e.getCursor(), e.getWhoClicked(), null)) {
+                        e.setCancelled(true);
+                    } else {
+                        checkUpdates(craftHolder);
+                    }
                 }
             }
         }

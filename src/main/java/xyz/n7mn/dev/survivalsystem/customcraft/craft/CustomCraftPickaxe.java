@@ -8,6 +8,7 @@ import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
 
 public class CustomCraftPickaxe extends CustomCraftAbstract {
+
     @Override
     public String getRecipeID() {
         return "great_pickaxe";
