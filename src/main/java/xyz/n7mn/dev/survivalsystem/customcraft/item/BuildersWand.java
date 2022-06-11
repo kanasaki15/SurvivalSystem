@@ -132,11 +132,19 @@ public class BuildersWand implements TickCheck, Listener {
         for (ItemStack item : player.getInventory().getContents()) {
             if (item != null
                     && item.getType().isBlock()
-                    && item.getType().isSolid()) {
+                    && item.getType().isSolid()
+                    && !item.hasItemMeta()
+                    && !item.getType().name().contains("DOOR")
+                    && !item.getType().name().contains("BED")
+                    && !item.getType().name().contains("SHULKER")) {
 
-                item.setAmount(item.getAmount() - 1);
+                if (item.getAmount() > 0) {
+                    item.setAmount(item.getAmount() - 1);
 
-                location.getBlock().setType(item.getType());
+                    location.getBlock().setType(item.getType());
+
+                    break;
+                }
             }
         }
     }
