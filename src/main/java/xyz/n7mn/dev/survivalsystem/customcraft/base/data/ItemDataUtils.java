@@ -34,9 +34,15 @@ public class ItemDataUtils {
             , ChatColor.YELLOW + "HPが半分以下になったとき耐性 Ⅱをつける。"));
 
     public static ItemData LAUNCH_PAD = new ItemData(ItemStackUtil.createItem(Material.HEAVY_WEIGHTED_PRESSURE_PLATE
-                , ChatColor.YELLOW + "ランチャーパッド"
-                , new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "mt_launch_pad")
-                , PersistentDataType.INTEGER, 0));
+            , ChatColor.YELLOW + "ランチャーパッド"
+            , new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "mt_launch_pad")
+            , PersistentDataType.INTEGER, 0));
+
+    public static ItemData BUILDERS_WAND_1 = new ItemData(ItemStackUtil.createItem(Material.STICK
+            , ChatColor.AQUA + "ビルダーズワンド (1)"
+            , new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "builders_wand")
+            , PersistentDataType.INTEGER, 5
+            , ChatColor.YELLOW + "向いてるいる方向にブロックを置いてくれる"));
 
 
     public static ItemData DIAMOND_PICKAXE = new ItemData(ItemStackUtil.createItem(Material.DIAMOND_PICKAXE, ChatColor.YELLOW + "すごいピッケル", new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "great_pickaxe"), PersistentDataType.INTEGER, 1, ChatColor.YELLOW + "テスト"));
@@ -50,5 +56,8 @@ public class ItemDataUtils {
 
         LAUNCH_PAD.getItemStack().addEnchant(Enchantment.MENDING, 1, true);
         LAUNCH_PAD.getItemStack().addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
+        BUILDERS_WAND_1.getItemStack().addEnchant(Enchantment.MENDING, 1, true);
+        BUILDERS_WAND_1.getItemStack().addItemFlags(ItemFlag.HIDE_ENCHANTS);
     }
 }

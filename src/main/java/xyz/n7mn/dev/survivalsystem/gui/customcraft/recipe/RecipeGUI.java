@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftAbstract;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
+import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIItem;
 import xyz.n7mn.dev.survivalsystem.gui.base.GUIListener;
 import xyz.n7mn.dev.survivalsystem.gui.customcraft.craft.CraftGUI;
@@ -105,7 +106,7 @@ public class RecipeGUI implements GUIListener {
                 final int slot = allowed.get(i);
                 final ItemData itemData = recipe.get(i);
 
-                inventory.setItem(slot, itemData.getItemStack());
+                inventory.setItem(slot, itemData != null ? itemData.getItemStack() : ItemDataUtils.AIR_DUMMY.getItemStack());
             }
 
             inventory.setItem(24, craftAbstract.getItem(null).getItemStack());

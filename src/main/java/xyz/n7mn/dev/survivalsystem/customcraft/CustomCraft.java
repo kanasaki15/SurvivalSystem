@@ -25,6 +25,7 @@ public class CustomCraft {
         //add(new CustomCraftPickaxe());
         add(new CustomCraftLeather());
         add(new CustomCraftLaunchPad());
+        add(new CustomCraftBuildersWand1());
 
         if (SurvivalInstance.INSTANCE.getPlugin().getConfig().getBoolean("registerVanillaRecipes")) {
 

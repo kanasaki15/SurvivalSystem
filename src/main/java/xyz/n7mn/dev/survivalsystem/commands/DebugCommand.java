@@ -18,6 +18,7 @@ import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 public class DebugCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+
         if (sender instanceof Player player) {
             ItemStack itemStack = new ItemStack(Material.DIAMOND_CHESTPLATE);
 
@@ -42,6 +43,7 @@ public class DebugCommand implements CommandExecutor {
 
             player.teleport(Bukkit.getWorld(args[1]).getSpawnLocation());
         }
+
 
         return true;
     }
