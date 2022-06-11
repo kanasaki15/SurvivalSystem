@@ -19,6 +19,8 @@ CANNOT-USE: '&c使用できません！'
 GRAVE-NAME: '&a%name%のお墓撤去まで・・・ %time%秒'
 GRAVE-DROP-ITEM: '&cアイテムが一杯なので%item%を地面に捨てました・・・！'
 
+BUILDERS-WAND-ACTIONBAR: '使用する材料 %type% (残り %amount%)'
+
 ENCHANT-MESSAGE: '&bラッキー！ %enchant-name%&bを獲得！ (&e%chance%%&bで獲得しました)'
 
 ## 特別にCHANCEをここに置いてあります

@@ -1,5 +1,6 @@
 package xyz.n7mn.dev.survivalsystem.customcraft.item;
 
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -8,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Consumer;
@@ -15,8 +17,10 @@ import org.bukkit.util.Vector;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.itemchecker.base.TickCheck;
 import xyz.n7mn.dev.survivalsystem.playerdata.PlayerData;
+import xyz.n7mn.dev.survivalsystem.util.MessageUtil;
 import xyz.n7mn.dev.survivalsystem.util.ParticleUtils;
 import xyz.n7mn.dev.survivalsystem.util.PlayerDataUtil;
+import xyz.n7mn.dev.survivalsystem.util.pair.Pair;
 
 import java.util.List;
 
@@ -56,8 +60,33 @@ public class BuildersWand implements TickCheck, Listener {
                 } else {
                     run(block, 2, length, box -> ParticleUtils.summonOutlineParticle(player, player.getWorld(), box, Particle.SOUL_FIRE_FLAME));
                 }
+
+                final Pair<Material, Integer> pair = calculate(player);
+
+                player.sendActionBar(MessageUtil.replaceFromConfig("BUILDERS-WAND-ACTIONBAR", "%type%|" + WordUtils.capitalizeFully(pair.getKey().name().toLowerCase().replaceAll("_", " ")), "%amount%|" + pair.getValue()));
             }
         }
+    }
+
+    public Pair<Material, Integer> calculate(Player player) {
+        Pair<Material, Integer> pair = new Pair<>(Material.AIR, 0);
+
+        for (ItemStack item : player.getInventory().getContents()) {
+            if (item != null
+                    && item.getType().isBlock()
+                    && item.getType().isSolid()) {
+
+                if (pair.getKey() == Material.AIR) {
+                    pair.setKey(item.getType());
+                }
+
+                if (item.getType() == pair.getKey()) {
+                    pair.setValue(pair.getValue() + item.getAmount());
+                }
+            }
+        }
+
+        return pair;
     }
 
     @EventHandler
@@ -87,14 +116,27 @@ public class BuildersWand implements TickCheck, Listener {
                 final double dirZ = Math.abs(vec.getZ());
 
                 if (dirX > dirZ && dirX > dirY) {
-                    run(block, 0, length, box -> box.getCenter().toLocation(e.getClickedBlock().getWorld()).getBlock().setType(Material.STONE));
+                    run(block, 0, length, box -> place(data.getPlayer(), box.getCenter().toLocation(e.getClickedBlock().getWorld())));
                 } else if (dirY > dirZ) {
-                    run(block, 1, length, box -> box.getCenter().toLocation(e.getClickedBlock().getWorld()).getBlock().setType(Material.STONE));
+                    run(block, 1, length, box -> place(data.getPlayer(), box.getCenter().toLocation(e.getClickedBlock().getWorld())));
                 } else {
-                    run(block, 2, length, box -> box.getCenter().toLocation(e.getClickedBlock().getWorld()).getBlock().setType(Material.STONE));
+                    run(block, 2, length, box -> place(data.getPlayer(), box.getCenter().toLocation(e.getClickedBlock().getWorld())));
                 }
 
                 data.getEventData().setLastBuildersWand(System.currentTimeMillis());
+            }
+        }
+    }
+
+    public void place(Player player, Location location) {
+        for (ItemStack item : player.getInventory().getContents()) {
+            if (item != null
+                    && item.getType().isBlock()
+                    && item.getType().isSolid()) {
+
+                item.setAmount(item.getAmount() - 1);
+
+                location.getBlock().setType(item.getType());
             }
         }
     }
