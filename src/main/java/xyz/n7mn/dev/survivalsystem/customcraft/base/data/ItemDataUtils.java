@@ -42,7 +42,8 @@ public class ItemDataUtils {
             , ChatColor.AQUA + "ビルダーズワンド (1)"
             , new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "builders_wand")
             , PersistentDataType.INTEGER, 5
-            , ChatColor.YELLOW + "向いてるいる方向にブロックを置いてくれる"));
+            , ChatColor.YELLOW + "向いてるいる方向にブロックを置いてくれる"
+            , ChatColor.RED + "⚠ 注意 とても使いにくいです"));
 
 
     public static ItemData DIAMOND_PICKAXE = new ItemData(ItemStackUtil.createItem(Material.DIAMOND_PICKAXE, ChatColor.YELLOW + "すごいピッケル", new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "great_pickaxe"), PersistentDataType.INTEGER, 1, ChatColor.YELLOW + "テスト"));
