@@ -116,11 +116,11 @@ public class BuildersWand implements TickCheck, Listener {
                 final double dirZ = Math.abs(vec.getZ());
 
                 if (dirX > dirZ && dirX > dirY) {
-                    run(block, 0, length, box -> place(data.getPlayer(), box.getCenter().toLocation(e.getClickedBlock().getWorld())));
+                    run(block, 0, length, box -> place(data.getPlayer(), box.getMin().toLocation(e.getClickedBlock().getWorld())));
                 } else if (dirY > dirZ) {
-                    run(block, 1, length, box -> place(data.getPlayer(), box.getCenter().toLocation(e.getClickedBlock().getWorld())));
+                    run(block, 1, length, box -> place(data.getPlayer(), box.getMin().toLocation(e.getClickedBlock().getWorld())));
                 } else {
-                    run(block, 2, length, box -> place(data.getPlayer(), box.getCenter().toLocation(e.getClickedBlock().getWorld())));
+                    run(block, 2, length, box -> place(data.getPlayer(), box.getMin().toLocation(e.getClickedBlock().getWorld())));
                 }
 
                 data.getEventData().setLastBuildersWand(System.currentTimeMillis());
@@ -138,13 +138,18 @@ public class BuildersWand implements TickCheck, Listener {
                     && !item.getType().name().contains("BED")
                     && !item.getType().name().contains("SHULKER")) {
 
-                if (item.getAmount() > 0) {
-                    item.setAmount(item.getAmount() - 1);
+                item.setAmount(item.getAmount() - 1);
 
-                    location.getBlock().setType(item.getType());
-
-                    break;
+                if (item.getAmount() == 0) {
+                    item.setType(Material.AIR);
                 }
+
+                Block block = location.getBlock();
+
+                block.setType(item.getType());
+                block.getState().update(true, true);
+
+                break;
             }
         }
     }

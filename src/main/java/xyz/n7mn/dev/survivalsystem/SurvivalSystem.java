@@ -3,10 +3,7 @@ package xyz.n7mn.dev.survivalsystem;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import xyz.n7mn.dev.survivalsystem.commands.DebugCommand;
-import xyz.n7mn.dev.survivalsystem.commands.GraveCommand;
-import xyz.n7mn.dev.survivalsystem.commands.ReloadCommand;
-import xyz.n7mn.dev.survivalsystem.commands.VanishCommand;
+import xyz.n7mn.dev.survivalsystem.commands.*;
 import xyz.n7mn.dev.survivalsystem.customblockdata.CustomBlockData;
 import xyz.n7mn.dev.survivalsystem.event.EventListener;
 import xyz.n7mn.dev.survivalsystem.util.MessageManager;
@@ -32,6 +29,8 @@ public final class SurvivalSystem extends JavaPlugin {
         getCommand("reloadConfig").setExecutor(new ReloadCommand());
         getCommand("grave").setExecutor(new GraveCommand());
         getCommand("debug").setExecutor(new DebugCommand());
+
+        getCommand("blackhole").setExecutor(new BlackHoleCommand());
 
         SurvivalInstance.INSTANCE.init();
     }

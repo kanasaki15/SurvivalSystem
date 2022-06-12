@@ -46,3 +46,5 @@ commands:
     permission: 'sv.grave'
   debug:
     permission: 'sv.debug'
+  blackhole:
+    permission: 'sv.blackhole'
