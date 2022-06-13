@@ -13,9 +13,11 @@ import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 public class ItemDataUtils {
     public static final ItemData AIR_DUMMY = new ItemData(new ItemStack(Material.AIR));
 
-    public static final ItemData INVALID_ITEM = new ItemData(ItemStackUtil.createItem(Material.RED_STAINED_GLASS_PANE, ChatColor.RED + "不明！ レシピ通りに置いてください"));
+    public static final ItemData INVALID_ITEM = new ItemData(ItemStackUtil.createItem(Material.RED_STAINED_GLASS_PANE
+            , ChatColor.RED + "不明！ レシピ通りに置いてください"));
 
-    public static final ItemData DIRT_HELMET = new ItemData(ItemStackUtil.createItem(Material.LEATHER_HELMET, ChatColor.DARK_GREEN + "テスト装備"));
+    public static final ItemData DIRT_HELMET = new ItemData(ItemStackUtil.createItem(Material.LEATHER_HELMET
+            , ChatColor.DARK_GREEN + "テスト装備"));
 
     public static ItemData RESISTANCE_RING1 = new ItemData(ItemStackUtil.createItem(Material.GOLD_NUGGET
             , ChatColor.YELLOW + "耐性のリング Ⅰ"
@@ -39,14 +41,23 @@ public class ItemDataUtils {
             , PersistentDataType.INTEGER, 0));
 
     public static ItemData BUILDERS_WAND_1 = new ItemData(ItemStackUtil.createItem(Material.STICK
-            , ChatColor.AQUA + "ビルダーズワンド (1)"
+            , ChatColor.AQUA + "ビルダーズワンド Lv1"
             , new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "builders_wand")
             , PersistentDataType.INTEGER, 5
             , ChatColor.YELLOW + "向いてるいる方向にブロックを置いてくれる"
             , ChatColor.RED + "⚠ 注意 とても使いにくいです"));
 
+    public static ItemData HEALING_WAND = new ItemData(ItemStackUtil.createItem(Material.BLAZE_ROD
+            , ChatColor.AQUA + "回復の杖"
+            , new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "healing_wand")
+            , PersistentDataType.INTEGER, 1
+            , ChatColor.AQUA + "消費MP 25"));
 
-    public static ItemData DIAMOND_PICKAXE = new ItemData(ItemStackUtil.createItem(Material.DIAMOND_PICKAXE, ChatColor.YELLOW + "すごいピッケル", new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "great_pickaxe"), PersistentDataType.INTEGER, 1, ChatColor.YELLOW + "テスト"));
+    public static ItemData DIAMOND_PICKAXE = new ItemData(ItemStackUtil.createItem(Material.DIAMOND_PICKAXE
+            , ChatColor.YELLOW + "すごいピッケル"
+            , new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "great_pickaxe")
+            , PersistentDataType.INTEGER, 1
+            , ChatColor.YELLOW + "テスト"));
 
     public static void init() {
         RESISTANCE_RING1.getItemStack().addEnchant(Enchantment.MENDING, 1, true);

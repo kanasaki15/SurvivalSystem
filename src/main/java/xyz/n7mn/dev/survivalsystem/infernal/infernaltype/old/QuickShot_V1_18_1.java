@@ -4,8 +4,8 @@ import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalBowShoot;
 import net.minecraft.world.entity.monster.EntitySkeleton;
 import net.minecraft.world.entity.monster.EntitySkeletonAbstract;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftSkeleton;
-import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftSkeleton;
+import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Skeleton;
@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 
 import static xyz.n7mn.dev.survivalsystem.infernal.InfernalNameSpace.quickShotNameSpace;
 
+//todo: replace
 public class QuickShot_V1_18_1 extends InfernalAbstract {
 
     @Override
@@ -31,6 +32,7 @@ public class QuickShot_V1_18_1 extends InfernalAbstract {
 
             PathfinderGoalBowShoot<EntitySkeletonAbstract> abstractPathfinderGoalBowShoot = (PathfinderGoalBowShoot<EntitySkeletonAbstract>) field.get(entitySkeleton);
 
+            //maybe replaced
             Field speed = PathfinderGoalBowShoot.class.getDeclaredField("b");
             speed.setAccessible(true);
 
@@ -40,7 +42,8 @@ public class QuickShot_V1_18_1 extends InfernalAbstract {
             itemCoolDown.setAccessible(true);
             itemCoolDown.setInt(entitySkeleton, -100);
 
-            Field item = EntityLiving.class.getDeclaredField("bA");
+            //replaced
+            Field item = EntityLiving.class.getDeclaredField("bz");
             item.setAccessible(true);
             item.set(entitySkeleton, CraftItemStack.asNMSCopy(entity.getEquipment().getItemInMainHand()));
 

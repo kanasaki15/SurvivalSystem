@@ -1,21 +1,20 @@
 package xyz.n7mn.dev.survivalsystem.customcraft.craft;
 
-import org.bukkit.Material;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftAbstract;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
 
-public class CustomCraftResistanceRing2 extends CustomCraftAbstract {
+public class CustomCraftHealingWand1 extends CustomCraftAbstract {
 
     @Override
     public String getRecipeID() {
-        return "resistance_ring_2";
+        return "heal_wand_1";
     }
 
     @Override
     public ItemData getItem(CustomCraftData data) {
-        return ItemDataUtils.RESISTANCE_RING2;
+        return ItemDataUtils.HEALING_WAND;
     }
 
     @Override
@@ -27,11 +26,6 @@ public class CustomCraftResistanceRing2 extends CustomCraftAbstract {
     public CustomCraftData create() {
         CustomCraftData data = new CustomCraftData();
 
-        data.setItemData(Material.DIAMOND, 1, 2, 3, 4, 6, 7, 8, 9);
-        data.setItemData(ItemDataUtils.RESISTANCE_RING1, 5);
-
-        data.setCheckPersistentData(true);
-
-        return data;
+        return null;
     }
 }

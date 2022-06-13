@@ -23,7 +23,6 @@ public class CustomCraftTest2 extends CustomCraftAbstract {
 
     @Override
     public CustomCraftData create() {
-
         CustomCraftData data = new CustomCraftData();
 
         // 1 2 3

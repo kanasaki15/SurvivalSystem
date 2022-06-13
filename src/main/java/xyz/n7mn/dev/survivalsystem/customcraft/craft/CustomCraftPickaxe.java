@@ -1,7 +1,6 @@
 package xyz.n7mn.dev.survivalsystem.customcraft.craft;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftAbstract;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
@@ -36,11 +35,8 @@ public class CustomCraftPickaxe extends CustomCraftAbstract {
     public CustomCraftData create() {
         CustomCraftData data = new CustomCraftData();
 
-        ItemStack diamondPickAxe = new ItemStack(Material.DIAMOND_PICKAXE);
-        ItemStack diamondBlock = new ItemStack(Material.DIAMOND_BLOCK);
-
-        data.setItemData(diamondBlock, 1, 2, 3, 4, 6, 7, 8, 9);
-        data.setItemData(diamondPickAxe, 5);
+        data.setItemData(Material.DIAMOND_PICKAXE, 1, 2, 3, 4, 6, 7, 8, 9);
+        data.setItemData(Material.DIAMOND_BLOCK, 5);
 
         return data;
     }

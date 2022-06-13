@@ -1,5 +1,6 @@
 package xyz.n7mn.dev.survivalsystem.customcraft.item;
 
+import net.kyori.adventure.text.Component;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -25,9 +26,6 @@ import xyz.n7mn.dev.survivalsystem.util.pair.Pair;
 import java.util.List;
 
 public class BuildersWand implements TickCheck, Listener {
-
-    //todo: persistent data container
-    private final int length = 5;
 
     public BuildersWand() {
         Bukkit.getPluginManager().registerEvents(this, SurvivalInstance.INSTANCE.getPlugin());
@@ -63,7 +61,7 @@ public class BuildersWand implements TickCheck, Listener {
 
                 final Pair<Material, Integer> pair = calculate(player);
 
-                player.sendActionBar(MessageUtil.replaceFromConfig("BUILDERS-WAND-ACTIONBAR", "%type%|" + WordUtils.capitalizeFully(pair.getKey().name().toLowerCase().replaceAll("_", " ")), "%amount%|" + pair.getValue()));
+                player.sendActionBar(Component.text(MessageUtil.replaceFromConfig("BUILDERS-WAND-ACTIONBAR", "%type%|" + WordUtils.capitalizeFully(pair.getKey().name().toLowerCase().replaceAll("_", " ")), "%amount%|" + pair.getValue())));
             }
         }
     }

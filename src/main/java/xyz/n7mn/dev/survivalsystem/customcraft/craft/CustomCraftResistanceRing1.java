@@ -1,7 +1,6 @@
 package xyz.n7mn.dev.survivalsystem.customcraft.craft;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftAbstract;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.CustomCraftData;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemData;
@@ -28,8 +27,8 @@ public class CustomCraftResistanceRing1 extends CustomCraftAbstract {
     public CustomCraftData create() {
         CustomCraftData data = new CustomCraftData();
 
-        data.setItemData(new ItemStack(Material.YELLOW_STAINED_GLASS_PANE), 1, 2, 3, 4, 6, 7, 8, 9);
-        data.setItemData(new ItemStack(Material.DRAGON_EGG), 5);
+        data.setItemData(Material.YELLOW_STAINED_GLASS_PANE, 1, 2, 3, 4, 6, 7, 8, 9);
+        data.setItemData(Material.DRAGON_EGG, 5);
 
         return data;
     }

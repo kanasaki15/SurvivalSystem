@@ -31,7 +31,7 @@ public class ParticleUtils {
                     }
                 }
             }
-        }
+        });
     }
 
     public void summonOutlineParticle(Player player, World world, Location location1, Location location2, Particle type) {
