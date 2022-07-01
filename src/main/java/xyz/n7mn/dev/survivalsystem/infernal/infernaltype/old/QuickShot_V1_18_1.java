@@ -1,20 +1,11 @@
 package xyz.n7mn.dev.survivalsystem.infernal.infernaltype.old;
 
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalBowShoot;
-import net.minecraft.world.entity.monster.EntitySkeleton;
-import net.minecraft.world.entity.monster.EntitySkeletonAbstract;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftSkeleton;
-import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.persistence.PersistentDataType;
 import xyz.n7mn.dev.survivalsystem.infernal.InfernalAbstract;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import static xyz.n7mn.dev.survivalsystem.infernal.InfernalNameSpace.quickShotNameSpace;
 
@@ -24,9 +15,9 @@ public class QuickShot_V1_18_1 extends InfernalAbstract {
     @Override
     public void handle(LivingEntity entity) {
 
-        EntitySkeleton entitySkeleton = ((CraftSkeleton) entity).getHandle();
+        ((CraftSkeleton) entity).getHandle().setSecondsOnFire(0, true);
 
-        try {
+        /*try {
             Field field = EntitySkeletonAbstract.class.getDeclaredField("b");
             field.setAccessible(true);
 
@@ -53,7 +44,7 @@ public class QuickShot_V1_18_1 extends InfernalAbstract {
 
         } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
             ex.printStackTrace();
-        }
+        }*/
     }
 
     @Override

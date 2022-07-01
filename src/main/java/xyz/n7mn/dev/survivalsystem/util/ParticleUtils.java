@@ -68,7 +68,41 @@ public class ParticleUtils {
         });
     }
 
+    public List<Location> getTowerParticleList(Location location, final double size, final double y) {
+        final List<Location> locations = new ArrayList<>();
 
+        final double value = Math.PI / 100 / size;
+
+        for (double pi = 0; pi <= Math.PI * 2; pi += value) {
+            final double x = size * Math.cos(pi);
+            final double z = size * Math.sin(pi);
+
+            location.add(x, y, z);
+
+            locations.add(location.clone());
+
+            location.subtract(x, 0, z);
+        }
+
+        return locations;
+    }
+
+
+    public void summonTowerParticle(Player player, Location location, final double repeat, final double size, final double y) {
+        List<Location> locations = getTowerParticleList(location, size, y);
+
+        final double toY = Math.abs(locations.get(locations.size() - 1).getY() - locations.get(0).getY());
+
+        //limits
+        for (int i = 0; i < repeat; i++) {
+
+            final double additionalY = i * toY;
+
+            for (Location loc : locations) {
+                ParticleUtils.summon(loc.clone().add(0, additionalY, 0), Particle.FLAME, player);
+            }
+        }
+    }
 
     public int contains(Location location, BoundingBox box) {
         int total = 0;

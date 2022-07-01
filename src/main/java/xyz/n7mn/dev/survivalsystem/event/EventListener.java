@@ -207,7 +207,7 @@ public class EventListener implements Listener {
 
             final int time = SurvivalInstance.INSTANCE.getPlugin().getConfig().getInt("GraveTime");
 
-            armorStand.setCustomName(MessageUtil.replaceFromConfig("GRAVE-NAME", "%name%|" + e.getPlayer().getName(), "%time%|" + time));
+            armorStand.customName(Component.text(MessageUtil.replaceFromConfig("GRAVE-NAME", "%name%|" + e.getPlayer().getName(), "%time%|" + time)));
             armorStand.getPersistentDataContainer().set(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "delete_time"), PersistentDataType.INTEGER, time);
 
             List<ItemStackData> list = new ArrayList<>();
@@ -231,7 +231,7 @@ public class EventListener implements Listener {
 
         if (killer instanceof Player player) {
 
-            if (player.getEquipment().getItemInMainHand() != null && ItemStackUtil.isSword(player.getEquipment().getItemInMainHand())) {
+            if (ItemStackUtil.isSword(player.getEquipment().getItemInMainHand())) {
 
                 final int level = player.getEquipment().getItemInMainHand().getEnchantmentLevel(CustomEnchantUtils.LIFE_STEAL);
 

@@ -1,6 +1,5 @@
 package xyz.n7mn.dev.survivalsystem.commands;
 
-import org.bukkit.Particle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,7 +11,10 @@ public class BlackHoleCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof Player player) {
-            ParticleUtils.summonSphereParticle(player, player.getLocation(), 1.7, Particle.VILLAGER_HAPPY);
+            //ParticleUtils.summonSphereParticle(player, player.getLocation(), 1.7, Particle.VILLAGER_HAPPY);
+
+            //todo tornado particle
+            ParticleUtils.summonTowerParticle(player, player.getLocation(), 4, 4, 0.01);
         }
 
         return false;
