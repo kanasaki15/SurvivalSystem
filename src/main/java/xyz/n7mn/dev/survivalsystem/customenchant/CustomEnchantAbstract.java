@@ -1,14 +1,14 @@
 package xyz.n7mn.dev.survivalsystem.customenchant;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
 
 public abstract class CustomEnchantAbstract extends Enchantment {
 
-    @Getter @Setter
     private boolean upgradeable = true;
 
     public CustomEnchantAbstract(@NotNull NamespacedKey key) {
@@ -22,6 +22,11 @@ public abstract class CustomEnchantAbstract extends Enchantment {
     public abstract int getEnchantMax();
 
     public abstract boolean isActiveEnchant();
+
+    @Override
+    public boolean conflictsWith(@NotNull Enchantment other) {
+        return false;
+    }
 
     @Override
     public boolean isTradeable() {
@@ -41,5 +46,23 @@ public abstract class CustomEnchantAbstract extends Enchantment {
     @Override
     public boolean isTreasure() {
         return false;
+    }
+
+    @Override
+    public @NotNull String translationKey() {
+        return null;
+    }
+
+    @Override
+    public @NotNull Set<EquipmentSlot> getActiveSlots() {
+        return null;
+    }
+
+    public boolean isUpgradeable() {
+        return upgradeable;
+    }
+
+    public void setUpgradeable(boolean upgradeable) {
+        this.upgradeable = upgradeable;
     }
 }

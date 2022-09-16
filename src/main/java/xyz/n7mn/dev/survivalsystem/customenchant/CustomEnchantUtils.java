@@ -153,20 +153,18 @@ public class CustomEnchantUtils {
         return itemStack.getEnchantments().keySet().stream().anyMatch(enchantment -> !(enchantment instanceof CustomEnchantAbstract));
     }
 
-    public boolean addCustomEnchant(ItemStack itemStack, CustomEnchantAbstract enchant, int level, boolean ignoreLevelRestriction) {
-        return addCustomEnchant(itemStack, enchant, level, ignoreLevelRestriction, true);
-    }
-
-    public boolean addCustomEnchant(ItemStack itemStack, CustomEnchantAbstract enchant, int level, boolean ignoreLevelRestriction, boolean force) {
-        if (force || enchant.canEnchantItem(itemStack)) {
+    public void addCustomEnchant(ItemStack itemStack, CustomEnchantAbstract enchant, int level, boolean ignoreLevelRestriction) {
+        if (itemStack.addEnchant(enchant, level, ignoreLevelRestriction)) {
             ItemStackUtil.addLore(itemStack, enchant.displayName(level));
-
-            itemStack.addEnchant(enchant, level, ignoreLevelRestriction);
-
-            return true;
         }
-        return false;
     }
+
+    public void addCustomEnchant(ItemStack item, CustomEnchantAbstract customEnchant, int level, boolean ignoreLevelRestriction, boolean forceAddingLore) {
+        if (item.addEnchant(customEnchant, level, ignoreLevelRestriction) || forceAddingLore) {
+            ItemStackUtil.addLore(item, customEnchant.displayName(level));
+        }
+    }
+
 
     /**
      * @deprecated - don't need this

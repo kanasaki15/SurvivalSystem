@@ -72,13 +72,9 @@ public class GraveCache {
         });
     }
 
-    public void reEntry() {
+    public void init() {
         graveCache.clear();
 
-        SurvivalInstance.INSTANCE.getConnection().getGraveTable().get(result -> graveCache.putAll(result));
-    }
-
-    public void init() {
         SurvivalInstance.INSTANCE.getConnection().getGraveTable().get(result -> graveCache.putAll(result));
     }
 }

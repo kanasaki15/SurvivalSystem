@@ -41,7 +41,7 @@ public class ItemDataUtils {
             , PersistentDataType.INTEGER, 0));
 
     public static ItemData BUILDERS_WAND_1 = new ItemData(ItemStackUtil.createItem(Material.STICK
-            , ChatColor.AQUA + "ビルダーズワンド Lv1"
+            , ChatColor.AQUA + "ビルダーズワンド (Exp)"
             , new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "builders_wand")
             , PersistentDataType.INTEGER, 5
             , ChatColor.YELLOW + "向いてるいる方向にブロックを置いてくれる"

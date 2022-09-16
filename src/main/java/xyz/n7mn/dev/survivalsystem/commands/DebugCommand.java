@@ -26,7 +26,7 @@ public class DebugCommand implements CommandExecutor {
 
             ItemStack itemStack1 = new ItemStack(Material.ENCHANTED_BOOK);
 
-            CustomEnchantUtils.addCustomEnchant(itemStack1, CustomEnchantUtils.RESISTANCE, 5, true, true);
+            CustomEnchantUtils.addCustomEnchant(itemStack1, CustomEnchantUtils.RESISTANCE, 5, true);
 
             ItemStackUtil.addItem(player, itemStack);
             ItemStackUtil.addItem(player, itemStack1);
