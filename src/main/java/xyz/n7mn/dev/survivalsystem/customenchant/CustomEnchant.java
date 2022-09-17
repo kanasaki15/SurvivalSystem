@@ -112,6 +112,10 @@ public class CustomEnchant {
             for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
                 CustomEnchantUtils.addEnchant(item, entry.getKey(), entry.getValue(), true, entry.getKey() instanceof CustomEnchantAbstract);
             }
+
+            if (inv.getRenameText() != null) {
+                item.setDisplayName(inv.getRenameText());
+            }
         }
 
         return item;
@@ -128,14 +132,16 @@ public class CustomEnchant {
     }
 
     public void addEnchantment(HumanEntity player, Map<Enchantment, Integer> enchants, ItemStack item, ItemStack target) {
-        addEnchantment(player, item, enchants, item.getType() == Material.ENCHANTED_BOOK
+        addEnchantment(player, item, target, enchants, item.getType() == Material.ENCHANTED_BOOK
                 ? ((EnchantmentStorageMeta) item.getItemMeta()).getStoredEnchants() : item.getEnchantments());
     }
 
-    private void addEnchantment(HumanEntity entity, ItemStack item, Map<Enchantment, Integer> enchants, Map<Enchantment, Integer> enchantments) {
+    private void addEnchantment(HumanEntity entity, ItemStack item, ItemStack target, Map<Enchantment, Integer> enchants, Map<Enchantment, Integer> enchantments) {
         //?
+        final boolean canSkip = (item.getType() == Material.ENCHANTED_BOOK && target.getType() == Material.ENCHANTED_BOOK) || entity.getGameMode() == GameMode.CREATIVE;
+
         for (Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
-            if (item.getType() != Material.ENCHANTED_BOOK && !enchantment.getKey().canEnchantItem(item) && entity.getGameMode() != GameMode.CREATIVE) {
+            if (!canSkip && !enchantment.getKey().canEnchantItem(item) && !enchantment.getKey().canEnchantItem(target)) {
                 continue;
             }
             final Integer level = enchants.get(enchantment.getKey());
