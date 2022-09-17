@@ -2,6 +2,8 @@ package xyz.n7mn.dev.survivalsystem.customenchant.enchant;
 
 import io.papermc.paper.enchantments.EnchantmentRarity;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -10,7 +12,6 @@ import org.bukkit.entity.EntityCategory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.customenchant.CustomEnchantAbstract;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 import xyz.n7mn.dev.survivalsystem.util.RomanNumber;
@@ -19,7 +20,7 @@ import java.util.Set;
 
 public class LifeStealEnchant extends CustomEnchantAbstract {
     public LifeStealEnchant() {
-        super(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "enchant_life_steal"));
+        super(NamespacedKey.minecraft("life_steal"));
     }
 
     @Override
@@ -29,7 +30,7 @@ public class LifeStealEnchant extends CustomEnchantAbstract {
 
     @Override
     public double getEnchantChance(int level) {
-        return level * 0.3;
+        return level * 0.3 + 100;
     }
 
     @Override
@@ -84,7 +85,10 @@ public class LifeStealEnchant extends CustomEnchantAbstract {
 
     @Override
     public @NotNull Component displayName(int level) {
-        return Component.text(displayNameToString(level));
+        return Component.translatable(translationKey())
+                .decoration(TextDecoration.ITALIC, false)
+                .color(TextColor.color(255, 20, 20))
+                .append(Component.text(" " + RomanNumber.toRoman(level)));
     }
 
     @Override
@@ -99,7 +103,7 @@ public class LifeStealEnchant extends CustomEnchantAbstract {
 
     @Override
     public @NotNull EnchantmentRarity getRarity() {
-        return null;
+        return EnchantmentRarity.COMMON;
     }
 
     @Override
@@ -114,6 +118,6 @@ public class LifeStealEnchant extends CustomEnchantAbstract {
 
     @Override
     public @NotNull String translationKey() {
-        return null;
+        return "enchantment.minecraft.life_steal";
     }
 }

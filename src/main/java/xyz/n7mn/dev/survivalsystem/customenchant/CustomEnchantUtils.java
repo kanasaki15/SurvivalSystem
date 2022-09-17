@@ -3,6 +3,9 @@ package xyz.n7mn.dev.survivalsystem.customenchant;
 import com.google.common.collect.ImmutableMap;
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentIteratorFlag;
+import net.kyori.adventure.text.ComponentIteratorType;
+import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -11,10 +14,7 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import xyz.n7mn.dev.survivalsystem.customenchant.enchant.*;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -114,6 +114,36 @@ public class CustomEnchantUtils {
 
         return enchants.size() != 0 ? enchantment.build() : ImmutableMap.of();
     }
+
+    public ItemStack removeLore(ItemStack item, Enchantment enchantment) {
+        item.getEnchants().forEach((enchant, level) -> {
+            if (enchant.equals(enchantment) && item.hasLore()) {
+                item.lore(removeLore(item, enchantment, level));
+            }
+        });
+        return item;
+    }
+
+    private List<Component> removeLore(ItemStack item, Enchantment enchantment, int level) {
+        List<Component> components = new ArrayList<>();
+
+        item.getItemMeta().lore().forEach(lore -> {
+            boolean skip = false;
+
+            for (Component componentLike : lore.iterable(ComponentIteratorType.DEPTH_FIRST, ComponentIteratorFlag.INCLUDE_TRANSLATABLE_COMPONENT_ARGUMENTS)) {
+                if (componentLike instanceof TranslatableComponent translate && translate.key().equals(enchantment.translationKey())) {
+                    skip = true;
+                }
+            }
+
+            if (!skip) {
+                components.add(lore);
+            }
+        });
+
+        return components;
+    }
+
 
     public ItemStack removeLore(ItemStack target, CustomEnchantAbstract enchantment, boolean cursed) {
         target.getEnchants().forEach((enchant, level) -> {

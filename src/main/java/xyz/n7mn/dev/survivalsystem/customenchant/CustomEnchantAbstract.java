@@ -49,11 +49,6 @@ public abstract class CustomEnchantAbstract extends Enchantment {
     }
 
     @Override
-    public @NotNull String translationKey() {
-        return null;
-    }
-
-    @Override
     public @NotNull Set<EquipmentSlot> getActiveSlots() {
         return null;
     }

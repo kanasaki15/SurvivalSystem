@@ -85,7 +85,13 @@ public class CustomEnchant {
             inv.getResult().addEnchantments(enchants);
         } else if (inv.getFirstItem() != null && inv.getSecondItem() != null) {
             //cannot enchantment!
-            if (inv.getResult() == null && inv.getFirstItem().getType() == Material.ENCHANTED_BOOK && inv.getSecondItem().getType() != Material.ENCHANTED_BOOK) {
+            final boolean isSecondBook = inv.getFirstItem().getType() != Material.ENCHANTED_BOOK && inv.getSecondItem().getType() == Material.BOOK;
+
+            if (inv.getResult() == null && !isSecondBook) {
+                return null;
+            }
+
+            if (!isSecondBook && inv.getFirstItem().getType() != inv.getSecondItem().getType()) {
                 return null;
             }
 
@@ -105,7 +111,7 @@ public class CustomEnchant {
             for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
                 if (entry.getKey() instanceof CustomEnchantAbstract customEnchant) {
                     //safe remove lore!
-                    CustomEnchantUtils.removeLore(item, customEnchant, false);
+                    CustomEnchantUtils.removeLore(item, customEnchant);
                 }
             }
 
