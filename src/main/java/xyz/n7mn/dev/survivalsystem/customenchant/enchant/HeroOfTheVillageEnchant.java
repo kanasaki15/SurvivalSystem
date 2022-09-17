@@ -20,11 +20,6 @@ public class HeroOfTheVillageEnchant extends CustomEnchantAbstract {
     }
 
     @Override
-    public String displayNameToString(int level) {
-        return null;
-    }
-
-    @Override
     public double getEnchantChance(int level) {
         return 0;
     }

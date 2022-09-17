@@ -14,25 +14,27 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import xyz.n7mn.dev.survivalsystem.customenchant.enchant.*;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("deprecation")
 @UtilityClass
 public class CustomEnchantUtils {
-    public CustomEnchantAbstract RESISTANCE = new ResistanceEnchant();
-    public CustomEnchantAbstract TEST = new TestEnchant();
+    //public CustomEnchantAbstract RESISTANCE = new ResistanceEnchant();
+    //public CustomEnchantAbstract TEST = new TestEnchant();
     public CustomEnchantAbstract LIFE_STEAL = new LifeStealEnchant();
     public CustomEnchantAbstract NIGHT_VISION = new NightVisionEnchant();
-    public CustomEnchantAbstract KINETIC_RESISTANCE = new KineticEnergyResistanceEnchant();
+    //public CustomEnchantAbstract KINETIC_RESISTANCE = new KineticEnergyResistanceEnchant();
 
     public CustomEnchantAbstract[] AllEnchants = new CustomEnchantAbstract[]{
-            RESISTANCE,
-            TEST,
+            //RESISTANCE,
+            //TEST,
             LIFE_STEAL,
             NIGHT_VISION,
-            KINETIC_RESISTANCE,
+           // KINETIC_RESISTANCE,
     };
 
     public void replaceLore(ItemStack target, Component match, Component replace) {
@@ -142,39 +144,6 @@ public class CustomEnchantUtils {
         });
 
         return components;
-    }
-
-
-    public ItemStack removeLore(ItemStack target, CustomEnchantAbstract enchantment, boolean cursed) {
-        target.getEnchants().forEach((enchant, level) -> {
-            if (enchant.equals(enchantment) && target.hasLore()) {
-                removeLore(target, enchantment, level, cursed);
-            }
-        });
-        return target;
-    }
-
-    private void removeLore(ItemStack target, CustomEnchantAbstract enchantment, final int level, final boolean cursed) {
-        if (!cursed || !enchantment.isCursed()) {
-            target.setLore(target.getLore().stream()
-                    .filter(lore -> !lore.equals(enchantment.displayNameToString(level)))
-                    .collect(Collectors.toList()));
-        } else {
-            target.addEnchant(enchantment, level, true);
-        }
-    }
-
-    public ItemStack removeLore(ItemStack target, ItemStack from, final boolean cursed) {
-        from.getEnchants().forEach((enchant, level) -> {
-            if (enchant instanceof CustomEnchantAbstract found && target.hasLore()) {
-                removeLore(target, found, level, cursed);
-            }
-        });
-        return target;
-    }
-
-    public ItemStack removeLore(ItemStack target) {
-        return removeLore(target, target, true);
     }
 
     public boolean hasCustomEnchant(ItemStack itemStack) {

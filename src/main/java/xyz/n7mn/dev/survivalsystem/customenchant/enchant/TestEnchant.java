@@ -2,7 +2,6 @@ package xyz.n7mn.dev.survivalsystem.customenchant.enchant;
 
 import io.papermc.paper.enchantments.EnchantmentRarity;
 import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -13,18 +12,12 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 import xyz.n7mn.dev.survivalsystem.customenchant.CustomEnchantAbstract;
-import xyz.n7mn.dev.survivalsystem.util.RomanNumber;
 
 import java.util.Set;
 
 public class TestEnchant extends CustomEnchantAbstract {
     public TestEnchant() {
         super(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "test"));
-    }
-
-    @Override
-    public String displayNameToString(int level) {
-        return ChatColor.YELLOW + "デバッグ " + RomanNumber.toRoman(level);
     }
 
     @Override
@@ -84,7 +77,7 @@ public class TestEnchant extends CustomEnchantAbstract {
 
     @Override
     public @NotNull Component displayName(int level) {
-        return Component.text(displayNameToString(level));
+        return null;//Component.text(displayNameToString(level));
     }
 
     @Override

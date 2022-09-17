@@ -4,7 +4,6 @@ import io.papermc.paper.enchantments.EnchantmentRarity;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
@@ -16,16 +15,12 @@ import xyz.n7mn.dev.survivalsystem.customenchant.CustomEnchantAbstract;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 import xyz.n7mn.dev.survivalsystem.util.RomanNumber;
 
+import java.util.Collections;
 import java.util.Set;
 
 public class LifeStealEnchant extends CustomEnchantAbstract {
     public LifeStealEnchant() {
         super(NamespacedKey.minecraft("life_steal"));
-    }
-
-    @Override
-    public String displayNameToString(int level) {
-        return ChatColor.RED + "HP吸収 " + RomanNumber.toRoman(level);
     }
 
     @Override
@@ -41,11 +36,6 @@ public class LifeStealEnchant extends CustomEnchantAbstract {
     @Override
     public boolean isActiveEnchant() {
         return true;
-    }
-
-    @Override
-    public @NotNull String getName() {
-        return "LifeSteal".toUpperCase();
     }
 
     @Override
@@ -113,11 +103,11 @@ public class LifeStealEnchant extends CustomEnchantAbstract {
 
     @Override
     public @NotNull Set<EquipmentSlot> getActiveSlots() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
     public @NotNull String translationKey() {
-        return "enchantment.minecraft.life_steal";
+        return "enchantment.custom.life_steal";
     }
 }

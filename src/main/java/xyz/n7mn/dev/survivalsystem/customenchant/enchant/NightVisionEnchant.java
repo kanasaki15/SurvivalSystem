@@ -2,7 +2,8 @@ package xyz.n7mn.dev.survivalsystem.customenchant.enchant;
 
 import io.papermc.paper.enchantments.EnchantmentRarity;
 import net.kyori.adventure.text.Component;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
@@ -20,11 +21,6 @@ import java.util.Set;
 public class NightVisionEnchant extends CustomEnchantAbstract {
     public NightVisionEnchant() {
         super(new NamespacedKey(SurvivalInstance.INSTANCE.getPlugin(), "enchant_night_vision"));
-    }
-
-    @Override
-    public String displayNameToString(int level) {
-        return ChatColor.BLUE + "暗視 " + RomanNumber.toRoman(level);
     }
 
     @Override
@@ -84,7 +80,10 @@ public class NightVisionEnchant extends CustomEnchantAbstract {
 
     @Override
     public @NotNull Component displayName(int level) {
-        return Component.text(displayNameToString(level));
+        return Component.translatable(translationKey())
+                .decoration(TextDecoration.ITALIC, false)
+                .color(TextColor.color(0, 20, 120))
+                .append(Component.text(" " + RomanNumber.toRoman(level)));
     }
 
     @Override
@@ -114,6 +113,6 @@ public class NightVisionEnchant extends CustomEnchantAbstract {
 
     @Override
     public @NotNull String translationKey() {
-        return null;
+        return "enchantment.custom.night_vision";
     }
 }

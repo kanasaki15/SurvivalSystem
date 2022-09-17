@@ -1,5 +1,6 @@
 package xyz.n7mn.dev.survivalsystem.customenchant;
 
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.EquipmentSlot;
@@ -14,8 +15,6 @@ public abstract class CustomEnchantAbstract extends Enchantment {
     public CustomEnchantAbstract(@NotNull NamespacedKey key) {
         super(key);
     }
-
-    public abstract String displayNameToString(final int level);
 
     public abstract double getEnchantChance(final int level);
 
@@ -59,5 +58,14 @@ public abstract class CustomEnchantAbstract extends Enchantment {
 
     public void setUpgradeable(boolean upgradeable) {
         this.upgradeable = upgradeable;
+    }
+
+    @Override
+    public @NotNull String getName() {
+        return  getName(1);
+    }
+
+    public @NotNull String getName(int level) {
+        return GsonComponentSerializer.gson().serialize(displayName(level));
     }
 }

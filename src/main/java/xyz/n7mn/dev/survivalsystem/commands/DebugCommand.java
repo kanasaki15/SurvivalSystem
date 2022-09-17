@@ -1,10 +1,12 @@
 package xyz.n7mn.dev.survivalsystem.commands;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -22,16 +24,25 @@ public class DebugCommand implements CommandExecutor {
         if (sender instanceof Player player) {
             ItemStack itemStack = new ItemStack(Material.DIAMOND_CHESTPLATE);
 
-            CustomEnchantUtils.addCustomEnchant(itemStack, CustomEnchantUtils.RESISTANCE, 5, true);
+            player.sendMessage(Enchantment.DAMAGE_ALL.translationKey());
+            player.sendMessage(CustomEnchantUtils.LIFE_STEAL.key().toString());
+            player.sendMessage(CustomEnchantUtils.LIFE_STEAL.translationKey());
+
+            player.sendMessage(Component.translatable(CustomEnchantUtils.LIFE_STEAL.translationKey()));
+            player.getInventory().getItemInMainHand().getItemMeta().lore()
+                            .forEach(player::sendMessage);
+            player.sendMessage(player.getInventory().getItemInMainHand().getItemMeta().toString());
+
+            //CustomEnchantUtils.addCustomEnchant(itemStack, CustomEnchantUtils.RESISTANCE, 5, true);
 
             ItemStack itemStack1 = new ItemStack(Material.ENCHANTED_BOOK);
 
-            CustomEnchantUtils.addCustomEnchant(itemStack1, CustomEnchantUtils.RESISTANCE, 5, true);
+            //CustomEnchantUtils.addCustomEnchant(itemStack1, CustomEnchantUtils.RESISTANCE, 5, true);
 
             ItemStackUtil.addItem(player, itemStack);
             ItemStackUtil.addItem(player, itemStack1);
 
-            player.sendMessage(String.valueOf(player.getInventory().getItemInMainHand().hasEnchant(CustomEnchantUtils.RESISTANCE)));
+            //player.sendMessage(String.valueOf(player.getInventory().getItemInMainHand().hasEnchant(CustomEnchantUtils.RESISTANCE)));
 
             @NotNull Entity skeleton = player.getWorld().spawnEntity(player.getLocation(), EntityType.SKELETON);
 
