@@ -1,5 +1,6 @@
 package xyz.n7mn.dev.survivalsystem.customenchant;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -9,6 +10,7 @@ import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.GrindstoneInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -43,24 +45,45 @@ public class CustomEnchant {
     }
 
     public void onPrepareGrindstoneEvent(GrindstoneInventory inventory) {
-        ItemStack itemStack = inventory.getResult();
+        ItemStack item = inventory.getResult();
 
-        /*if (itemStack != null) {
-            if (itemStack.getType() != Material.BOOK) {
-                if (inventory.getUpperItem() != null) {
-                    CustomEnchantUtils.removeLore(itemStack, inventory.getUpperItem(), true);
-                }
+        //true
+        if (item != null) {
+            Map<Enchantment, Integer> cursedEnchants = new HashMap<>();
 
-                if (inventory.getLowerItem() != null) {
-                    CustomEnchantUtils.removeLore(itemStack, inventory.getLowerItem(), true);
-                }
-            } else {
-                //TODO:
+            if (inventory.getLowerItem() != null) {
+                prepare(inventory.getLowerItem(), cursedEnchants);
             }
 
-            //WHY?!??!
-            Bukkit.getScheduler().runTask(SurvivalInstance.INSTANCE.getPlugin(), () -> inventory.setResult(itemStack));
-        }*/
+            if (inventory.getUpperItem() != null) {
+                prepare(inventory.getUpperItem(), cursedEnchants);
+            }
+
+            if (item.getType() == Material.BOOK && !cursedEnchants.isEmpty()) {
+                item.setType(Material.ENCHANTED_BOOK);
+                cursedEnchants.forEach((enchantment, level) -> CustomEnchantUtils.addEnchant(item, enchantment, level, true, true));
+            } else {
+                cursedEnchants.forEach((enchantment, level) -> item.addEnchant(enchantment, level, true));
+            }
+
+            //I don't know how to work
+            Bukkit.getScheduler().runTask(SurvivalInstance.INSTANCE.getPlugin(), () -> {
+                inventory.setResult(item);
+            });
+        }
+    }
+
+    public void prepare(ItemStack item, Map<Enchantment, Integer> cursedEnchants) {
+        Map<Enchantment, Integer> enchants = item.getType() == Material.ENCHANTED_BOOK ?
+                ((EnchantmentStorageMeta) item.getItemMeta()).getStoredEnchants() : item.getEnchantments();
+
+        for (Map.Entry<Enchantment, Integer> enchant : enchants.entrySet()) {
+            if (enchant.getKey().isCursed()) {
+                cursedEnchants.put(enchant.getKey(), enchant.getValue());
+            } else {
+                CustomEnchantUtils.removeLore(item, enchant.getKey());
+            }
+        }
     }
 
     public void onPrepareAnvilEvent(PrepareAnvilEvent event) {
@@ -83,7 +106,7 @@ public class CustomEnchant {
             inv.getResult().addEnchantments(enchants);
         } else if (inv.getFirstItem() != null && inv.getSecondItem() != null) {
             //cannot enchantment!
-            final boolean isSecondBook = inv.getFirstItem().getType() != Material.ENCHANTED_BOOK && inv.getSecondItem().getType() == Material.BOOK;
+            final boolean isSecondBook = inv.getFirstItem().getType() != Material.ENCHANTED_BOOK && inv.getSecondItem().getType() == Material.ENCHANTED_BOOK;
 
             if (inv.getResult() == null && !isSecondBook) {
                 return null;

@@ -47,7 +47,6 @@ import xyz.n7mn.dev.survivalsystem.customblockdata.CustomBlockData;
 import xyz.n7mn.dev.survivalsystem.customblockdata.CustomBlockDataEvent;
 import xyz.n7mn.dev.survivalsystem.customblockdata.CustomBlockDataRemoveEvent;
 import xyz.n7mn.dev.survivalsystem.customcraft.base.data.ItemDataUtils;
-import xyz.n7mn.dev.survivalsystem.customenchant.CustomEnchantAbstract;
 import xyz.n7mn.dev.survivalsystem.customenchant.CustomEnchantUtils;
 import xyz.n7mn.dev.survivalsystem.data.GraveInventoryData;
 import xyz.n7mn.dev.survivalsystem.gui.customcraft.craft.CraftGUI;
@@ -60,7 +59,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class EventListener implements Listener {
 
@@ -245,7 +243,7 @@ public class EventListener implements Listener {
     @EventHandler
     public void onEntityDamageEvent(EntityDamageEvent e) {
         if (e.getCause() == EntityDamageEvent.DamageCause.FLY_INTO_WALL && e.getEntity() instanceof Player player) {
-            final int value = 1
+            /*final int value = 1
                     + getValue(player.getEquipment().getHelmet(), CustomEnchantUtils.KINETIC_RESISTANCE)
                     + getValue(player.getEquipment().getChestplate(), CustomEnchantUtils.KINETIC_RESISTANCE)
                     + getValue(player.getEquipment().getLeggings(), CustomEnchantUtils.KINETIC_RESISTANCE)
@@ -253,7 +251,8 @@ public class EventListener implements Listener {
 
             final double damage = e.getDamage() / value;
 
-            e.setDamage(damage);
+            e.setDamage(damage);*/
+            //temporary
         }
     }
 
@@ -295,7 +294,8 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onEnchantEvent(final EnchantItemEvent e) {
-        ItemStack useItem = e.getItem().getType() == Material.BOOK ? new ItemStack(Material.ENCHANTED_BOOK) : e.getItem();
+        //TODO: 工業化と一緒に実装
+        /*ItemStack useItem = e.getItem().getType() == Material.BOOK ? new ItemStack(Material.ENCHANTED_BOOK) : e.getItem();
 
         for (CustomEnchantAbstract data : CustomEnchantUtils.AllEnchants) {
             if (data.isActiveEnchant() && data.canEnchantItem(useItem)) {
@@ -313,7 +313,7 @@ public class EventListener implements Listener {
                     }
                 }
             }
-        }
+        }*/
     }
 
     @EventHandler

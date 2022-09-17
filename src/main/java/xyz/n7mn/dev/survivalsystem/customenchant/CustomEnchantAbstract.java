@@ -6,6 +6,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.Set;
 
 public abstract class CustomEnchantAbstract extends Enchantment {
@@ -49,7 +50,7 @@ public abstract class CustomEnchantAbstract extends Enchantment {
 
     @Override
     public @NotNull Set<EquipmentSlot> getActiveSlots() {
-        return null;
+        return Collections.emptySet();
     }
 
     public boolean isUpgradeable() {

@@ -60,7 +60,7 @@ public class LifeStealEnchant extends CustomEnchantAbstract {
 
     @Override
     public boolean isCursed() {
-        return false;
+        return true;
     }
 
     @Override
