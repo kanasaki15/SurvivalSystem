@@ -43,4 +43,18 @@ TipsList: [
     "Discordは「/discord」、ルールは「/rule」です。\nDiscord is \"/discord\" and rules are \"/rule\"."
 ]
 
+RESOURCE-PACK:
+  ## temporary link!
+  LINK: 'https://download.mc-packs.net/pack/837e7abb8a99441460189773117fb88163ec89d1.zip'
+  HASH: '837e7abb8a99441460189773117fb88163ec89d1'
+  JA_JP:
+    - '"%proceed%" を押してリソースパックをダウンロードしてください'
+    - 'ゲームをプレイするために必要です'
+  EN_US:
+    - 'Press "%proceed%" to download the resource pack'
+    - 'Require to play the game'
+    - ''
+    - '"%proceed%" を押してリソースパックをダウンロードしてください'
+    - 'ゲームをプレイするために必要です'
+
 ADVANCEMENT:

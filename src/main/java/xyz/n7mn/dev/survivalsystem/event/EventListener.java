@@ -5,6 +5,7 @@ import com.destroystokyo.paper.event.inventory.PrepareResultEvent;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -129,7 +130,31 @@ public class EventListener implements Listener {
             MessageUtil.sendMessageBroadCast("JOIN-MESSAGE", "%player%|" + e.getPlayer().getName());
         }
 
+        String messages = getLocaleMessage(e.getPlayer().locale().toString());
+
+        e.getPlayer().setResourcePack(MessageManager.getString("RESOURCE-PACK.LINK"), MessageManager.getString("RESOURCE-PACK.HASH"), true, Component.text(messages)
+                .replaceText(TextReplacementConfig.builder()
+                        .match("%proceed%")
+                        .replacement(Component.translatable("gui.proceed"))
+                        .build()));
+
+
         e.joinMessage(Component.empty());
+    }
+
+    public String getLocaleMessage(String language) {
+        try {
+            return ChatColor.translateAlternateColorCodes('&', String.join("\n", MessageManager.getStringList("RESOURCE-PACK." + language.toUpperCase())));
+        } catch (Exception ex) {
+            return ChatColor.translateAlternateColorCodes('&', String.join("\n", MessageManager.getStringList("RESOURCE-PACK.EN_US")));
+        }
+    }
+
+    @EventHandler
+    public void onPlayerResourcePackStatusEvent(PlayerResourcePackStatusEvent event) {
+        if (event.getStatus() == PlayerResourcePackStatusEvent.Status.SUCCESSFULLY_LOADED) {
+            event.getPlayer().sendMessage("Thank You Download ResourcePack!");
+        }
     }
 
     @EventHandler
@@ -407,7 +432,6 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onPrepareResultEvent(PrepareResultEvent e) {
-        //CUSTOM ENCHANTS!
         if (e.getView().getType() == InventoryType.GRINDSTONE && e.getResult() != null) {
             SurvivalInstance.INSTANCE.getCustomEnchant().onPrepareGrindstoneEvent((GrindstoneInventory) e.getInventory());
         }

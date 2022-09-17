@@ -11,7 +11,7 @@ import xyz.n7mn.dev.survivalsystem.util.MessageUtil;
 public class ReloadCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        MessageManager.reload();
+        MessageManager.init();
         SurvivalInstance.INSTANCE.getPlugin().reloadConfig();
 
         sender.sendMessage(MessageUtil.replaceFromConfig("RELOAD-COMMAND"));

@@ -30,6 +30,10 @@ public class MessageManager {
         return messageConfig.getStringList(key);
     }
 
+    public static YamlConfiguration getYamlConfiguration() {
+        return messageConfig;
+    }
+
     public static void reload() {
         messageConfig = YamlConfiguration.loadConfiguration(new File(SurvivalInstance.INSTANCE.getPlugin().getDataFolder(), "message.yml"));
 

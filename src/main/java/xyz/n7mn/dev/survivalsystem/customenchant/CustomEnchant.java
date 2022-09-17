@@ -45,32 +45,30 @@ public class CustomEnchant {
     }
 
     public void onPrepareGrindstoneEvent(GrindstoneInventory inventory) {
-        ItemStack item = inventory.getResult();
+        ItemStack item = inventory.getResult().clone();
 
         //true
-        if (item != null) {
-            Map<Enchantment, Integer> cursedEnchants = new HashMap<>();
+        Map<Enchantment, Integer> cursedEnchants = new HashMap<>();
 
-            if (inventory.getLowerItem() != null) {
-                prepare(inventory.getLowerItem(), cursedEnchants);
-            }
-
-            if (inventory.getUpperItem() != null) {
-                prepare(inventory.getUpperItem(), cursedEnchants);
-            }
-
-            if (item.getType() == Material.BOOK && !cursedEnchants.isEmpty()) {
-                item.setType(Material.ENCHANTED_BOOK);
-                cursedEnchants.forEach((enchantment, level) -> CustomEnchantUtils.addEnchant(item, enchantment, level, true, true));
-            } else {
-                cursedEnchants.forEach((enchantment, level) -> item.addEnchant(enchantment, level, true));
-            }
-
-            //I don't know how to work
-            Bukkit.getScheduler().runTask(SurvivalInstance.INSTANCE.getPlugin(), () -> {
-                inventory.setResult(item);
-            });
+        if (inventory.getLowerItem() != null) {
+            prepare(inventory.getLowerItem(), cursedEnchants);
         }
+
+        if (inventory.getUpperItem() != null) {
+            prepare(inventory.getUpperItem(), cursedEnchants);
+        }
+
+        if (item.getType() == Material.BOOK && !cursedEnchants.isEmpty()) {
+            item.setType(Material.ENCHANTED_BOOK);
+            cursedEnchants.forEach((enchantment, level) -> CustomEnchantUtils.addEnchant(item, enchantment, level, true, item.getType() == Material.ENCHANTED_BOOK));
+        } else {
+            cursedEnchants.forEach((enchantment, level) -> item.addEnchant(enchantment, level, true));
+        }
+
+        //I don't know how to work
+        Bukkit.getScheduler().runTask(SurvivalInstance.INSTANCE.getPlugin(), () -> {
+            inventory.setResult(item);
+        });
     }
 
     public void prepare(ItemStack item, Map<Enchantment, Integer> cursedEnchants) {
@@ -103,7 +101,7 @@ public class CustomEnchant {
         if (inv.getResult() != null && inv.getFirstItem() != null && inv.getSecondItem() == null) {
             addEnchantment(player, enchants, inv.getResult(), inv.getFirstItem());
 
-            inv.getResult().addEnchantments(enchants);
+            item.addEnchantments(enchants);
         } else if (inv.getFirstItem() != null && inv.getSecondItem() != null) {
             //cannot enchantment!
             final boolean isSecondBook = inv.getFirstItem().getType() != Material.ENCHANTED_BOOK && inv.getSecondItem().getType() == Material.ENCHANTED_BOOK;
