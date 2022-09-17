@@ -4,8 +4,10 @@ import com.google.common.collect.ImmutableMap;
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import xyz.n7mn.dev.survivalsystem.customenchant.enchant.*;
 import xyz.n7mn.dev.survivalsystem.util.ItemStackUtil;
 
@@ -156,6 +158,21 @@ public class CustomEnchantUtils {
     public void addCustomEnchant(ItemStack itemStack, CustomEnchantAbstract enchant, int level, boolean ignoreLevelRestriction) {
         if (itemStack.addEnchant(enchant, level, ignoreLevelRestriction)) {
             ItemStackUtil.addLore(itemStack, enchant.displayName(level));
+        }
+    }
+
+    public void addEnchant(ItemStack item, Enchantment enchantment, int level, final boolean ignoreLevelRestriction, boolean addingLore) {
+        if (item.getType() == Material.ENCHANTED_BOOK) {
+            EnchantmentStorageMeta meta = (EnchantmentStorageMeta) item.getItemMeta();
+
+            meta.addStoredEnchant(enchantment, level, ignoreLevelRestriction);
+            item.setItemMeta(meta);
+        } else {
+            item.addEnchant(enchantment, level, ignoreLevelRestriction);
+        }
+
+        if (addingLore && enchantment instanceof CustomEnchantAbstract customEnchant) {
+            ItemStackUtil.addLore(item, customEnchant.displayName(level));
         }
     }
 

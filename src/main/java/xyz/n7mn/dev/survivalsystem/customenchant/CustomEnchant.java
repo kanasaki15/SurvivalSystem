@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.GrindstoneInventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import xyz.n7mn.dev.survivalsystem.SurvivalInstance;
 
 import java.lang.reflect.Field;
@@ -83,35 +84,60 @@ public class CustomEnchant {
 
             inv.getResult().addEnchantments(enchants);
         } else if (inv.getFirstItem() != null && inv.getSecondItem() != null) {
+            //cannot enchantment!
+            if (inv.getResult() == null && inv.getFirstItem().getType() == Material.ENCHANTED_BOOK && inv.getSecondItem().getType() != Material.ENCHANTED_BOOK) {
+                return null;
+            }
+
             addEnchantment(player, enchants, inv.getSecondItem(), inv.getFirstItem());
             addEnchantment(player, enchants, inv.getFirstItem(), inv.getSecondItem());
 
+            Map<Enchantment, Integer> enchantments = inv.getFirstItem().getType() == Material.ENCHANTED_BOOK
+                    ? ((EnchantmentStorageMeta) inv.getFirstItem().getItemMeta()).getStoredEnchants() : inv.getFirstItem().getEnchantments();
+
+            //don't accept not valid enchant
+            if (inv.getResult() == null && isSameEnchants(enchantments, enchants)) {
+                return null;
+            }
+
             item = inv.getFirstItem().clone();
 
-            for (Map.Entry<Enchantment, Integer> entry : item.getEnchantments().entrySet()) {
+            for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
                 if (entry.getKey() instanceof CustomEnchantAbstract customEnchant) {
-                    CustomEnchantUtils.removeLore(item, customEnchant, customEnchant.isCursed());
+                    //safe remove lore!
+                    CustomEnchantUtils.removeLore(item, customEnchant, false);
                 }
             }
 
             for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
-                if (entry.getKey() instanceof CustomEnchantAbstract customEnchant) {
-                    CustomEnchantUtils.addCustomEnchant(item, customEnchant, entry.getValue(), true, true);
-                } else {
-                    item.addEnchant(entry.getKey(), entry.getValue(), true);
-                }
+                CustomEnchantUtils.addEnchant(item, entry.getKey(), entry.getValue(), true, entry.getKey() instanceof CustomEnchantAbstract);
             }
         }
 
         return item;
     }
 
+    public boolean isSameEnchants(Map<Enchantment, Integer> map1, Map<Enchantment, Integer> map2) {
+        if (map1.size() != map2.size()) {
+            return false;
+        }
+        Map<Enchantment, Integer> map = new HashMap<>(map1);
+        map2.forEach(map::remove);
+
+        return map.isEmpty();
+    }
+
     public void addEnchantment(HumanEntity player, Map<Enchantment, Integer> enchants, ItemStack item, ItemStack target) {
-        for (Map.Entry<Enchantment, Integer> enchantment : item.getEnchantments().entrySet()) {
-            if (!enchantment.getKey().canEnchantItem(target) && player.getGameMode() != GameMode.CREATIVE) {
+        addEnchantment(player, item, enchants, item.getType() == Material.ENCHANTED_BOOK
+                ? ((EnchantmentStorageMeta) item.getItemMeta()).getStoredEnchants() : item.getEnchantments());
+    }
+
+    private void addEnchantment(HumanEntity entity, ItemStack item, Map<Enchantment, Integer> enchants, Map<Enchantment, Integer> enchantments) {
+        //?
+        for (Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
+            if (item.getType() != Material.ENCHANTED_BOOK && !enchantment.getKey().canEnchantItem(item) && entity.getGameMode() != GameMode.CREATIVE) {
                 continue;
             }
-            //?
             final Integer level = enchants.get(enchantment.getKey());
 
             if (level == null) {
