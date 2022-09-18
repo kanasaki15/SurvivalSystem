@@ -120,13 +120,13 @@ public class CustomEnchantUtils {
     public ItemStack removeLore(ItemStack item, Enchantment enchantment) {
         item.getEnchants().forEach((enchant, level) -> {
             if (enchant.equals(enchantment) && item.hasLore()) {
-                item.lore(removeLore(item, enchantment, level));
+                item.lore(excludeCustomEnchantLore(item, enchantment));
             }
         });
         return item;
     }
 
-    private List<Component> removeLore(ItemStack item, Enchantment enchantment, int level) {
+    private List<Component> excludeCustomEnchantLore(ItemStack item, Enchantment enchantment) {
         List<Component> components = new ArrayList<>();
 
         item.getItemMeta().lore().forEach(lore -> {
@@ -154,12 +154,6 @@ public class CustomEnchantUtils {
         return itemStack.getEnchantments().keySet().stream().anyMatch(enchantment -> !(enchantment instanceof CustomEnchantAbstract));
     }
 
-    public void addCustomEnchant(ItemStack itemStack, CustomEnchantAbstract enchant, int level, boolean ignoreLevelRestriction) {
-        if (itemStack.addEnchant(enchant, level, ignoreLevelRestriction)) {
-            ItemStackUtil.addLore(itemStack, enchant.displayName(level));
-        }
-    }
-
     public void addEnchant(ItemStack item, Enchantment enchantment, int level, final boolean ignoreLevelRestriction, boolean addingLore) {
         if (item.getType() == Material.ENCHANTED_BOOK) {
             EnchantmentStorageMeta meta = (EnchantmentStorageMeta) item.getItemMeta();
@@ -171,12 +165,6 @@ public class CustomEnchantUtils {
         }
 
         if (addingLore && enchantment instanceof CustomEnchantAbstract customEnchant) {
-            ItemStackUtil.addLore(item, customEnchant.displayName(level));
-        }
-    }
-
-    public void addCustomEnchant(ItemStack item, CustomEnchantAbstract customEnchant, int level, boolean ignoreLevelRestriction, boolean forceAddingLore) {
-        if (item.addEnchant(customEnchant, level, ignoreLevelRestriction) || forceAddingLore) {
             ItemStackUtil.addLore(item, customEnchant.displayName(level));
         }
     }

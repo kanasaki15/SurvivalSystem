@@ -45,8 +45,8 @@ TipsList: [
 
 RESOURCE-PACK:
   ## temporary link!
-  LINK: 'https://download.mc-packs.net/pack/837e7abb8a99441460189773117fb88163ec89d1.zip'
-  HASH: '837e7abb8a99441460189773117fb88163ec89d1'
+  LINK: 'https://download.mc-packs.net/pack/16e98e94938c18764d17bf735621484262720740.zip'
+  HASH: '16e98e94938c18764d17bf735621484262720740'
   JA_JP:
     - '"%proceed%" を押してリソースパックをダウンロードしてください'
     - 'ゲームをプレイするために必要です'
