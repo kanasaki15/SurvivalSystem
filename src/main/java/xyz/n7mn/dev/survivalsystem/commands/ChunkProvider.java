@@ -1,5 +1,6 @@
 package xyz.n7mn.dev.survivalsystem.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;
@@ -13,18 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * @credit https://www.spigotmc.org/threads/how-to-create-a-custom-world-generator.545616/
+ *
+ * @author KoutaChan
+ */
 public class ChunkProvider extends ChunkGenerator {
-    private final FastNoiseLite terrainNoise = new FastNoiseLite();
-    private final FastNoiseLite detailNoise = new FastNoiseLite();
     private final FastNoiseLite caveNoise = new FastNoiseLite();
     private final FastNoiseLite caveNoiseY = new FastNoiseLite();
 
     private final FastNoiseLite bedrockNoise = new FastNoiseLite();
 
     public ChunkProvider() {
+        //two noise and Bedrock Noise
         caveNoiseY.SetFrequency(0.00945F);
         caveNoise.SetFrequency(0.005f);
-        //caveNoise.SetFractalType(FastNoiseLite.FractalType.FBm);
 
         bedrockNoise.SetFrequency(0.65F);
     }
@@ -40,14 +44,14 @@ public class ChunkProvider extends ChunkGenerator {
 
                     final float noiseY = caveNoiseY.GetNoise(x + chunkX * 16,  z + chunkZ * 16);
 
-                    //80 is lower of y // == maxY
-                    final float currentY = 80 + (noiseY * 60);
+                    //max of Y
+                    final float maxY = 80 + (noiseY * 60);
 
-                    final float surface = Math.abs(y - currentY);
+                    final float surface = Math.abs(y - maxY);
                     //make cave? TODO: USE FUNCTION... (NOT STABLE)
                     final double function = noiseY * 2;
 
-                    if (currentY > y && noise > function) {// && noise > function) {
+                    if (maxY > y && noise > function) {
                         if (1 > surface) {
                             chunkData.setBlock(x, y, z, Material.GRASS_BLOCK);
                         } else if (5.5 > surface) {
@@ -55,7 +59,23 @@ public class ChunkProvider extends ChunkGenerator {
                         } else if (Math.min(worldInfo.getMinHeight() + 3, worldInfo.getMaxHeight()) > y && (y == worldInfo.getMinHeight() || bedrockNoise.GetNoise(x + chunkX * 16, y + z + chunkZ * 16) > -0.1F)) {
                             chunkData.setBlock(x, y, z, Material.BEDROCK);
                         } else {
-                            chunkData.setBlock(x, y, z, Material.STONE);
+                            //1
+                            if (1 == random.nextInt(0, 100)) {
+                                final boolean isAir = isAir(x + chunkX * 16 + 1, y, z + chunkZ * 16)
+                                        || isAir(x + chunkX * 16, y, z + chunkZ * 16)
+                                        || isAir(x + chunkX * 16 - 1, y, z + chunkZ * 16)
+                                        || isAir(x + chunkX * 16, y, z + chunkZ * 16 - 1);
+                                if (isAir) {
+                                    //tests
+                                    chunkData.setBlock(x, y, z, Material.DIAMOND_BLOCK);
+
+                                    Bukkit.broadcastMessage("placed DiamondBlock=" + (x + chunkX * 16) + " y:" + y + " z:" + (z + chunkZ * 16));
+                                } else {
+                                    chunkData.setBlock(x, y, z, Material.STONE);
+                                }
+                            } else {
+                                chunkData.setBlock(x, y, z, Material.STONE);
+                            }
                         }
 
                         passed = true;
@@ -67,6 +87,13 @@ public class ChunkProvider extends ChunkGenerator {
                 }
             }
         }
+    }
+
+    public boolean isAir(int x, int y, int z) {
+        final float noise = caveNoise.GetNoise(x, y, z);
+        final float noiseY = caveNoiseY.GetNoise(x, z);
+
+        return !(noise > noiseY * 2);
     }
 
     @Override
