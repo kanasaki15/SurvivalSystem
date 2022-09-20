@@ -1,6 +1,5 @@
 package xyz.n7mn.dev.survivalsystem.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;
@@ -46,12 +45,13 @@ public class ChunkProvider extends ChunkGenerator {
 
                     //max of Y
                     final float maxY = 80 + (noiseY * 60);
-
-                    final float surface = Math.abs(y - maxY);
+                    ;
                     //make cave? TODO: USE FUNCTION... (NOT STABLE)
-                    final double function = noiseY * 2;
+                    final float function = noiseY * 2;
 
                     if (maxY > y && noise > function) {
+                        final float surface = Math.abs(y - maxY);
+
                         if (1 > surface) {
                             chunkData.setBlock(x, y, z, Material.GRASS_BLOCK);
                         } else if (5.5 > surface) {
@@ -59,29 +59,11 @@ public class ChunkProvider extends ChunkGenerator {
                         } else if (Math.min(worldInfo.getMinHeight() + 3, worldInfo.getMaxHeight()) > y && (y == worldInfo.getMinHeight() || bedrockNoise.GetNoise(x + chunkX * 16, y + z + chunkZ * 16) > -0.1F)) {
                             chunkData.setBlock(x, y, z, Material.BEDROCK);
                         } else {
-                            //1
-                            if (1 == random.nextInt(0, 100)) {
-                                final boolean isAir = isAir(x + chunkX * 16 + 1, y, z + chunkZ * 16)
-                                        || isAir(x + chunkX * 16, y, z + chunkZ * 16)
-                                        || isAir(x + chunkX * 16 - 1, y, z + chunkZ * 16)
-                                        || isAir(x + chunkX * 16, y, z + chunkZ * 16 - 1);
-                                if (isAir) {
-                                    //tests
-                                    chunkData.setBlock(x, y, z, Material.DIAMOND_BLOCK);
-
-                                    Bukkit.broadcastMessage("placed DiamondBlock=" + (x + chunkX * 16) + " y:" + y + " z:" + (z + chunkZ * 16));
-                                } else {
-                                    chunkData.setBlock(x, y, z, Material.STONE);
-                                }
-                            } else {
-                                chunkData.setBlock(x, y, z, Material.STONE);
-                            }
+                            chunkData.setBlock(x, y, z, Material.STONE);
                         }
 
                         passed = true;
-                    }
-
-                    if (!passed && Math.min(worldInfo.getMinHeight() + 3, worldInfo.getMaxHeight()) > y && (y == worldInfo.getMinHeight() || bedrockNoise.GetNoise(x + chunkX * 16, y + z + chunkZ * 16) > -0.1F)) {
+                    } else if (Math.min(worldInfo.getMinHeight() + 3, worldInfo.getMaxHeight()) > y && (y == worldInfo.getMinHeight() || bedrockNoise.GetNoise(x + chunkX * 16, y + z + chunkZ * 16) > -0.1F)) {
                         chunkData.setBlock(x, y, z, Material.BEDROCK);
                     }
                 }
